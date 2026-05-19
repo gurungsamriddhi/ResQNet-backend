@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
@@ -8,75 +8,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
-use Illuminate\Support\Facades\Auth;
-
-class AuthController extends Controller
+class RegisterOrganizationController extends Controller
 {
     /**
-     * Show the login form
-     */
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    /**
-     * Handle login request
-     */
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Check if user is inactive
-            if (!Auth::user()->is_active) {
-                Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Your account is pending approval or inactive.',
-                ]);
-            }
-
-            if (Auth::user()->hasRole('super_admin')) {
-                return redirect()->route('admin.dashboard');
-            }
-
-            return redirect()->intended('/');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
-    }
-
-    /**
-     * Handle logout
-     */
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    }
-
-    /**
-     * Show the organization registration form
+     * Show the organization registration form.
      */
     public function showRegisterOrganizationForm()
     {
-        return view('auth.register-organization'); // Assuming this blade template will exist
+        return view('auth.register-organization');
     }
 
     /**
-     * Handle Organization Registration
+     * Handle Organization Registration.
      */
     public function registerOrganization(Request $request)
     {
@@ -91,18 +36,19 @@ class AuthController extends Controller
             'org_name' => 'required|string|max:255',
             'org_email' => 'required|string|email|max:255',
             'registration_number' => 'required|string|max:255',
-            'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+            'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
         DB::beginTransaction();
+
         try {
-            // 1. Create the User (inactive)
+            // 1. Create the User (inactive — requires admin approval)
             $user = User::create([
                 'name' => $request->user_name,
                 'email' => $request->user_email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->user_phone,
-                'is_active' => false, // Requires admin approval
+                'is_active' => false,
             ]);
 
             $user->assignRole('organization');
@@ -111,7 +57,7 @@ class AuthController extends Controller
             $org = Organization::create([
                 'user_id' => $user->id,
                 'name' => $request->org_name,
-                'slug' => \Illuminate\Support\Str::slug($request->org_name) . '-' . uniqid(),
+                'slug' => Str::slug($request->org_name) . '-' . uniqid(),
                 'email' => $request->org_email,
                 'registration_number' => $request->registration_number,
                 'status' => 'pending',
@@ -125,9 +71,7 @@ class AuthController extends Controller
 
             DB::commit();
 
-            // Redirect back with a success message
             return redirect()->route('login')->with('status', 'Your registration request has been submitted. Please wait for admin approval.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Registration failed: ' . $e->getMessage()])->withInput();

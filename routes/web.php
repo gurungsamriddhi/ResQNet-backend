@@ -1,8 +1,7 @@
 <?php
-
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\OrganizationManagementController;
 use App\Http\Controllers\Web\Admin\UserManagementController;
@@ -19,8 +18,8 @@ Route::get('/', function () {
 });
 
 // Organization Web Routes (Registration)
-Route::get('/register-organization', [AuthController::class, 'showRegisterOrganizationForm'])->name('register.organization');
-Route::post('/register-organization', [AuthController::class, 'registerOrganization']);
+Route::get('/register-organization', [RegisterOrganizationController::class, 'showRegisterOrganizationForm'])->name('register.organization');
+Route::post('/register-organization', [RegisterOrganizationController::class, 'registerOrganization']);
 
 require __DIR__.'/auth.php';
 

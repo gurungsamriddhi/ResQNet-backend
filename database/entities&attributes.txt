@@ -1,0 +1,250 @@
+# ResQNet — Entities & Attributes
+
+## 1. Users
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| name | VARCHAR(255) | NOT NULL |
+| email | VARCHAR(255) | NOT NULL, UNIQUE |
+| email_verified_at | TIMESTAMP | NULL |
+| password | VARCHAR(255) | NOT NULL |
+| phone | VARCHAR(20) | NULL, UNIQUE |
+| avatar | VARCHAR(255) | NULL |
+| address | TEXT | NULL |
+| is_active | BOOLEAN | DEFAULT TRUE |
+| phone_verified_at | TIMESTAMP | NULL |
+| last_login_at | TIMESTAMP | NULL |
+| remember_token | VARCHAR(100) | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 2. Organizations
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| user_id | BIGINT UNSIGNED | FK → users.id, UNIQUE, CASCADE |
+| name | VARCHAR(255) | NOT NULL |
+| slug | VARCHAR(255) | NOT NULL, UNIQUE |
+| description | TEXT | NULL |
+| logo | VARCHAR(255) | NULL |
+| phone | VARCHAR(20) | NULL |
+| email | VARCHAR(255) | NULL |
+| address | VARCHAR(255) | NULL |
+| registration_number | VARCHAR(255) | NULL |
+| latitude | DECIMAL(10,8) | NULL |
+| longitude | DECIMAL(11,8) | NULL |
+| is_verified | BOOLEAN | DEFAULT FALSE |
+| verified_at | TIMESTAMP | NULL |
+| status | ENUM('pending','active','suspended','rejected') | DEFAULT 'pending' |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 3. Pets
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| organization_id | BIGINT UNSIGNED | FK → organizations.id, NULL, SET NULL |
+| qr_code_id | VARCHAR(20) | NOT NULL, UNIQUE |
+| name | VARCHAR(255) | NOT NULL |
+| species | ENUM('dog','cat','bird','rabbit','other') | DEFAULT 'dog' |
+| breed | VARCHAR(100) | NULL |
+| age_months | INT UNSIGNED | NULL |
+| gender | ENUM('male','female','unknown') | DEFAULT 'unknown' |
+| size | ENUM('small','medium','large','xl') | DEFAULT 'medium' |
+| color | VARCHAR(100) | NULL |
+| description | TEXT | NULL |
+| health_status | TEXT | NULL |
+| is_vaccinated | BOOLEAN | DEFAULT FALSE |
+| is_neutered | BOOLEAN | DEFAULT FALSE |
+| status | ENUM('available','adopted','unavailable','inactive') | DEFAULT 'available' |
+| adopted_at | TIMESTAMP | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 4. Pet Images
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, CASCADE |
+| image_path | VARCHAR(255) | NOT NULL |
+| is_primary | BOOLEAN | DEFAULT FALSE |
+| sort_order | INT UNSIGNED | DEFAULT 0 |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+
+> No soft deletes — images are hard-deleted with file cleanup.
+
+---
+
+## 5. Adoption Requests
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, CASCADE |
+| user_id | BIGINT UNSIGNED | FK → users.id, NULL, SET NULL |
+| message | TEXT | NULL |
+| living_situation | VARCHAR(255) | NULL |
+| has_other_pets | BOOLEAN | NULL |
+| status | ENUM('pending','approved','rejected') | DEFAULT 'pending' |
+| admin_notes | TEXT | NULL |
+| reviewed_at | TIMESTAMP | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 6. Rescue Reports
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| user_id | BIGINT UNSIGNED | FK → users.id, NULL, SET NULL |
+| organization_id | BIGINT UNSIGNED | FK → organizations.id, NULL, SET NULL |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, NULL, SET NULL |
+| title | VARCHAR(255) | NULL |
+| description | TEXT | NOT NULL |
+| image_path | VARCHAR(255) | NULL |
+| latitude | DECIMAL(10,8) | NULL |
+| longitude | DECIMAL(11,8) | NULL |
+| address | VARCHAR(255) | NULL |
+| urgency | ENUM('low','medium','high','critical') | DEFAULT 'medium' |
+| status | ENUM('reported','assigned','in_progress','resolved') | DEFAULT 'reported' |
+| resolved_at | TIMESTAMP | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 7. Donations
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| user_id | BIGINT UNSIGNED | FK → users.id, NULL, SET NULL |
+| organization_id | BIGINT UNSIGNED | FK → organizations.id, NULL, SET NULL |
+| amount | DECIMAL(10,2) | NOT NULL |
+| payment_method | ENUM('khalti','esewa') | NOT NULL |
+| transaction_id | VARCHAR(255) | NULL |
+| status | ENUM('pending','completed','failed') | DEFAULT 'pending' |
+| payment_payload | JSON | NULL |
+| remarks | TEXT | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 8. Vets
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| organization_id | BIGINT UNSIGNED | FK → organizations.id, CASCADE |
+| name | VARCHAR(255) | NOT NULL |
+| phone | VARCHAR(20) | NULL |
+| email | VARCHAR(255) | NULL |
+| specialization | VARCHAR(255) | NULL |
+| license_number | VARCHAR(100) | NULL |
+| is_active | BOOLEAN | DEFAULT TRUE |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 9. Medical Records
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, CASCADE |
+| vet_id | BIGINT UNSIGNED | FK → vets.id, NULL, SET NULL |
+| type | ENUM('checkup','treatment','surgery','injury','observation','other') | DEFAULT 'checkup' |
+| title | VARCHAR(255) | NOT NULL |
+| description | TEXT | NULL |
+| notes | TEXT | NULL |
+| record_date | DATE | NOT NULL |
+| next_visit_date | DATE | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 10. Vaccinations
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, CASCADE |
+| vet_id | BIGINT UNSIGNED | FK → vets.id, NULL, SET NULL |
+| vaccine_name | VARCHAR(255) | NOT NULL |
+| batch_number | VARCHAR(100) | NULL |
+| date_administered | DATE | NOT NULL |
+| next_due_date | DATE | NULL |
+| notes | TEXT | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 11. Medications
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| pet_id | BIGINT UNSIGNED | FK → pets.id, CASCADE |
+| vet_id | BIGINT UNSIGNED | FK → vets.id, NULL, SET NULL |
+| medicine_name | VARCHAR(255) | NOT NULL |
+| dosage | VARCHAR(255) | NOT NULL |
+| frequency | VARCHAR(255) | NULL |
+| start_date | DATE | NOT NULL |
+| end_date | DATE | NULL |
+| notes | TEXT | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+| deleted_at | TIMESTAMP | NULL (soft delete) |
+
+---
+
+## 12. Media (Spatie MediaLibrary)
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT |
+| model_type | VARCHAR(255) | NOT NULL |
+| model_id | BIGINT UNSIGNED | NOT NULL |
+| uuid | CHAR(36) | NULL, UNIQUE |
+| collection_name | VARCHAR(255) | NOT NULL |
+| name | VARCHAR(255) | NOT NULL |
+| file_name | VARCHAR(255) | NOT NULL |
+| mime_type | VARCHAR(255) | NULL |
+| disk | VARCHAR(255) | NOT NULL |
+| conversions_disk | VARCHAR(255) | NULL |
+| size | BIGINT UNSIGNED | NOT NULL |
+| manipulations | JSON | NOT NULL |
+| custom_properties | JSON | NOT NULL |
+| generated_conversions | JSON | NOT NULL |
+| responsive_images | JSON | NOT NULL |
+| order_column | INT UNSIGNED | NULL |
+| created_at | TIMESTAMP | NULL |
+| updated_at | TIMESTAMP | NULL |
+
+> Polymorphic table — `model_type` + `model_id` link to any model (currently Organizations).

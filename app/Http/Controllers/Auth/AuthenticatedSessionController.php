@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -27,9 +25,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user=Auth::user();
 
         // Check if user is active
-        if (!Auth::user()->is_active) {
+        if (!$user->is_active) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -39,8 +38,12 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-        if (Auth::user()->hasRole('super_admin')) {
-            return redirect()->intended(route('admin.dashboard', absolute: false));
+        if($user->hasRole('super_admin')){
+            return redirect()->route('admin.dashboard');
+        }
+
+        if($user->hasRole('organization')){
+            return redirect()->route('organization.dashboard');
         }
 
         return redirect()->intended(route('dashboard', absolute: false));
