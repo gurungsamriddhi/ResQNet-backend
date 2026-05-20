@@ -15,7 +15,7 @@ class RegisterOrganizationController extends Controller
     /**
      * Show the organization registration form.
      */
-    public function showRegisterOrganizationForm()
+    public function create()
     {
         return view('auth.register-organization');
     }
@@ -23,8 +23,13 @@ class RegisterOrganizationController extends Controller
     /**
      * Handle Organization Registration.
      */
-    public function registerOrganization(Request $request)
+    public function store(Request $request)
     {
+    //     dd([
+    //     'password' => $request->password,
+    //     'password_confirmation' => $request->password_confirmation,
+    //     'all_fields' => $request->all()
+    // ]);
         $request->validate([
             // User validations
             'user_name' => 'required|string|max:255',
@@ -71,7 +76,7 @@ class RegisterOrganizationController extends Controller
 
             DB::commit();
 
-            return redirect()->route('login')->with('status', 'Your registration request has been submitted. Please wait for admin approval.');
+            return redirect()->route('registration.pending');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Registration failed: ' . $e->getMessage()])->withInput();

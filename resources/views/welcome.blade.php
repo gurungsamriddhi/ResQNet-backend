@@ -78,22 +78,9 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-4">
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-primary-600 font-medium transition">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-primary-600 font-medium transition">Log in</a>
-                        <a href="{{ route('register.organization') }}" class="bg-primary-500 hover:bg-primary-600 text-white px-5 py-2.5 rounded-full font-medium transition shadow-md shadow-primary-500/30">
-                            Partner With Us
-                        </a>
-                    @endauth
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
-                    <button class="text-gray-600 hover:text-primary-500 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
+                    <a href="{{ route('register.organization') }}" class="bg-primary-500 hover:bg-primary-600 text-white px-5 py-2.5 rounded-full font-medium transition shadow-md shadow-primary-500/30">
+                        Partner With Us
+                    </a>
                     </button>
                 </div>
             </div>
