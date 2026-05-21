@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\OrganizationManagementController;
@@ -78,5 +79,4 @@ Route::middleware(['auth', 'is_active', 'role:organization'])
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

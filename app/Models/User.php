@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\SendOtpNotification;
+use Illuminate\Support\Facades\Cache;
 
 
 /**
@@ -69,5 +71,38 @@ class User extends Authenticatable
     public function organization()
     {
         return $this->hasOne(\App\Models\Organization::class);
+    }
+
+    public function sendOtp($type = 'email')
+    {
+        $cooldownKey = "otp_cooldown_{$type}_{$this->email}";
+        if (Cache::has($cooldownKey)) {
+            $secondsRemaining = Cache::get($cooldownKey)->diffInSeconds(now());
+            throw new \Exception("Please wait 60 seconds before requesting a new OTP.");
+        }
+
+        $otp = rand(100000, 999999);
+        $key = "otp_{$type}_{$this->email}";
+
+        //save otp in cache (temporary memory) for 10 minutes
+        Cache::put($key, $otp, now()->addMinutes(10)); // 10 minutes expiry
+        Cache::put($cooldownKey, now()->addSeconds(60), now()->addSeconds(60)); // 60s cooldown
+
+        $this->notify(new SendOtpNotification($otp, $type));
+    }
+
+    public function verifyOtp($otp, $type = 'email')
+    {
+        $key = "otp_{$type}_{$this->email}";
+        //get otp from cache
+        $storedOtp = Cache::get($key);
+
+        if ($storedOtp && $storedOtp == $otp) {
+            //delete otp from cache
+            Cache::forget($key);
+            return true;
+        }
+
+        return false;
     }
 }
