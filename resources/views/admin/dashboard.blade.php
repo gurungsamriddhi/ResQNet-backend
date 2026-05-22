@@ -1,53 +1,338 @@
-@extends('layouts.admin')
+<x-layouts.admin>
+    <!-- Welcome Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-admin-textPrimary font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
+                Welcome back, Asmita 🐾
+            </h1>
+            <p class="text-admin-textSecondary text-sm mt-1">
+                Here's a real-time summary of ResQNet's shelter activities, emergency rescues, and active adoptions today.
+            </p>
+        </div>
+        
+        <!-- Interactive Date Filter / Action Pill -->
+        <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-admin-surface border border-admin-border text-xs font-semibold text-admin-textSecondary shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-admin-btnGreen animate-pulse"></span>
+                Live Database
+            </span>
+            <button class="flex items-center gap-2 bg-admin-primary hover:bg-admin-primaryPress text-admin-textOnPrimary text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all duration-200">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Add Record</span>
+            </button>
+        </div>
+    </div>
 
-@section('title', 'Super Admin Dashboard | ResQNet')
-@section('header', 'System Overview')
-
-@section('content')
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Stat Card 1 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-gray-500 font-medium">Total Organizations</h3>
-            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+    <!-- Top Metric Row Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+        
+        <!-- Card 1: Active Pet Listings -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Active Pet Listings
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        42
+                    </h3>
+                </div>
+                <!-- Pill / Growth -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span>+12%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
+                <i data-lucide="dog" class="w-5 h-5"></i>
             </div>
         </div>
-        <div class="text-3xl font-bold text-gray-900">{{ $stats['total_orgs'] ?? 0 }}</div>
-    </div>
 
-    <!-- Stat Card 2 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-gray-500 font-medium">Pending Approvals</h3>
-            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <!-- Card 2: Pending Adoptions -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Pending Adoptions
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        12
+                    </h3>
+                </div>
+                <!-- Pill / Growth -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span>+8%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
+                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
             </div>
         </div>
-        <div class="text-3xl font-bold text-gray-900">{{ $stats['pending_orgs'] ?? 0 }}</div>
-    </div>
 
-    <!-- Stat Card 3 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-gray-500 font-medium">Registered Users</h3>
-            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <!-- Card 3: Active Rescues -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Active Rescues
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        5
+                    </h3>
+                </div>
+                <!-- Pill / Decline -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-errorBg text-admin-errorText shadow-sm">
+                        <i data-lucide="trending-down" class="w-3 h-3"></i>
+                        <span>-10%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">critical status</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnRed/10 text-admin-btnRed group-hover:bg-admin-btnRed group-hover:text-white transition-all duration-300">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
             </div>
         </div>
-        <div class="text-3xl font-bold text-gray-900">{{ $stats['total_users'] ?? 0 }}</div>
-    </div>
-</div>
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-    <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
-    <div class="flex gap-4">
-        <a href="{{ route('admin.organizations.index') }}" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition">
-            Review Pending Organizations
-        </a>
-        <a href="{{ route('admin.users.index') }}" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg font-medium transition">
-            Manage Users
-        </a>
+        <!-- Card 4: Completed Adoptions -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Completed Adoptions
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        156
+                    </h3>
+                </div>
+                <!-- Pill / Growth -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span>+24%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">this month</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
+                <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+        </div>
+
     </div>
-</div>
-@endsection
+
+    <!-- Mock Data Array & Main Dashboard Sub-grid exactly matching the reference mockup -->
+    @php
+    $highPriorityRescues = [
+        [
+            'title' => 'Injured stray dog',
+            'status' => 'CRITICAL',
+            'location' => 'Nayabazar-9, Pokhara',
+            'time' => '8 min ago',
+            'code' => 'RQ-2418',
+        ],
+        [
+            'title' => 'Kitten stuck in drain',
+            'status' => 'URGENT',
+            'location' => 'Chipledhunga, Pokhara near trademall',
+            'time' => '26 min ago',
+            'code' => 'RQ-2417',
+        ],
+        [
+            'title' => 'Abandoned puppies (4)',
+            'status' => 'URGENT',
+            'location' => 'Chorepatan, Devis Fall',
+            'time' => '1 h ago',
+            'code' => 'RQ-2415',
+        ],
+    ];
+
+    $recentActivities = [
+        [
+            'title' => 'PAWS Pokhara',
+            'action' => 'approved adoption for Mango',
+            'time' => '2 min ago',
+        ],
+        [
+            'title' => 'Donor: Maya Rana',
+            'action' => 'donated NPR 2,500 to medical fund',
+            'time' => '12 min ago',
+        ],
+        [
+            'title' => 'Field team',
+            'action' => 'rescued 4 kittens in Chorepatan',
+            'time' => '38 min ago',
+        ],
+        [
+            'title' => 'CARA Welfare',
+            'action' => 'submitted org verification docs',
+            'time' => '1 h ago',
+        ],
+    ];
+    @endphp
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        
+        <!-- Left Column: High-priority rescues Outer Container Card -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 lg:col-span-2 shadow-sm flex flex-col justify-between">
+            <div>
+                <!-- Header Row -->
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-admin-border/60">
+                    <div>
+                        <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
+                            High-priority rescues
+                        </h3>
+                        <p class="text-admin-textSecondary text-xs mt-0.5">
+                            Help these animals now.
+                        </p>
+                    </div>
+                    <a href="#" class="flex items-center gap-1 text-xs font-bold text-admin-primary hover:text-admin-primaryPress transition-colors">
+                        <span>View all</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- List Row Item Grid -->
+                <div class="space-y-4">
+                    @foreach($highPriorityRescues as $rescue)
+                        <div class="bg-admin-surface border border-admin-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-200 hover:shadow-md hover:border-admin-primary/20">
+                            
+                            <!-- Left & Text Column -->
+                            <div class="flex items-center gap-4">
+                                <!-- Circular Icon Container with Dynamic Glowing/Pulsing Alert for CRITICAL status -->
+                                @if($rescue['status'] === 'CRITICAL')
+                                    <div class="relative flex-shrink-0">
+                                        <!-- Popping red glowing backdrop ring (popping in and out) -->
+                                        <span class="absolute inset-0 rounded-full bg-red-500 opacity-25 animate-ping"></span>
+                                        <!-- Pulsing inner circle -->
+                                        <div class="relative w-12 h-12 rounded-full bg-red-100 text-red-600 border border-red-200 flex items-center justify-center shadow-sm animate-pulse">
+                                            <i data-lucide="bell-ring" class="w-5 h-5 text-red-600 fill-red-200"></i>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="w-12 h-12 rounded-full bg-red-50 text-red-400 border border-red-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                        <i data-lucide="bell" class="w-5 h-5 text-red-400"></i>
+                                    </div>
+                                @endif
+
+                                <!-- Text Content Column -->
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h4 class="text-admin-textPrimary font-bold text-sm sm:text-base tracking-tight truncate">
+                                            {{ $rescue['title'] }}
+                                        </h4>
+                                        
+                                        <!-- Status Badge Logic -->
+                                        @if($rescue['status'] === 'CRITICAL')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-admin-btnRed text-white tracking-wide">
+                                                CRITICAL
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-[#FDF6E2] text-[#8F5F14] border border-[#F5E7C4] tracking-wide uppercase">
+                                                {{ $rescue['status'] }}
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Lower Meta-data Row -->
+                                    <div class="flex items-center gap-3.5 mt-2 text-xs text-admin-textSecondary flex-wrap">
+                                        <!-- Location -->
+                                        <div class="flex items-center gap-1">
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
+                                            <span>{{ $rescue['location'] }}</span>
+                                        </div>
+                                        
+                                        <!-- Time Ago -->
+                                        <div class="flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
+                                            <span>{{ $rescue['time'] }}</span>
+                                        </div>
+                                        
+                                        <!-- ID Code -->
+                                        <div class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase">
+                                            {{ $rescue['code'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Section: Help Now Coral Action Button -->
+                            <div class="flex-shrink-0">
+                                <button class="w-full sm:w-auto bg-[#FA6E52] hover:bg-[#E25338] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95">
+                                    Help now
+                                </button>
+                            </div>
+
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Recent Activity Feed matching the mockup perfectly -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div>
+                <!-- Header -->
+                <div class="border-b border-admin-border/60 pb-4 mb-6">
+                    <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
+                        Recent activity
+                    </h3>
+                    <p class="text-admin-textSecondary text-xs mt-0.5">
+                        Live feed across the network.
+                    </p>
+                </div>
+
+                <!-- Timeline List of Feeds -->
+                <div class="relative pl-6 border-l-2 border-admin-border/60 space-y-6">
+                    @foreach($recentActivities as $activity)
+                        <div class="relative">
+                            <!-- Bullet timeline dot connecting them -->
+                            <span class="absolute -left-[31px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-admin-surface border-2 border-admin-primary shadow-sm">
+                                <span class="h-2 w-2 rounded-full bg-admin-primary"></span>
+                            </span>
+                            
+                            <!-- Feed Content -->
+                            <div>
+                                <p class="text-xs text-admin-textPrimary leading-relaxed">
+                                    <span class="font-extrabold text-admin-textPrimary">{{ $activity['title'] }}</span> 
+                                    <span class="text-admin-textSecondary">{{ $activity['action'] }}</span>
+                                </p>
+                                <span class="block text-[10px] text-admin-textSecondary/60 mt-1 font-semibold">
+                                    {{ $activity['time'] }}
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Sleek info helper in footer of right card -->
+            <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/50 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
+                <i data-lucide="info" class="w-4 h-4 text-admin-primary flex-shrink-0 mt-0.5"></i>
+                <p>
+                    Activities are streamed live from ResQNet, Animal Welfare Nepal and field rescuers.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</x-layouts.admin>

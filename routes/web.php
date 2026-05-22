@@ -13,8 +13,9 @@ use App\Http\Controllers\Web\Organization\HealthController;
 use App\Http\Controllers\Web\Organization\FinanceController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
 
+// This controls http://127.0.0.1:8000/
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome'); 
 });
 
 // ====================== PUBLIC ROUTES ======================
@@ -80,3 +81,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
 require __DIR__ . '/auth.php';
+// This controls http://127.0.0.1:8000/admin/dashboard
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+});
