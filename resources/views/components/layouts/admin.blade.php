@@ -25,9 +25,100 @@
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Outfit', sans-serif;
         }
+        /* Sleek Premium Dark Mode Theme Variables & Class Overrides */
+        body.dark {
+            background-color: #0F172A !important; /* deep slate-900 */
+            color: #F8FAFC !important; /* slate-50 */
+        }
+        body.dark .bg-admin-surface {
+            background-color: #1E293B !important; /* slate-800 */
+        }
+        body.dark .bg-admin-bg {
+            background-color: #0F172A !important;
+        }
+        body.dark .border-admin-border {
+            border-color: #334155 !important; /* slate-700 */
+        }
+        body.dark .border-admin-border\/60 {
+            border-color: rgba(51, 65, 85, 0.6) !important;
+        }
+        body.dark .border-admin-border\/40 {
+            border-color: rgba(51, 65, 85, 0.4) !important;
+        }
+        body.dark .border-admin-border\/50 {
+            border-color: rgba(51, 65, 85, 0.5) !important;
+        }
+        body.dark .text-admin-textPrimary {
+            color: #F8FAFC !important;
+        }
+        body.dark .text-admin-textSecondary {
+            color: #94A3B8 !important; /* slate-400 */
+        }
+        body.dark .text-admin-textSecondary\/60 {
+            color: rgba(148, 163, 184, 0.6) !important;
+        }
+        body.dark .text-admin-textSecondary\/80 {
+            color: rgba(148, 163, 184, 0.8) !important;
+        }
+        body.dark input, body.dark select, body.dark textarea {
+            background-color: #0F172A !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+        /* Keep nav indicators / icons contrast high in dark mode */
+        body.dark .bg-[#FCC234]\/10 {
+            background-color: rgba(252, 194, 52, 0.15) !important;
+        }
+        body.dark .bg-admin-primary\/10 {
+            background-color: rgba(61, 90, 78, 0.25) !important;
+        }
+        body.dark .bg-admin-btnGreen\/10 {
+            background-color: rgba(34, 197, 94, 0.15) !important;
+        }
+        body.dark .bg-admin-btnRed\/10 {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+        }
+        body.dark .bg-admin-bg-dark {
+            background-color: #0b0f19 !important;
+        }
+        /* Premium Dark Mode Sidebar Overrides */
+        body.dark aside, 
+        body.dark [role="dialog"] .bg-admin-primary {
+            background-color: #0B0F19 !important; /* ultra dark slate */
+            border-color: #1E293B !important;
+        }
+        body.dark aside .bg-admin-primaryPress,
+        body.dark [role="dialog"] .bg-admin-primaryPress {
+            background-color: #090D16 !important;
+            border-color: #1E293B !important;
+        }
+        body.dark aside nav a:not(.bg-admin-navActive),
+        body.dark [role="dialog"] nav a:not(.bg-admin-navActive) {
+            color: #94A3B8 !important; /* slate-400 */
+        }
+        body.dark aside nav a:not(.bg-admin-navActive):hover,
+        body.dark [role="dialog"] nav a:not(.bg-admin-navActive):hover {
+            background-color: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+        body.dark aside nav span.text-admin-textOnPrimary\/40,
+        body.dark [role="dialog"] nav span.text-admin-textOnPrimary\/40 {
+            color: #475569 !important; /* slate-600 */
+        }
+        body.dark aside nav .bg-admin-primaryPress,
+        body.dark [role="dialog"] nav .bg-admin-primaryPress {
+            background-color: #1E293B !important;
+        }
+        body.dark aside .border-admin-primaryPress,
+        body.dark [role="dialog"] .border-admin-primaryPress {
+            border-color: #1E293B !important;
+        }
     </style>
 </head>
-<body class="h-full bg-admin-bg text-admin-textPrimary antialiased" x-data="{ mobileSidebarOpen: false, darkMode: false }">
+<body class="h-full bg-admin-bg text-admin-textPrimary antialiased" 
+      x-data="{ mobileSidebarOpen: false, darkMode: localStorage.getItem('darkMode') === 'true' }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      :class="{ 'dark': darkMode }">
 
     <!-- Overall Split Screen Shell -->
     <div class="flex h-full min-h-screen overflow-hidden">
@@ -35,11 +126,12 @@
         <!-- Sidebar Navigation -->
         <x-admin.sidebar />
 
-        <!-- Flexible Right-side Content Area -->
-        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- Flexible Right-side Content Area with Scroll & Scrolled Header Blur -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto" x-data="{ scrolled: false }" @scroll="scrolled = ($event.target.scrollTop > 10)">
             
-            <!-- Sleek Top Header Navbar -->
-            <header class="bg-admin-surface border-b border-admin-border h-16 sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 md:px-8 shadow-sm transition-all duration-300">
+            <!-- Sleek Top Header Navbar with Dynamic Scroll Transition padding/blur -->
+            <header class="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 transition-all duration-300"
+                    :class="scrolled ? 'bg-admin-surface/80 backdrop-blur-md shadow-md border-b border-admin-border/80' : 'bg-admin-surface border-b border-admin-border shadow-sm'">
                 
                 <!-- Left: Mobile Sidebar Toggle & Search Bar -->
                 <div class="flex items-center gap-4 flex-1">

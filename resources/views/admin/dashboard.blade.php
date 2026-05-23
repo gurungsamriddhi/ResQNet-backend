@@ -24,19 +24,19 @@
     </div>
 
     <!-- Top Metric Row Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
         
-        <!-- Card 1: Active Pet Listings -->
+        <!-- Card 1: Total Animals -->
         <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
                     <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Active Pet Listings
+                        Total Animals
                     </span>
                     <!-- Main Value -->
                     <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        42
+                        142
                     </h3>
                 </div>
                 <!-- Pill / Growth -->
@@ -50,39 +50,11 @@
             </div>
             <!-- Circular Icon Placeholder Top Right -->
             <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
-                <i data-lucide="dog" class="w-5 h-5"></i>
+                <i data-lucide="paw-print" class="w-5 h-5"></i>
             </div>
         </div>
 
-        <!-- Card 2: Pending Adoptions -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="flex flex-col justify-between h-full">
-                <div>
-                    <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Pending Adoptions
-                    </span>
-                    <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        12
-                    </h3>
-                </div>
-                <!-- Pill / Growth -->
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                        <span>+8%</span>
-                    </span>
-                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
-                </div>
-            </div>
-            <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
-                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
-            </div>
-        </div>
-
-        <!-- Card 3: Active Rescues -->
+        <!-- Card 2: Active Rescues -->
         <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
@@ -107,6 +79,34 @@
             <!-- Circular Icon Placeholder Top Right -->
             <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnRed/10 text-admin-btnRed group-hover:bg-admin-btnRed group-hover:text-white transition-all duration-300">
                 <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+        </div>
+
+        <!-- Card 3: Pets In Care -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Pets In Care
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        28
+                    </h3>
+                </div>
+                <!-- Pill / Growth -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span>+8%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
+                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
             </div>
         </div>
 
@@ -135,6 +135,190 @@
             <!-- Circular Icon Placeholder Top Right -->
             <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+        </div>
+        <!-- Card 5: Total Donations -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <!-- Title -->
+                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                        Total Donations
+                    </span>
+                    <!-- Main Value -->
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                        NPR 124,500
+                    </h3>
+                </div>
+                <!-- Pill / Growth -->
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span>+18%</span>
+                    </span>
+                    <span class="text-[10px] text-admin-textSecondary">this week</span>
+                </div>
+            </div>
+            <!-- Circular Icon Placeholder Top Right -->
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#FCC234]/10 text-[#9E7A1C] group-hover:bg-[#FCC234] group-hover:text-admin-textPrimary transition-all duration-300">
+                <i data-lucide="hand-coins" class="w-5 h-5"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Donations this week Chart & Info Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        
+        <!-- Left-Side Chart Box (Takes up roughly 2/3 width on large screens) -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 lg:col-span-2 shadow-sm flex flex-col justify-between">
+            <div>
+                <!-- Header Area -->
+                <div class="flex items-center justify-between pb-4 border-b border-admin-border/60">
+                    <div>
+                        <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight">
+                            Donations this week
+                        </h3>
+                        <p class="text-admin-textSecondary text-xs mt-1">
+                            Every peso/rupee fuels another rescue.
+                        </p>
+                    </div>
+                    <!-- Right side: Trend pill and badge -->
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-admin-successBg text-admin-successText shadow-sm">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+24%</span>
+                        </span>
+                        <span class="text-xs text-admin-textSecondary hidden sm:inline">vs last week</span>
+                    </div>
+                </div>
+
+                <!-- Clean Graph Area Container with Left Y-Axis and Right SVG Grid -->
+                <div class="flex gap-4 mt-6">
+                    <!-- Left Y-Axis Labels Column -->
+                    <div class="flex flex-col justify-between text-[10px] font-semibold text-admin-textSecondary/60 h-48 py-1 select-none text-right w-16">
+                        <span>NPR 50,000</span>
+                        <span>NPR 37,500</span>
+                        <span>NPR 25,000</span>
+                        <span>NPR 12,500</span>
+                        <span>NPR 0</span>
+                    </div>
+
+                    <!-- Right Chart Container -->
+                    <div class="flex-1 flex flex-col justify-between">
+                        <!-- SVG area has a fixed height of h-48 to hold the canvas cleanly -->
+                        <div class="relative h-48 w-full">
+                            <!-- Crisp responsive SVG -->
+                            <svg class="w-full h-full" viewBox="0 0 600 160" preserveAspectRatio="none">
+                                <defs>
+                                    <!-- Salmon/Coral Gradient fading out smoothly at the base -->
+                                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#FA6E52" stop-opacity="0.25"/>
+                                        <stop offset="100%" stop-color="#FA6E52" stop-opacity="0.0"/>
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- Horizontal dashed grid lines -->
+                                <line x1="0" y1="10" x2="600" y2="10" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="45" x2="600" y2="45" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="80" x2="600" y2="80" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="115" x2="600" y2="115" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="150" x2="600" y2="150" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+
+                                <!-- Elegant filled gradient path (salmon/coral) -->
+                                <path d="M 0 130 
+                                         C 80 120, 100 80, 180 90 
+                                         C 260 100, 280 50, 360 60 
+                                         C 440 70, 480 20, 600 15 
+                                         L 600 150 L 0 150 Z" 
+                                      fill="url(#chartGradient)" />
+
+                                <!-- Thick overlay line path (salmon/coral) -->
+                                <path d="M 0 130 
+                                         C 80 120, 100 80, 180 90 
+                                         C 260 100, 280 50, 360 60 
+                                         C 440 70, 480 20, 600 15" 
+                                      fill="none" stroke="#FA6E52" stroke-width="3.5" stroke-linecap="round" />
+                            </svg>
+                        </div>
+
+                        <!-- Days of the week at the bottom, perfectly aligned, no fixed height constraints -->
+                        <div class="flex justify-between text-xs font-semibold text-admin-textSecondary/80 pt-3 border-t border-admin-border/40 mt-3 select-none">
+                            <span class="w-10 text-left">Mon</span>
+                            <span class="w-10 text-center">Tue</span>
+                            <span class="w-10 text-center">Wed</span>
+                            <span class="w-10 text-center">Thu</span>
+                            <span class="w-10 text-center">Fri</span>
+                            <span class="w-10 text-center">Sat</span>
+                            <span class="w-10 text-right">Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right-Side Donation Goal/Campaign Card (1/3 width on large screens) -->
+        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div>
+                <!-- Header -->
+                <div class="border-b border-admin-border/60 pb-4 mb-5">
+                    <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight flex items-center gap-2">
+                        <i data-lucide="target" class="w-5 h-5 text-admin-primary"></i>
+                        <span>Campaign Goal</span>
+                    </h3>
+                    <p class="text-admin-textSecondary text-xs mt-1">
+                        Monthly milestone for shelter expansion.
+                    </p>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="space-y-5">
+                    <div class="flex items-baseline justify-between">
+                        <span class="text-xs font-semibold text-admin-textSecondary uppercase tracking-wider">Progress</span>
+                        <div class="text-right">
+                            <span class="text-xl font-extrabold text-admin-textPrimary">NPR 124,500</span>
+                            <span class="text-xs text-admin-textSecondary">/ NPR 150,000</span>
+                        </div>
+                    </div>
+
+                    <!-- Custom Progress Bar -->
+                    <div class="w-full bg-admin-bg rounded-full h-3 overflow-hidden border border-admin-border/50">
+                        <div class="bg-gradient-to-r from-admin-primary to-admin-navActive h-full rounded-full transition-all duration-500 shadow-inner" style="width: 83%"></div>
+                    </div>
+
+                    <!-- Impact Breakdown List -->
+                    <div class="space-y-3 pt-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-admin-primary"></span>
+                                <span>Medical & Surgery</span>
+                            </div>
+                            <span class="font-bold text-admin-textPrimary">60%</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-admin-navActive"></span>
+                                <span>Pet Food & Shelter</span>
+                            </div>
+                            <span class="font-bold text-admin-textPrimary">25%</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-admin-btnGreen"></span>
+                                <span>Field Rescue Fuel</span>
+                            </div>
+                            <span class="font-bold text-admin-textPrimary">15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Quote -->
+            <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/40 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
+                <i data-lucide="heart" class="w-4 h-4 text-admin-btnRed flex-shrink-0 mt-0.5 fill-admin-btnRed/25"></i>
+                <p>
+                    Every contribution directly funds shelter veterinary services and active field rescue operations.
+                </p>
             </div>
         </div>
 
