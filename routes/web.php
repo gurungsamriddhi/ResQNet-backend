@@ -85,3 +85,7 @@ require __DIR__ . '/auth.php';
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 });
+
+Route::get('/admin/pets', function () {
+    return view('admin.pets.index');
+});

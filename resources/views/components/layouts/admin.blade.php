@@ -14,9 +14,17 @@
     <!-- CSS / JS Bundles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Lucide Icons & Alpine.js CDN -->
+    <!-- Lucide Icons, Alpine.js, & Turbo Drive CDN for SPA transitions -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.es2017-umd.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        // Draw Lucide icons instantly on SPA page transitions
+        document.addEventListener("turbo:load", function() {
+            lucide.createIcons();
+        });
+    </script>
 
     <style>
         body {
@@ -52,13 +60,13 @@
             color: #F8FAFC !important;
         }
         body.dark .text-admin-textSecondary {
-            color: #94A3B8 !important; /* slate-400 */
+            color: #CBD5E1 !important; /* slate-300 premium off-white */
         }
         body.dark .text-admin-textSecondary\/60 {
-            color: rgba(148, 163, 184, 0.6) !important;
+            color: rgba(203, 213, 225, 0.6) !important;
         }
         body.dark .text-admin-textSecondary\/80 {
-            color: rgba(148, 163, 184, 0.8) !important;
+            color: rgba(203, 213, 225, 0.8) !important;
         }
         body.dark input, body.dark select, body.dark textarea {
             background-color: #0F172A !important;
@@ -94,7 +102,7 @@
         }
         body.dark aside nav a:not(.bg-admin-navActive),
         body.dark [role="dialog"] nav a:not(.bg-admin-navActive) {
-            color: #94A3B8 !important; /* slate-400 */
+            color: #CBD5E1 !important; /* slate-300 off-white */
         }
         body.dark aside nav a:not(.bg-admin-navActive):hover,
         body.dark [role="dialog"] nav a:not(.bg-admin-navActive):hover {
@@ -119,6 +127,12 @@
       x-data="{ mobileSidebarOpen: false, darkMode: localStorage.getItem('darkMode') === 'true' }" 
       x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
       :class="{ 'dark': darkMode }">
+    <script>
+        // Prevent dark mode visual theme flashes by injecting immediate dark class
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+        }
+    </script>
 
     <!-- Overall Split Screen Shell -->
     <div class="flex h-full min-h-screen overflow-hidden">
