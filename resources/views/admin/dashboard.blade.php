@@ -180,7 +180,7 @@
                             Donations this week
                         </h3>
                         <p class="text-admin-textSecondary text-xs mt-1">
-                            Every peso/rupee fuels another rescue.
+                            Every rupees fuels another rescue.
                         </p>
                     </div>
                     <!-- Right side: Trend pill and badge -->

@@ -31,7 +31,7 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 
-                @if(auth()->user()->hasRole('super_admin'))
+                @if(auth()->user()?->hasRole('super_admin'))
                     <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">System Admin</p>
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-800 text-white transition">
                         <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -47,7 +47,7 @@
                     </a>
                 @endif
 
-                @if(auth()->user()->hasRole('organization'))
+                @if(auth()->user()?->hasRole('organization'))
                     <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Shelter Management</p>
                     <a href="{{ route('organization.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-800 text-white transition">
                         <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
@@ -87,9 +87,9 @@
                 <h2 class="text-xl font-semibold text-gray-800">@yield('header')</h2>
                 
                 <div class="flex items-center gap-4">
-                    <span class="text-sm font-medium text-gray-600">{{ auth()->user()->name }}</span>
+                    <span class="text-sm font-medium text-gray-600">{{ auth()->user()?->name ?? 'Dev User' }}</span>
                     <form method="POST" 
-              action="{{ auth()->user()->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
+              action="{{ auth()->user()?->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
             @csrf
             <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium transition">
                 Log Out

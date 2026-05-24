@@ -1,4 +1,11 @@
 <!-- Sidebar Wrapper Component -->
+@php
+    $isSuperAdmin = auth()->user()?->hasRole('super_admin');
+    $petsUrl = $isSuperAdmin ? '/admin/pets' : '/organization/pets';
+    $dashboardUrl = $isSuperAdmin ? '/admin/dashboard' : '/organization/dashboard';
+    $isPetsActive = request()->is('admin/pets') || request()->is('organization/pets');
+    $isDashboardActive = request()->is('admin/dashboard') || request()->is('organization/dashboard');
+@endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
     <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0 h-full bg-admin-primary text-admin-textOnPrimary border-r border-admin-primaryPress shadow-xl">
@@ -21,10 +28,10 @@
                 <ul class="space-y-1.5">
                     <!-- Dashboard (Active Item) -->
                     <li>
-                        <a href="/admin/dashboard" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ Request::is('admin/dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav font-semibold shadow-md shadow-admin-navActive/10 hover:scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200 group">
+                        <a href="{{ $dashboardUrl }}" 
+                           class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDashboardActive ? 'bg-admin-navActive text-admin-textOnActiveNav font-semibold shadow-md shadow-admin-navActive/10 hover:scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200 group">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="layout-dashboard" class="w-4 h-4 {{ Request::is('admin/dashboard') ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }} transition-colors"></i>
+                                <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }} transition-colors"></i>
                                 <span>Dashboard</span>
                             </div>
                             <!-- Subtle metric badge if needed -->
@@ -34,14 +41,26 @@
 
                     <!-- Pets -->
                     <li>
-                        <a href="/admin/pets" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ Request::is('admin/pets') ? 'bg-admin-navActive text-admin-textOnActiveNav font-semibold shadow-md shadow-admin-navActive/10 hover:scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200 group">
+                        <a href="{{ $petsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isPetsActive ? 'bg-admin-navActive text-admin-textOnActiveNav font-semibold shadow-md shadow-admin-navActive/10 hover:scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200 group">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="dog" class="w-4 h-4 {{ Request::is('admin/pets') ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }} transition-colors"></i>
+                                <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }} transition-colors"></i>
                                 <span>Pets Management</span>
                             </div>
                             <!-- Orange metric count badge -->
                             <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm shadow-[#F59E0B]/20">42</span>
+                        </a>
+                    </li>
+
+                    <!-- Health Records -->
+                    <li>
+                        <a href="#"
+                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="heart-pulse" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
+                                <span>Health Records</span>
+                            </div>
+                            <span class="bg-admin-primaryPress text-admin-textOnPrimary/60 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
                         </a>
                     </li>
 
@@ -192,23 +211,33 @@
                         <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Operations</span>
                         <ul class="space-y-1">
                              <li>
-                                <a href="/admin/dashboard" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl {{ Request::is('admin/dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200">
+                                <a href="{{ $dashboardUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl {{ $isDashboardActive ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="layout-dashboard" class="w-4 h-4 {{ Request::is('admin/dashboard') ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50' }}"></i>
+                                        <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50' }}"></i>
                                         <span>Dashboard</span>
                                     </div>
                                     <span class="bg-admin-primary text-admin-textOnPrimary px-2 py-0.5 rounded-full text-[10px] font-bold">Live</span>
                                 </a>
                              </li>
                              <li>
-                                <a href="/admin/pets" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl {{ Request::is('admin/pets') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200">
+                                <a href="{{ $petsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl {{ $isPetsActive ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary font-medium' }} text-sm transition-all duration-200">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="dog" class="w-4 h-4 {{ Request::is('admin/pets') ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50' }}"></i>
+                                        <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-admin-textOnActiveNav' : 'text-admin-textOnPrimary/50' }}"></i>
                                         <span>Pets Management</span>
                                     </div>
                                     <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold">42</span>
+                                </a>
+                             </li>
+                             <li>
+                                <a href="#" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="heart-pulse" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
+                                        <span>Health Records</span>
+                                    </div>
+                                    <span class="bg-admin-primaryPress text-admin-textOnPrimary/60 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
                                 </a>
                              </li>
                              <li>
