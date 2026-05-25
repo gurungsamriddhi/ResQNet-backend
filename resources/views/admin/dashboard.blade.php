@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-admin-textPrimary font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
-                Welcome back, Asmita 🐾
+                Welcome back, {{ explode(' ', auth()->user()->name)[0] }} 🐾
             </h1>
             <p class="text-admin-textSecondary text-sm mt-1">
                 Here's a real-time summary of ResQNet's shelter activities, emergency rescues, and active adoptions today.
@@ -26,117 +26,130 @@
     <!-- Top Metric Row Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
         
-        <!-- Card 1: Active Pet Listings -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="flex flex-col justify-between h-full">
-                <div>
-                    <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Active Pet Listings
-                    </span>
-                    <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        42
-                    </h3>
+        @if(auth()->user()->hasRole('super_admin'))
+            <!-- SUPER ADMIN METRICS -->
+            <!-- Card 1: Total Organizations -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Total Organizations</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['total_orgs'] ?? 0 }}
+                        </h3>
+                    </div>
                 </div>
-                <!-- Pill / Growth -->
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                        <span>+12%</span>
-                    </span>
-                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
+                    <i data-lucide="building-2" class="w-5 h-5"></i>
                 </div>
             </div>
-            <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
-                <i data-lucide="dog" class="w-5 h-5"></i>
-            </div>
-        </div>
 
-        <!-- Card 2: Pending Adoptions -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="flex flex-col justify-between h-full">
-                <div>
-                    <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Pending Adoptions
-                    </span>
-                    <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        12
-                    </h3>
+            <!-- Card 2: Pending Organizations -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Pending Approvals</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['pending_orgs'] ?? 0 }}
+                        </h3>
+                    </div>
                 </div>
-                <!-- Pill / Growth -->
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                        <span>+8%</span>
-                    </span>
-                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
                 </div>
             </div>
-            <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
-                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
-            </div>
-        </div>
 
-        <!-- Card 3: Active Rescues -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="flex flex-col justify-between h-full">
-                <div>
-                    <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Active Rescues
-                    </span>
-                    <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        5
-                    </h3>
+            <!-- Card 3: Total Users -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Registered Users</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['total_users'] ?? 0 }}
+                        </h3>
+                    </div>
                 </div>
-                <!-- Pill / Decline -->
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-errorBg text-admin-errorText shadow-sm">
-                        <i data-lucide="trending-down" class="w-3 h-3"></i>
-                        <span>-10%</span>
-                    </span>
-                    <span class="text-[10px] text-admin-textSecondary">critical status</span>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
+                    <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
             </div>
-            <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnRed/10 text-admin-btnRed group-hover:bg-admin-btnRed group-hover:text-white transition-all duration-300">
-                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            
+            <!-- Card 4: System Status -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">System Status</span>
+                        <h3 class="text-admin-successText text-xl font-extrabold tracking-tight mt-4 group-hover:scale-105 origin-left transition-transform duration-200">
+                            Operational
+                        </h3>
+                    </div>
+                </div>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-successBg text-admin-successText group-hover:bg-admin-successText group-hover:text-white transition-all duration-300">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                </div>
             </div>
-        </div>
 
-        <!-- Card 4: Completed Adoptions -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="flex flex-col justify-between h-full">
-                <div>
-                    <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
-                        Completed Adoptions
-                    </span>
-                    <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
-                        156
-                    </h3>
+        @elseif(auth()->user()->hasRole('organization'))
+            <!-- ORGANIZATION ADMIN METRICS -->
+            <!-- Card 1: Active Pet Listings -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Active Pet Listings</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['active_pets'] ?? 0 }}
+                        </h3>
+                    </div>
                 </div>
-                <!-- Pill / Growth -->
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                        <span>+24%</span>
-                    </span>
-                    <span class="text-[10px] text-admin-textSecondary">this month</span>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
+                    <i data-lucide="dog" class="w-5 h-5"></i>
                 </div>
             </div>
-            <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
+
+            <!-- Card 2: Pending Adoptions -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Pending Adoptions</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['pending_adoptions'] ?? 0 }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
+                    <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                </div>
             </div>
-        </div>
+
+            <!-- Card 3: Active Rescues -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Active Rescues</span>
+                        <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                            {{ $stats['active_rescues'] ?? 0 }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnRed/10 text-admin-btnRed group-hover:bg-admin-btnRed group-hover:text-white transition-all duration-300">
+                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: Total Donations -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Total Donations</span>
+                        <h3 class="text-admin-textPrimary text-xl font-extrabold tracking-tight mt-4 group-hover:scale-105 origin-left transition-transform duration-200">
+                            Rs. {{ number_format($stats['total_donations'] ?? 0) }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
+                    <i data-lucide="banknote" class="w-5 h-5"></i>
+                </div>
+            </div>
+        @endif
 
     </div>
 

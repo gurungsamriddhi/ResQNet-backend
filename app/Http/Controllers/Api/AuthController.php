@@ -140,9 +140,7 @@ class AuthController extends Controller
 
     }
 
-   
-
-    // ====================== LOGOUT ======================
+   // ====================== LOGOUT ======================
     public function logout(Request $request)
     {
         // Delete the token that was used to authenticate the current request

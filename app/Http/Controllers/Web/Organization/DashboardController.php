@@ -20,6 +20,6 @@ class DashboardController extends Controller
             'total_donations' => 0,
         ];
 
-        return view('organization.dashboard', compact('stats'));
+        return view('admin.dashboard', compact('stats'));
     }
 }

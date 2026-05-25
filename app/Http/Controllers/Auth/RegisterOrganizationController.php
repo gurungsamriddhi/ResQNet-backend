@@ -25,11 +25,11 @@ class RegisterOrganizationController extends Controller
      */
     public function store(Request $request)
     {
-    //     dd([
-    //     'password' => $request->password,
-    //     'password_confirmation' => $request->password_confirmation,
-    //     'all_fields' => $request->all()
-    // ]);
+        //     dd([
+        //     'password' => $request->password,
+        //     'password_confirmation' => $request->password_confirmation,
+        //     'all_fields' => $request->all()
+        // ]);
         $request->validate([
             // User validations
             'user_name' => 'required|string|max:255',

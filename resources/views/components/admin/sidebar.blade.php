@@ -15,120 +15,145 @@
 
         <!-- Scrollable Navigation Area -->
         <nav class="flex-1 px-4 py-6 overflow-y-auto space-y-7">
-            <!-- Operations Section -->
-            <div>
-                <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Operations</span>
-                <ul class="space-y-1.5">
-                    <!-- Dashboard (Active Item) -->
-                    <li>
-                        <a href="/admin/dashboard" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-admin-navActive text-admin-textOnActiveNav font-semibold text-sm shadow-md shadow-admin-navActive/10 transition-all duration-200 hover:scale-[1.02]">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                                <span>Dashboard</span>
-                            </div>
-                            <!-- Subtle metric badge if needed -->
-                            <span class="bg-admin-primary text-admin-textOnPrimary px-2 py-0.5 rounded-full text-[10px] font-bold">Live</span>
-                        </a>
-                    </li>
-
-                    <!-- Pets (Inactive Item) -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="dog" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Pet Directory</span>
-                            </div>
-                            <!-- Orange metric count badge -->
-                            <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm shadow-[#F59E0B]/20">42</span>
-                        </a>
-                    </li>
-
-                    <!-- Rescues (Inactive Item) -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Rescue Cases</span>
-                            </div>
-                            <!-- Red indicator badge -->
-                            <span class="bg-admin-btnRed text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm shadow-admin-btnRed/20">5</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Manage Section -->
-            <div>
-                <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Manage</span>
-                <ul class="space-y-1.5">
-                    <!-- Adoptions -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="heart-handshake" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Adoptions</span>
-                            </div>
-                            <!-- Orange counter pill '12' -->
-                            <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm shadow-[#F59E0B]/20">12</span>
-                        </a>
-                    </li>
-
-                    <!-- Volunteers -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="users" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Volunteers</span>
-                            </div>
-                            <!-- Inactive pill counter -->
-                            <span class="bg-admin-primaryPress text-admin-textOnPrimary/60 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
-                        </a>
-                    </li>
-
-                    <!-- Reports -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Analytics</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    <!-- System Settings -->
-                    <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xl text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200 group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="settings" class="w-4 h-4 text-admin-textOnPrimary/50 group-hover:text-admin-navActive transition-colors"></i>
-                                <span>Settings</span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <!-- Dynamic Navigation Links -->
+            @if(auth()->check() && auth()->user()->hasRole('super_admin'))
+                <!-- SUPER ADMIN MENU -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">System Admin</span>
+                    <ul class="space-y-1.5">
+                        <li>
+                            <a href="{{ route('admin.dashboard') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="layout-dashboard" class="w-4 h-4 {{ request()->routeIs('admin.dashboard') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Dashboard</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.organizations.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.organizations.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="building-2" class="w-4 h-4 {{ request()->routeIs('admin.organizations.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Organizations</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.users.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.users.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="users" class="w-4 h-4 {{ request()->routeIs('admin.users.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Users</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            @elseif(auth()->check() && auth()->user()->hasRole('organization'))
+                <!-- ORGANIZATION ADMIN MENU -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Shelter Management</span>
+                    <ul class="space-y-1.5">
+                        <li>
+                            <a href="{{ route('organization.dashboard') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="layout-dashboard" class="w-4 h-4 {{ request()->routeIs('organization.dashboard') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Dashboard</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.pets.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.pets.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="dog" class="w-4 h-4 {{ request()->routeIs('organization.pets.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Pet Directory</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.rescues.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.rescues.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="shield-alert" class="w-4 h-4 {{ request()->routeIs('organization.rescues.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Rescue Cases</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.adoptions.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.adoptions.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="heart-handshake" class="w-4 h-4 {{ request()->routeIs('organization.adoptions.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Adoptions</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.health.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.health.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="activity" class="w-4 h-4 {{ request()->routeIs('organization.health.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Health Records</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.finance.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.finance.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="banknote" class="w-4 h-4 {{ request()->routeIs('organization.finance.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Donations</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3 mt-4">Settings</span>
+                    <ul class="space-y-1.5">
+                        <li>
+                            <a href="{{ route('organization.staff.index') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.staff.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="users" class="w-4 h-4 {{ request()->routeIs('organization.staff.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Staff</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('organization.profile.edit') }}" 
+                               class="flex items-center justify-between px-3 py-2.5 rounded-xl {{ request()->routeIs('organization.profile.*') ? 'bg-admin-navActive text-admin-textOnActiveNav shadow-md shadow-admin-navActive/10 scale-[1.02]' : 'text-admin-textOnPrimary/75 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary group' }} font-semibold text-sm transition-all duration-200">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="settings" class="w-4 h-4 {{ request()->routeIs('organization.profile.*') ? '' : 'text-admin-textOnPrimary/50 group-hover:text-admin-navActive' }}"></i>
+                                    <span>Org Profile</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            @endif
         </nav>
 
         <!-- Sidebar Footer/User Profile -->
         <div class="p-4 bg-admin-primaryPress border-t border-admin-primaryPress flex items-center justify-between gap-2">
             <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-8 h-8 rounded-lg bg-admin-primary flex items-center justify-center text-sm border border-admin-primary/50 flex-shrink-0">
-                    🦁
+                <div class="w-8 h-8 rounded-lg bg-admin-primary flex items-center justify-center text-sm border border-admin-primary/50 flex-shrink-0 text-white font-bold">
+                    {{ substr(auth()->user()->name, 0, 1) }}
                 </div>
                 <div class="flex flex-col min-w-0">
-                    <span class="text-xs font-semibold truncate">ResQNet Wildlife</span>
-                    <span class="text-[9px] text-admin-textOnPrimary/50 truncate">HQ Operations</span>
+                    <span class="text-xs font-semibold truncate">{{ auth()->user()->name }}</span>
+                    <span class="text-[9px] text-admin-textOnPrimary/50 truncate">{{ auth()->user()->hasRole('super_admin') ? 'Super Admin' : 'Org Admin' }}</span>
                 </div>
             </div>
-            <button class="p-1.5 hover:bg-admin-primary/50 rounded-lg text-admin-textOnPrimary/60 hover:text-admin-textOnPrimary transition-colors" aria-label="Sign out">
-                <i data-lucide="log-out" class="w-4 h-4"></i>
-            </button>
+            <form method="POST" action="{{ auth()->user()->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
+                @csrf
+                <button type="submit" class="p-1.5 hover:bg-admin-btnRed rounded-lg text-admin-textOnPrimary/60 hover:text-admin-textOnPrimary transition-colors" aria-label="Sign out">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                </button>
+            </form>
         </div>
     </aside>
 
@@ -185,100 +210,98 @@
                     </div>
                 </div>
 
-                <!-- Mobile Sidebar Links -->
+                <!-- Mobile Sidebar Links (Duplicate of Desktop logic) -->
                 <div class="mt-8 flex-1 h-0 overflow-y-auto px-2 space-y-6">
-                    <!-- Operations Section -->
-                    <div>
-                        <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Operations</span>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="/admin/dashboard" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm">
-                                    <div class="flex items-center gap-3">
+                    @if(auth()->check() && auth()->user()->hasRole('super_admin'))
+                        <div>
+                            <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">System Admin</span>
+                            <ul class="space-y-1">
+                                <li>
+                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
                                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                                         <span>Dashboard</span>
-                                    </div>
-                                    <span class="bg-admin-primary text-admin-textOnPrimary px-2 py-0.5 rounded-full text-[10px] font-bold">Live</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="dog" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.organizations.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('admin.organizations.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="building-2" class="w-4 h-4"></i>
+                                        <span>Organizations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('admin.users.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="users" class="w-4 h-4"></i>
+                                        <span>Users</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    @elseif(auth()->check() && auth()->user()->hasRole('organization'))
+                        <div>
+                            <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Shelter Management</span>
+                            <ul class="space-y-1">
+                                <li>
+                                    <a href="{{ route('organization.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.dashboard') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                                        <span>Dashboard</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.pets.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.pets.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="dog" class="w-4 h-4"></i>
                                         <span>Pet Directory</span>
-                                    </div>
-                                    <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold">42</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="shield-alert" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.rescues.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.rescues.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="shield-alert" class="w-4 h-4"></i>
                                         <span>Rescue Cases</span>
-                                    </div>
-                                    <span class="bg-admin-btnRed text-white px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Manage Section -->
-                    <div>
-                        <span class="px-3 text-[10px] font-bold text-admin-textOnPrimary/40 uppercase tracking-widest block mb-3">Manage</span>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="heart-handshake" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.adoptions.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.adoptions.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="heart-handshake" class="w-4 h-4"></i>
                                         <span>Adoptions</span>
-                                    </div>
-                                    <span class="bg-[#F59E0B] text-white px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="users" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
-                                        <span>Volunteers</span>
-                                    </div>
-                                    <span class="bg-admin-primaryPress text-admin-textOnPrimary/60 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
-                                        <span>Analytics</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-admin-textOnPrimary/85 hover:bg-admin-primaryPress hover:text-admin-textOnPrimary text-sm font-medium transition-all duration-200">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="settings" class="w-4 h-4 text-admin-textOnPrimary/50"></i>
-                                        <span>Settings</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.health.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.health.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="activity" class="w-4 h-4"></i>
+                                        <span>Health Records</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.finance.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.finance.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="banknote" class="w-4 h-4"></i>
+                                        <span>Donations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.staff.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.staff.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="users" class="w-4 h-4"></i>
+                                        <span>Staff</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('organization.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl {{ request()->routeIs('organization.profile.*') ? 'bg-admin-navActive text-admin-textOnActiveNav font-bold text-sm' : 'text-admin-textOnPrimary/85 hover:bg-admin-primaryPress text-sm font-medium' }}">
+                                        <i data-lucide="settings" class="w-4 h-4"></i>
+                                        <span>Org Profile</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Mobile User Footer -->
                 <div class="p-4 bg-admin-primaryPress border-t border-admin-primaryPress flex items-center justify-between gap-2 mt-auto">
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-8 h-8 rounded-lg bg-admin-primary flex items-center justify-center text-sm border border-admin-primary/50 flex-shrink-0">
-                            🦁
+                        <div class="w-8 h-8 rounded-lg bg-admin-primary flex items-center justify-center text-sm border border-admin-primary/50 flex-shrink-0 text-white font-bold">
+                            {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
                         <div class="flex flex-col min-w-0">
-                            <span class="text-xs font-semibold truncate">ResQNet Wildlife</span>
-                            <span class="text-[9px] text-admin-textOnPrimary/50 truncate">HQ Operations</span>
+                            <span class="text-xs font-semibold truncate">{{ auth()->user()->name }}</span>
+                            <span class="text-[9px] text-admin-textOnPrimary/50 truncate">{{ auth()->user()->hasRole('super_admin') ? 'Super Admin' : 'Org Admin' }}</span>
                         </div>
                     </div>
                 </div>

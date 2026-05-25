@@ -13,12 +13,12 @@ use App\Http\Controllers\Web\Organization\HealthController;
 use App\Http\Controllers\Web\Organization\FinanceController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
 
-// This controls http://127.0.0.1:8000/
+
 Route::get('/', function () {
     return view('welcome'); 
 });
 
-// ====================== PUBLIC ROUTES ======================
+// Public Route
 Route::get('/register-organization', [RegisterOrganizationController::class, 'create'])
      ->name('register.organization');
 
@@ -29,8 +29,7 @@ Route::get('/registration-pending', function () {
     return view('auth.registration-pending');
 })->name('registration.pending');
 
-// ====================== PROTECTED ROUTES ======================
-
+// Protected Routes
 // Super Admin Routes
 Route::middleware(['auth', 'is_active', 'role:super_admin'])
     ->prefix('admin')
@@ -81,7 +80,9 @@ Route::middleware(['auth', 'is_active', 'role:organization'])
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
 require __DIR__ . '/auth.php';
+
+
 // This controls http://127.0.0.1:8000/admin/dashboard
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-});
+// Route::get('/admin/dashboard', function () {
+//     return view('admin.dashboard');
+// });

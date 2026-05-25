@@ -93,15 +93,35 @@
                     <!-- User Profile Quick Info -->
                     <div class="flex items-center gap-3">
                         <div class="hidden md:flex flex-col text-right">
-                            <span class="text-xs font-semibold text-admin-textPrimary">Asmita Karki</span>
-                            <span class="text-[10px] text-admin-textSecondary uppercase tracking-wider">Super Admin</span>
+                            <span class="text-xs font-semibold text-admin-textPrimary">{{ auth()->user()->name }}</span>
+                            <span class="text-[10px] text-admin-textSecondary uppercase tracking-wider">
+                                {{ auth()->user()->hasRole('super_admin') ? 'Super Admin' : 'Org Admin' }}
+                            </span>
                         </div>
-                        <div class="relative flex-shrink-0 group cursor-pointer">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-admin-primary to-admin-navActive p-[2px] shadow-sm transition-all duration-300 group-hover:scale-105">
+                        <div class="relative flex-shrink-0 group cursor-pointer" x-data="{ userMenuOpen: false }" @click.away="userMenuOpen = false">
+                            <div @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-admin-primary to-admin-navActive p-[2px] shadow-sm transition-all duration-300 group-hover:scale-105">
                                 <div class="w-full h-full rounded-[10px] bg-admin-surface flex items-center justify-center overflow-hidden">
-                                    <!-- A cute placeholder for Asmita 🐾 -->
-                                    <span class="text-base">🐾</span>
+                                    <span class="text-base font-bold text-admin-primary">{{ substr(auth()->user()->name, 0, 1) }}</span>
                                 </div>
+                            </div>
+                            
+                            <!-- Dropdown Menu -->
+                            <div x-show="userMenuOpen" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute right-0 mt-2 w-48 bg-admin-surface border border-admin-border rounded-xl shadow-lg py-1 z-50"
+                                 style="display: none;">
+                                <form method="POST" action="{{ auth()->user()->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-admin-btnRed hover:bg-admin-bg flex items-center gap-2 transition-colors">
+                                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                                        Sign out
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

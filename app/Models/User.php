@@ -70,7 +70,22 @@ class User extends Authenticatable
      */
     public function organization()
     {
-        return $this->hasOne(\App\Models\Organization::class);
+        return $this->hasOne(Organization::class);
+    }
+
+    public function adoptionRequests()
+    {
+        return $this->hasMany(AdoptionRequest::class);
+    }
+
+    public function rescueReports()
+    {
+        return $this->hasMany(RescueReport::class);
+    }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
     }
 
     public function sendOtp($type = 'email')
