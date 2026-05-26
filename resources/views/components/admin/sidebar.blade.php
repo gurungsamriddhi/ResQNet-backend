@@ -3,8 +3,10 @@
     $isSuperAdmin = auth()->user()?->hasRole('super_admin');
     $petsUrl = $isSuperAdmin ? '/admin/pets' : '/organization/pets';
     $dashboardUrl = $isSuperAdmin ? '/admin/dashboard' : '/organization/dashboard';
+    $rescueUrl = route('organization.rescues.index');
     $isPetsActive = request()->is('admin/pets') || request()->is('organization/pets') || request()->routeIs('organization.pets.*');
     $isDashboardActive = request()->is('admin/dashboard') || request()->is('organization/dashboard');
+    $isRescueActive = request()->is('admin/rescue') || request()->is('organization/rescues') || request()->routeIs('organization.rescues.*');
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
@@ -64,10 +66,10 @@
 
                     <!-- Rescues -->
                     <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $rescueUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Rescue Cases</span>
                             </div>
                             <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
@@ -239,10 +241,10 @@
                                 </a>
                              </li>
                              <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $rescueUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="shield-alert" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Rescue Cases</span>
                                     </div>
                                     <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
