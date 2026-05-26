@@ -23,7 +23,7 @@
                     <i data-lucide="filter" class="w-4 h-4 text-admin-textSecondary group-hover:text-admin-primary transition-colors"></i>
                     <span>Advanced Filter</span>
                 </button>
-                <button @click="openAddModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg active:scale-95 shadow-admin-primary/10">
+                <button @click="openAddModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange text-white hover:bg-brand-orange/90 transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg active:scale-95 shadow-brand-orange/10">
                     <i data-lucide="plus" class="w-4.5 h-4.5 stroke-[2.5]"></i>
                     <span>Add Pet</span>
                 </button>
@@ -90,22 +90,22 @@
         <div x-show="search || speciesFilter || statusFilter" class="flex flex-wrap items-center gap-2 -mt-2">
             <span class="text-[11px] font-semibold text-admin-textSecondary/60 uppercase tracking-wider">Active filters:</span>
             <template x-if="search">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-admin-primary/10 text-admin-primary text-xs font-semibold border border-admin-primary/20">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-semibold border border-brand-orange/20">
                     <i data-lucide="search" class="w-3 h-3"></i>
                     "<span x-text="search"></span>"
-                    <button @click="search = ''" class="hover:text-admin-primaryPress ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
+                    <button @click="search = ''" class="hover:text-brand-orange/80 ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
                 </span>
             </template>
             <template x-if="speciesFilter">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-admin-primary/10 text-admin-primary text-xs font-semibold border border-admin-primary/20 capitalize">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-semibold border border-brand-orange/20 capitalize">
                     <i data-lucide="tag" class="w-3 h-3"></i> <span x-text="speciesFilter"></span>
-                    <button @click="speciesFilter = ''" class="hover:text-admin-primaryPress ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
+                    <button @click="speciesFilter = ''" class="hover:text-brand-orange/80 ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
                 </span>
             </template>
             <template x-if="statusFilter">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-admin-primary/10 text-admin-primary text-xs font-semibold border border-admin-primary/20">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-semibold border border-brand-orange/20">
                     <i data-lucide="filter" class="w-3 h-3"></i> <span x-text="statusLabel(statusFilter)"></span>
-                    <button @click="statusFilter = ''" class="hover:text-admin-primaryPress ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
+                    <button @click="statusFilter = ''" class="hover:text-brand-orange/80 ml-0.5"><i data-lucide="x" class="w-3 h-3"></i></button>
                 </span>
             </template>
         </div>

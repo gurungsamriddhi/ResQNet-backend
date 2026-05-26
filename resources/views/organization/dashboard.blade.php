@@ -9,11 +9,11 @@
             </p>
         </div>
         <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-admin-surface border border-admin-border text-xs font-semibold text-admin-textSecondary shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-admin-btnGreen animate-pulse"></span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary-50 border border-secondary-500/20 text-xs font-semibold text-secondary-500 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></span>
                 Live Database
             </span>
-            <a href="{{ route('organization.pets.create') }}" class="flex items-center gap-2 bg-admin-primary hover:bg-admin-primaryPress text-admin-textOnPrimary text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all duration-200">
+            <a href="{{ route('organization.pets.create') }}" class="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all duration-200">
                 <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 <span>Add New Pet</span>
             </a>
@@ -28,7 +28,7 @@
                     <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['active_pets'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+12%</span>
                     </span>
@@ -66,7 +66,7 @@
                     <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['pets_in_care'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+8%</span>
                     </span>
@@ -85,7 +85,7 @@
                     <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['pending_adoptions'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+24%</span>
                     </span>
@@ -104,7 +104,7 @@
                     <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">NPR {{ number_format($stats['total_donations']) }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-successBg text-admin-successText shadow-sm">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+18%</span>
                     </span>
@@ -118,15 +118,15 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 lg:col-span-2 shadow-sm flex flex-col justify-between">
+        <div class="bg-brand-cream border border-brand-orange/20 rounded-2xl p-6 lg:col-span-2 shadow-sm flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between pb-4 border-b border-admin-border/60">
+                <div class="flex items-center justify-between pb-4 border-b border-brand-orange/10">
                     <div>
                         <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight">Donations this week</h3>
                         <p class="text-admin-textSecondary text-xs mt-1">Every rupees fuels another rescue.</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-admin-successBg text-admin-successText shadow-sm">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-secondary-50 text-secondary-500 shadow-sm">
                             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                             <span>+24%</span>
                         </span>
@@ -148,21 +148,21 @@
                             <svg class="w-full h-full" viewBox="0 0 600 160" preserveAspectRatio="none">
                                 <defs>
                                     <linearGradient id="chartGradientOrg" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#FA6E52" stop-opacity="0.25"/>
-                                        <stop offset="100%" stop-color="#FA6E52" stop-opacity="0.0"/>
+                                        <stop offset="0%" stop-color="#EA7235" stop-opacity="0.25"/>
+                                        <stop offset="100%" stop-color="#EA7235" stop-opacity="0.0"/>
                                     </linearGradient>
                                 </defs>
-                                <line x1="0" y1="10" x2="600" y2="10" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
-                                <line x1="0" y1="45" x2="600" y2="45" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
-                                <line x1="0" y1="80" x2="600" y2="80" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
-                                <line x1="0" y1="115" x2="600" y2="115" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
-                                <line x1="0" y1="150" x2="600" y2="150" stroke="#E0E0E0" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="10" x2="600" y2="10" stroke="#F1E6D4" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="45" x2="600" y2="45" stroke="#F1E6D4" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="80" x2="600" y2="80" stroke="#F1E6D4" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="115" x2="600" y2="115" stroke="#F1E6D4" stroke-dasharray="4 4" stroke-width="1" />
+                                <line x1="0" y1="150" x2="600" y2="150" stroke="#F1E6D4" stroke-dasharray="4 4" stroke-width="1" />
                                 <path d="M 0 130 C 80 120, 100 80, 180 90 C 260 100, 280 50, 360 60 C 440 70, 480 20, 600 15 L 600 150 L 0 150 Z" fill="url(#chartGradientOrg)" />
-                                <path d="M 0 130 C 80 120, 100 80, 180 90 C 260 100, 280 50, 360 60 C 440 70, 480 20, 600 15" fill="none" stroke="#FA6E52" stroke-width="3.5" stroke-linecap="round" />
+                                <path d="M 0 130 C 80 120, 100 80, 180 90 C 260 100, 280 50, 360 60 C 440 70, 480 20, 600 15" fill="none" stroke="#EA7235" stroke-width="3.5" stroke-linecap="round" />
                             </svg>
                         </div>
 
-                        <div class="flex justify-between text-xs font-semibold text-admin-textSecondary/80 pt-3 border-t border-admin-border/40 mt-3 select-none">
+                        <div class="flex justify-between text-xs font-semibold text-admin-textSecondary/80 pt-3 border-t border-brand-orange/10 mt-3 select-none">
                             <span class="w-10 text-left">Mon</span>
                             <span class="w-10 text-center">Tue</span>
                             <span class="w-10 text-center">Wed</span>
@@ -216,14 +216,14 @@
                         </div>
                         <div class="flex items-center justify-between text-xs">
                             <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
-                                <span class="w-2.5 h-2.5 rounded-full bg-admin-btnGreen"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-secondary-500"></span>
                                 <span>Field Rescue Fuel</span>
                             </div>
                             <span class="font-bold text-admin-textPrimary">15%</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>iv>
 
             <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/40 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
                 <i data-lucide="heart" class="w-4 h-4 text-admin-btnRed flex-shrink-0 mt-0.5 fill-admin-btnRed/25"></i>

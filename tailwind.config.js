@@ -15,6 +15,15 @@ export default {
     theme: {
         extend: {
             colors: {
+                brand: {
+                    navy: '#111827',
+                    orange: '#EA7235',
+                    cream: '#FEF7ED',
+                },
+                secondary: {
+                    50: '#F0FDF4',
+                    500: '#10B981',
+                },
                 admin: {
                     // Primary Brand Colors
                     primary: '#3D5A4E',

@@ -90,4 +90,9 @@ Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
+// Fallback login route to prevent "Route [login] not defined" errors
+Route::get('/login', function () {
+    return redirect()->route('organization.login');
+})->name('login');
+
 require __DIR__ . '/auth.php';
