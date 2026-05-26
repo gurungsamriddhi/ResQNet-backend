@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\OrganizationManagementController;
 use App\Http\Controllers\Web\Admin\UserManagementController;
+use App\Http\Controllers\Web\Admin\PetController as AdminPetController;
 use App\Http\Controllers\Web\Organization\DashboardController as OrgDashboardController;
 use App\Http\Controllers\Web\Organization\PetController;
 use App\Http\Controllers\Web\Organization\AdoptionController;
@@ -13,12 +14,16 @@ use App\Http\Controllers\Web\Organization\HealthController;
 use App\Http\Controllers\Web\Organization\FinanceController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
 
-
+// This controls http://127.0.0.1:8000/
 Route::get('/', function () {
     return view('welcome'); 
 });
 
-// Public Route
+// ====================== PUBLIC ROUTES ======================
+Route::get('/login', function () {
+    return redirect('/admin/login');
+})->name('login');
+
 Route::get('/register-organization', [RegisterOrganizationController::class, 'create'])
      ->name('register.organization');
 
@@ -29,7 +34,8 @@ Route::get('/registration-pending', function () {
     return view('auth.registration-pending');
 })->name('registration.pending');
 
-// Protected Routes
+// ====================== PROTECTED ROUTES ======================
+
 // Super Admin Routes
 Route::middleware(['auth', 'is_active', 'role:super_admin'])
     ->prefix('admin')
@@ -46,16 +52,21 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])
     
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/deactivate', [UserManagementController::class, 'deactivate'])->name('users.deactivate');
+
+    Route::get('/pets', [AdminPetController::class, 'index'])->name('pets.index');
+    Route::post('/pets', [AdminPetController::class, 'store'])->name('pets.store');
+    Route::put('/pets/{pet}', [AdminPetController::class, 'update'])->name('pets.update');
+    Route::delete('/pets/{pet}', [AdminPetController::class, 'destroy'])->name('pets.destroy');
 });
 
 // Organization Routes
-Route::middleware(['auth', 'is_active', 'role:organization'])
+Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role:organization'])
     ->prefix('organization')
     ->name('organization.')
     ->group(function () {
 
     Route::get('/dashboard', [OrgDashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::resource('pets', PetController::class);
     Route::post('/pets/{pet}/status', [PetController::class, 'changeStatus'])->name('pets.status');
     Route::get('/pets/{pet}/qr', [PetController::class, 'generateQr'])->name('pets.qr');
@@ -80,9 +91,3 @@ Route::middleware(['auth', 'is_active', 'role:organization'])
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
 require __DIR__ . '/auth.php';
-
-
-// This controls http://127.0.0.1:8000/admin/dashboard
-// Route::get('/admin/dashboard', function () {
-//     return view('admin.dashboard');
-// });

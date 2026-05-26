@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class PetImage extends Model
 {
@@ -17,6 +17,8 @@ class PetImage extends Model
         'sort_order',
     ];
 
+    protected $appends = ['image_url'];
+
     protected function casts(): array
     {
         return [
@@ -25,8 +27,13 @@ class PetImage extends Model
         ];
     }
 
-    public function pet(): BelongsTo
+    public function pet()
     {
         return $this->belongsTo(Pet::class);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image_path ? Storage::url($this->image_path) : null;
     }
 }

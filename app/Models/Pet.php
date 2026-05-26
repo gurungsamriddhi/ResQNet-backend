@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
@@ -33,64 +31,35 @@ class Pet extends Model
     protected function casts(): array
     {
         return [
-            'age_months' => 'integer',
             'is_vaccinated' => 'boolean',
             'is_neutered' => 'boolean',
+            'age_months' => 'integer',
             'adopted_at' => 'datetime',
-            'deleted_at' => 'datetime',
         ];
     }
 
-    protected static function booted(): void
-    {
-        static::creating(function (Pet $pet) {
-            if (empty($pet->qr_code_id)) {
-                $pet->qr_code_id = static::generateQrCodeId();
-            }
-        });
-    }
-
-    public static function generateQrCodeId(): string
-    {
-        do {
-            $id = 'RQN-'.str_pad((string) random_int(1, 99999), 5, '0', STR_PAD_LEFT);
-        } while (static::where('qr_code_id', $id)->exists());
-
-        return $id;
-    }
-
-    public function organization(): BelongsTo
+    public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 
-    public function images(): HasMany
+    public function images()
     {
-        return $this->hasMany(PetImage::class);
+        return $this->hasMany(PetImage::class)->orderBy('sort_order');
     }
 
-    public function adoptionRequests(): HasMany
+    public function primaryImage()
     {
-        return $this->hasMany(AdoptionRequest::class);
+        return $this->hasOne(PetImage::class)->where('is_primary', true);
     }
 
-    public function rescueReports(): HasMany
+    protected static function booted()
     {
-        return $this->hasMany(RescueReport::class);
-    }
-
-    public function medicalRecords(): HasMany
-    {
-        return $this->hasMany(MedicalRecord::class);
-    }
-
-    public function vaccinations(): HasMany
-    {
-        return $this->hasMany(Vaccination::class);
-    }
-
-    public function medications(): HasMany
-    {
-        return $this->hasMany(Medication::class);
+        static::creating(function ($pet) {
+            if (!$pet->qr_code_id) {
+                $maxId = static::withTrashed()->max('id') ?? 0;
+                $pet->qr_code_id = 'RQN-' . str_pad($maxId + 1, 5, '0', STR_PAD_LEFT);
+            }
+        });
     }
 }
