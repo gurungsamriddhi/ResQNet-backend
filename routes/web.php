@@ -44,11 +44,11 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     
-    Route::get('/organizations', [OrganizationManagementController::class, 'index'])->name('organizations.index');
-    Route::post('/organizations/{organization}/approve', [OrganizationManagementController::class, 'approve'])->name('organizations.approve');
-    Route::post('/organizations/{organization}/reject', [OrganizationManagementController::class, 'reject'])->name('organizations.reject');
-    Route::post('/organizations/{organization}/suspend', [OrganizationManagementController::class, 'suspend'])->name('organizations.suspend');
-    Route::post('/organizations/{organization}/verify', [OrganizationManagementController::class, 'verify'])->name('organizations.verify');
+    // Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
+    // Route::post('/organizations/{organization}/approve', [OrganizationManagementController::class, 'approve'])->name('organizations.approve');
+    // Route::post('/organizations/{organization}/reject', [OrganizationManagementController::class, 'reject'])->name('organizations.reject');
+    // Route::post('/organizations/{organization}/suspend', [OrganizationManagementController::class, 'suspend'])->name('organizations.suspend');
+    // Route::post('/organizations/{organization}/verify', [OrganizationManagementController::class, 'verify'])->name('organizations.verify');
     
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/deactivate', [UserManagementController::class, 'deactivate'])->name('users.deactivate');

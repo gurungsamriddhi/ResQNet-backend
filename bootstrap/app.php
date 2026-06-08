@@ -6,9 +6,9 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -25,6 +25,28 @@ return Application::configure(basePath: dirname(__DIR__))
                     return route('admin.login');
                 }
                 return route('organization.login');
+            }
+        );
+
+        $middleware->redirectTo(
+            guests: fn() => route('organization.login'), // Where unauthenticated users go
+
+            users: function (\Illuminate\Http\Request $request) {
+                $user = \Illuminate\Support\Facades\Auth::user();
+
+                if ($user) {
+                    // If they are a Superadmin, seamlessly route them to the admin panel
+                    if ($user->hasRole('super_admin')) {
+                        return route('admin.dashboard');
+                    }
+
+                    // If they are an Organization owner/staff, send them to their dashboard
+                    if ($user->hasRole('organization_admin')) {
+                        return route('organization.dashboard');
+                    }
+                }
+
+                return route('dashboard'); // Fallback for standard users
             }
         );
     })
