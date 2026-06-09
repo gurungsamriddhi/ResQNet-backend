@@ -47,12 +47,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     }
 
                     // If they are an Organization owner/staff, send them to their dashboard
-                    if ($user->hasRole('organization_admin')) {
+                    if ($user->hasRole('organization')) {
                         return route('organization.dashboard');
                     }
                 }
 
-                return route('dashboard'); // Fallback for standard users
+                // return route('dashboard'); // Fallback for standard users
             }
         );
     })

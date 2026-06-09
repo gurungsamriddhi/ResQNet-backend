@@ -32,6 +32,8 @@ class Organization extends Model implements HasMedia
         'is_verified',
         'verified_at',
         'status',
+        'rejection_reason',
+        'suspension_reason',
     ];
 
     /**
