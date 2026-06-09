@@ -25,6 +25,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     return route('admin.login');
                 }
                 return route('organization.login');
+            },
+            users: function (\Illuminate\Http\Request $request) {
+                if ($request->is('admin') || $request->is('admin/*')) {
+                    return route('admin.dashboard');
+                }
+                return route('organization.dashboard');
             }
         );
 

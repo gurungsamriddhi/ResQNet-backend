@@ -57,6 +57,14 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])
     Route::post('/pets', [AdminPetController::class, 'store'])->name('pets.store');
     Route::put('/pets/{pet}', [AdminPetController::class, 'update'])->name('pets.update');
     Route::delete('/pets/{pet}', [AdminPetController::class, 'destroy'])->name('pets.destroy');
+
+    Route::get('/health', function () {
+        return view('admin.health.index');
+    })->name('health.index');
+
+    Route::get('/settings', function () {
+        return view('admin.settings.index');
+    })->name('settings.index');
 });
 
 // Organization Routes
@@ -71,7 +79,9 @@ Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role
     Route::post('/pets/{pet}/status', [PetController::class, 'changeStatus'])->name('pets.status');
     Route::get('/pets/{pet}/qr', [PetController::class, 'generateQr'])->name('pets.qr');
     
-    Route::get('/adoptions', [AdoptionController::class, 'index'])->name('adoptions.index');
+    Route::get('/adoptions', function () {
+        return view('admin.adoptions.index');
+    })->name('adoptions.index');
     Route::post('/adoptions/{request}/approve', [AdoptionController::class, 'approve'])->name('adoptions.approve');
     Route::post('/adoptions/{request}/reject', [AdoptionController::class, 'reject'])->name('adoptions.reject');
     
@@ -79,8 +89,24 @@ Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
     Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
     
-    Route::resource('health', HealthController::class);
+    Route::get('/health', function () {
+        return view('organization.health.index');
+    })->name('health.index');
+    Route::resource('health', HealthController::class)->except(['index']);
+
+    Route::get('/settings', function () {
+        return view('organization.settings.index');
+    })->name('settings.index');
     
+    Route::get('/users', function () {
+        return view('admin.users.index');
+    })->name('users.index');
+    Route::get('/volunteers', function () {
+        return view('admin.volunteers.index');
+    })->name('volunteers.index');
+    Route::get('/analytics', function () {
+        return view('admin.analytics.index');
+    })->name('analytics.index');
     Route::get('/staff', [\App\Http\Controllers\Web\Organization\StaffController::class, 'index'])->name('staff.index');
     Route::post('/staff/invite', [\App\Http\Controllers\Web\Organization\StaffController::class, 'invite'])->name('staff.invite');
     Route::delete('/staff/{user}', [\App\Http\Controllers\Web\Organization\StaffController::class, 'remove'])->name('staff.remove');

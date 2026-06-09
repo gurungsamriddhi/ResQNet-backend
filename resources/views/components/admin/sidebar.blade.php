@@ -4,9 +4,23 @@
     $petsUrl = $isSuperAdmin ? '/admin/pets' : '/organization/pets';
     $dashboardUrl = $isSuperAdmin ? '/admin/dashboard' : '/organization/dashboard';
     $rescueUrl = route('organization.rescues.index');
+    $healthUrl = $isSuperAdmin ? '/admin/health' : '/organization/health';
     $isPetsActive = request()->is('admin/pets') || request()->is('organization/pets') || request()->routeIs('organization.pets.*');
     $isDashboardActive = request()->is('admin/dashboard') || request()->is('organization/dashboard');
     $isRescueActive = request()->is('admin/rescue') || request()->is('organization/rescues') || request()->routeIs('organization.rescues.*');
+    $isHealthActive = request()->is('admin/health') || request()->is('organization/health') || request()->routeIs('organization.health.*');
+    $settingsUrl = $isSuperAdmin ? '/admin/settings' : '/organization/settings';
+    $isSettingsActive = request()->is('admin/settings') || request()->is('organization/settings') || request()->routeIs('organization.settings.*');
+    $usersUrl = $isSuperAdmin ? '/admin/users' : '/organization/users';
+    $isUsersActive = request()->is('admin/users') || request()->is('organization/users') || request()->routeIs('organization.users.*');
+    $organizationsUrl = '/admin/organizations';
+    $isOrganizationsActive = request()->is('admin/organizations') || request()->routeIs('admin.organizations.*');
+    $adoptionsUrl = $isSuperAdmin ? '/admin/adoptions' : '/organization/adoptions';
+    $isAdoptionsActive = request()->is('admin/adoptions') || request()->is('organization/adoptions') || request()->routeIs('organization.adoptions.*');
+    $volunteersUrl = $isSuperAdmin ? '/admin/volunteers' : '/organization/volunteers';
+    $isVolunteersActive = request()->is('admin/volunteers') || request()->is('organization/volunteers') || request()->routeIs('organization.volunteers.*');
+    $analyticsUrl = $isSuperAdmin ? '/admin/analytics' : '/organization/analytics';
+    $isAnalyticsActive = request()->is('admin/analytics') || request()->is('organization/analytics') || request()->routeIs('organization.analytics.*');
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
@@ -54,10 +68,10 @@
 
                     <!-- Health Records -->
                     <li>
-                        <a href="#"
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $healthUrl }}"
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="heart-pulse" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Health Records</span>
                             </div>
                             <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
@@ -75,6 +89,17 @@
                             <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
                         </a>
                     </li>
+
+                    <!-- Users -->
+                    <li>
+                        <a href="{{ $usersUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Users</span>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -84,10 +109,10 @@
                 <ul class="space-y-1.5">
                     <!-- Adoptions -->
                     <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $adoptionsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="heart-handshake" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Adoptions</span>
                             </div>
                             <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
@@ -96,22 +121,33 @@
 
                     <!-- Volunteers -->
                     <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $volunteersUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="users" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Volunteers</span>
                             </div>
                             <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
                         </a>
                     </li>
 
+                    <!-- Partner Orgs -->
+                    <li>
+                        <a href="{{ $organizationsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isOrganizationsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="building-2" class="w-4 h-4 {{ $isOrganizationsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Partner Orgs</span>
+                            </div>
+                        </a>
+                    </li>
+
                     <!-- Analytics -->
                     <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $analyticsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 {{ $isAnalyticsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Analytics</span>
                             </div>
                         </a>
@@ -119,10 +155,10 @@
 
                     <!-- Settings -->
                     <li>
-                        <a href="#" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium">
+                        <a href="{{ $settingsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="settings" class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"></i>
+                                <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Settings</span>
                             </div>
                         </a>
@@ -231,26 +267,35 @@
                                 </a>
                              </li>
                              <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $healthUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="heart-pulse" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Health Records</span>
                                     </div>
                                     <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
                                 </a>
                              </li>
                              <li>
-                                <a href="{{ $rescueUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Rescue Cases</span>
-                                    </div>
-                                    <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
-                                </a>
-                             </li>
-                        </ul>
+                                 <a href="{{ $rescueUrl }}" 
+                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                     <div class="flex items-center gap-3">
+                                         <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                         <span>Rescue Cases</span>
+                                     </div>
+                                     <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
+                                 </a>
+                              </li>
+                              <li>
+                                 <a href="{{ $usersUrl }}" 
+                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                     <div class="flex items-center gap-3">
+                                         <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                         <span>Users</span>
+                                     </div>
+                                 </a>
+                              </li>
+                         </ul>
                     </div>
 
                     <!-- Manage Section -->
@@ -258,39 +303,48 @@
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Manage</span>
                         <ul class="space-y-1">
                             <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $adoptionsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="heart-handshake" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Adoptions</span>
                                     </div>
                                     <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $volunteersUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="users" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Volunteers</span>
                                     </div>
                                     <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $organizationsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isOrganizationsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="building-2" class="w-4 h-4 {{ $isOrganizationsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Partner Orgs</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ $analyticsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="bar-chart-3" class="w-4 h-4 {{ $isAnalyticsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Analytics</span>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] text-slate-400 hover:bg-white/5 hover:text-white font-medium transition-all duration-200 group">
+                                <a href="{{ $settingsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="settings" class="w-4 h-4 text-slate-500 group-hover:text-slate-300"></i>
+                                        <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Settings</span>
                                     </div>
                                 </a>
