@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AdoptionController;
 use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\SavedPetController;
 
 // Publicly accessible API routes
 Route::prefix('auth')->group(function () {
@@ -35,6 +36,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // User Profile
         Route::get('/user', [UserController::class, 'show']);
         Route::patch('/user', [UserController::class, 'update']);
+        
+        // Saved Pets (Favorites)
+        Route::get('/user/saved-pets', [SavedPetController::class, 'index']);
+        Route::post('/pets/{pet}/save', [SavedPetController::class, 'toggle']);
 
         // Adoptions
         Route::get('/adoptions', [AdoptionController::class, 'index']);

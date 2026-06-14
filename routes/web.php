@@ -13,6 +13,9 @@ use App\Http\Controllers\Web\Organization\RescueController;
 use App\Http\Controllers\Web\Organization\HealthController;
 use App\Http\Controllers\Web\Organization\FinanceController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
+use App\Http\Controllers\Web\PublicPetController;
+use App\Http\Controllers\Web\Admin\VetController as AdminVetController;
+use App\Http\Controllers\Web\Organization\VetController as OrgVetController;
 
 // This controls http://127.0.0.1:8000/
 Route::get('/', function () {
@@ -34,6 +37,9 @@ Route::get('/registration-pending', function () {
     return view('auth.registration-pending');
 })->name('registration.pending');
 
+Route::get('/pets/qr/{qrCodeId}', [PublicPetController::class, 'showByQr'])
+    ->name('public.pets.qr.show');
+
 // ====================== PROTECTED ROUTES ======================
 
 // Super Admin Routes
@@ -52,10 +58,14 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin') ->
 
     Route::get('/pets', [AdminPetController::class, 'index'])->name('pets.index');
     Route::get('/pets/{pet}', [AdminPetController::class, 'show'])->name('pets.show');
+    Route::post('/pets/{pet}/suspend', [AdminPetController::class, 'suspend'])->name('pets.suspend');
+    Route::post('/pets/{pet}/reactivate', [AdminPetController::class, 'reactivate'])->name('pets.reactivate');
 
     Route::get('/health', function () {
         return view('admin.health.index');
     })->name('health.index');
+
+    Route::resource('vets', AdminVetController::class);
 
     Route::get('/settings', function () {
         return view('admin.settings.index');
@@ -93,8 +103,8 @@ Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role
     Route::delete('/health/vaccinations/{vaccination}', [HealthController::class, 'destroyVaccination'])->name('health.vaccinations.destroy');
     Route::post('/health/medications', [HealthController::class, 'storeMedication'])->name('health.medications.store');
     Route::delete('/health/medications/{medication}', [HealthController::class, 'destroyMedication'])->name('health.medications.destroy');
-    Route::post('/health/vets', [HealthController::class, 'storeVet'])->name('health.vets.store');
-    Route::delete('/health/vets/{vet}', [HealthController::class, 'destroyVet'])->name('health.vets.destroy');
+    
+    Route::apiResource('vets', OrgVetController::class);
 
     Route::get('/settings', function () {
         return view('organization.settings.index');

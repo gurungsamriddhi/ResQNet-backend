@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
@@ -12,6 +14,7 @@ class Pet extends Model
 
     protected $fillable = [
         'organization_id',
+        'created_by',
         'qr_code_id',
         'name',
         'species',
@@ -25,6 +28,7 @@ class Pet extends Model
         'is_vaccinated',
         'is_neutered',
         'status',
+        'suspension_reason',
         'adopted_at',
     ];
 
@@ -38,12 +42,19 @@ class Pet extends Model
         ];
     }
 
-    public function organization()
+    // ─── Relationships ────────────────────────────────────────
+
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
     }
 
-    public function images()
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function images(): HasMany
     {
         return $this->hasMany(PetImage::class)->orderBy('sort_order');
     }
@@ -53,30 +64,61 @@ class Pet extends Model
         return $this->hasOne(PetImage::class)->where('is_primary', true);
     }
 
-    public function adoptionRequests()
+    public function adoptionRequests(): HasMany
     {
         return $this->hasMany(AdoptionRequest::class);
     }
 
-    public function medicalRecords()
+    public function medicalRecords(): HasMany
     {
         return $this->hasMany(MedicalRecord::class)->orderByDesc('record_date');
     }
 
-    public function vaccinations()
+    public function vaccinations(): HasMany
     {
         return $this->hasMany(Vaccination::class)->orderByDesc('date_administered');
     }
 
-    public function medications()
+    public function medications(): HasMany
     {
         return $this->hasMany(Medication::class)->orderByDesc('start_date');
     }
 
-    public function rescueReports()
+    public function rescueReports(): HasMany
     {
         return $this->hasMany(RescueReport::class);
     }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'saved_pets')->withTimestamps();
+    }
+
+    // ─── Query Scopes ────────────────────────────────────────
+
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available');
+    }
+
+    public function scopeSuspended($query)
+    {
+        return $query->where('status', 'suspended');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNotIn('status', ['suspended', 'inactive']);
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────
+
+    public function isSuspended(): bool
+    {
+        return $this->status === 'suspended';
+    }
+
+    // ─── Boot ────────────────────────────────────────────────
 
     protected static function booted()
     {

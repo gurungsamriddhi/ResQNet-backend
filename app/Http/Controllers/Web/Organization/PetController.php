@@ -66,9 +66,21 @@ class PetController extends Controller
         if ($pet->organization_id !== auth()->user()?->organization?->id) {
             abort(403);
         }
-        $pet->load(['primaryImage', 'images', 'organization', 'adoptionRequests']);
+        $pet->load([
+            'primaryImage',
+            'images',
+            'organization',
+            'creator',
+            'adoptionRequests.user',
+            'medicalRecords.vet',
+            'vaccinations.vet',
+            'medications.vet',
+            'rescueReports',
+        ]);
         $canEdit = true;
-        return view('shared.pets.show', compact('pet', 'canEdit'));
+        $isSuperAdmin = false;
+        $analytics = $this->buildAnalytics($pet);
+        return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics'));
     }
 
     public function edit(Pet $pet)
@@ -190,6 +202,28 @@ class PetController extends Controller
                 ]);
             }
         }
+    }
+
+    private function buildAnalytics(Pet $pet): array
+    {
+        $totalRequests = $pet->adoptionRequests->count();
+        $approvedRequests = $pet->adoptionRequests->where('status', 'approved')->count();
+
+        return [
+            'days_in_care' => $pet->created_at->diffInDays(now()),
+            'total_medical_records' => $pet->medicalRecords->count(),
+            'total_vaccinations' => $pet->vaccinations->count(),
+            'total_medications' => $pet->medications->count(),
+            'adoption_requests' => $totalRequests,
+            'adoption_success_rate' => $totalRequests > 0
+                ? round(($approvedRequests / $totalRequests) * 100)
+                : 0,
+            'last_medical_visit' => $pet->medicalRecords->first()?->record_date?->format('M d, Y'),
+            'next_appointment' => $pet->medicalRecords
+                ->whereNotNull('next_visit_date')
+                ->sortBy('next_visit_date')
+                ->first()?->next_visit_date?->format('M d, Y'),
+        ];
     }
 
 }

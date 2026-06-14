@@ -49,4 +49,17 @@ class Vet extends Model
     {
         return $this->hasMany(Medication::class);
     }
+
+    public function scopeGlobal($query)
+    {
+        return $query->whereNull('organization_id');
+    }
+
+    public function scopeOrganization($query, $organizationId = null)
+    {
+        if ($organizationId) {
+            return $query->where('organization_id', $organizationId);
+        }
+        return $query->whereNotNull('organization_id');
+    }
 }

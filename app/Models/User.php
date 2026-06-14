@@ -88,6 +88,11 @@ class User extends Authenticatable
         return $this->hasMany(Donation::class);
     }
 
+    public function savedPets()
+    {
+        return $this->belongsToMany(Pet::class, 'saved_pets')->withTimestamps();
+    }
+
     public function sendOtp($type = 'email')
     {
         $cooldownKey = "otp_cooldown_{$type}_{$this->email}";

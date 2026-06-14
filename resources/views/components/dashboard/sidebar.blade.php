@@ -168,7 +168,7 @@
         </nav>
 
         <!-- Sidebar Footer/User Profile -->
-        <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2">
+        <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2" x-data="{ logoutModalOpen: false }">
             <div class="flex items-center gap-3 overflow-hidden">
                 <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
                     {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
@@ -178,12 +178,34 @@
                     <span class="text-[9px] text-slate-500 truncate uppercase tracking-wider font-bold">{{ $isSuperAdmin ? 'Super Admin' : 'Org Admin' }}</span>
                 </div>
             </div>
-            <form method="POST" action="{{ $isSuperAdmin ? route('admin.logout') : route('organization.logout') }}">
-                @csrf
-                <button type="submit" class="p-1.5 hover:bg-brand-orange/20 hover:text-brand-orange rounded-lg text-slate-400 transition-colors" aria-label="Sign out">
-                    <i data-lucide="log-out" class="w-4 h-4"></i>
-                </button>
-            </form>
+            
+            <button type="button" @click="logoutModalOpen = true" class="p-1.5 hover:bg-brand-orange/20 hover:text-brand-orange rounded-lg text-slate-400 transition-colors" aria-label="Sign out">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Logout Modal -->
+            <template x-teleport="body">
+                <div x-show="logoutModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display: none;" @keydown.escape.window="logoutModalOpen = false">
+                    <div @click.away="logoutModalOpen = false" class="bg-white rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200">
+                        <div class="p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 text-red-600">
+                                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="text-lg font-extrabold text-slate-900">Confirm Logout</h3>
+                            </div>
+                            <p class="text-sm text-slate-500">Are you sure you want to sign out of your account?</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 flex justify-end gap-3 border-t border-slate-200">
+                            <button type="button" @click="logoutModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
+                            <form method="POST" action="{{ $isSuperAdmin ? route('admin.logout') : route('organization.logout') }}">
+                                @csrf
+                                <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
     </aside>
 
@@ -354,7 +376,7 @@
                 </div>
 
                 <!-- Mobile User Footer -->
-                <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2 mt-auto">
+                <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2 mt-auto" x-data="{ mobileLogoutModalOpen: false }">
                     <div class="flex items-center gap-3 overflow-hidden">
                         <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
                             {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
@@ -364,6 +386,34 @@
                             <span class="text-[9px] text-slate-500 truncate uppercase tracking-wider font-bold">{{ $isSuperAdmin ? 'Super Admin' : 'Org Admin' }}</span>
                         </div>
                     </div>
+                    
+                    <button type="button" @click="mobileLogoutModalOpen = true" class="p-1.5 hover:bg-brand-orange/20 hover:text-brand-orange rounded-lg text-slate-400 transition-colors" aria-label="Sign out">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- Mobile Logout Modal -->
+                    <template x-teleport="body">
+                        <div x-show="mobileLogoutModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display: none;" @keydown.escape.window="mobileLogoutModalOpen = false">
+                            <div @click.away="mobileLogoutModalOpen = false" class="bg-white rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200">
+                                <div class="p-6">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 text-red-600">
+                                            <i data-lucide="log-out" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="text-lg font-extrabold text-slate-900">Confirm Logout</h3>
+                                    </div>
+                                    <p class="text-sm text-slate-500">Are you sure you want to sign out of your account?</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 flex justify-end gap-3 border-t border-slate-200">
+                                    <button type="button" @click="mobileLogoutModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
+                                    <form method="POST" action="{{ $isSuperAdmin ? route('admin.logout') : route('organization.logout') }}">
+                                        @csrf
+                                        <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Logout</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
             </div>

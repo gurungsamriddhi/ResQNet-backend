@@ -30,7 +30,10 @@ class HealthController extends Controller
             ->get();
 
         $records = $pets->map(fn ($pet) => $this->transformPetHealth($pet));
-        $vets = Vet::where('organization_id', $orgId)->where('is_active', true)->orderBy('name')->get();
+        $vets = Vet::where(function ($q) use ($orgId) {
+            $q->where('organization_id', $orgId)
+              ->orWhereNull('organization_id'); // Include Global Vets
+        })->where('is_active', true)->orderBy('name')->get();
 
         return view('organization.health.index', [
             'records' => $records,
@@ -122,30 +125,6 @@ class HealthController extends Controller
         $medication->delete();
 
         return response()->json(['message' => 'Medication deleted.']);
-    }
-
-    public function storeVet(StoreVetRequest $request)
-    {
-        $orgId = auth()->user()?->organization?->id;
-        $vet = Vet::create([
-            ...$request->validated(),
-            'organization_id' => $orgId,
-        ]);
-
-        return response()->json([
-            'message' => 'Vet added.',
-            'vet' => new VetResource($vet),
-        ], 201);
-    }
-
-    public function destroyVet(Vet $vet)
-    {
-        if ($vet->organization_id !== auth()->user()?->organization?->id) {
-            abort(403);
-        }
-        $vet->delete();
-
-        return response()->json(['message' => 'Vet removed.']);
     }
 
     private function authorizePet(int $petId): void

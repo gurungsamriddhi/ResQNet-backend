@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PetResource;
+use App\Models\AdoptionRequest;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 
@@ -45,19 +46,57 @@ class PetController extends Controller
         return PetResource::collection($pets);
     }
 
-    public function show(Pet $pet)
+    public function show(Request $request, Pet $pet)
     {
-        $pet->load(['primaryImage', 'images', 'organization', 'medicalRecords.vet', 'vaccinations.vet', 'medications.vet']);
+        $this->loadPetForApi($request, $pet);
 
-        return new PetResource($pet);
+        return (new PetResource($pet))->additional([
+            'meta' => [
+                'can_view_detailed_records' => $this->canViewDetailedRecords($request, $pet),
+            ],
+        ]);
     }
 
-    public function showByQr(string $qrCodeId)
+    public function showByQr(Request $request, string $qrCodeId)
     {
         $pet = Pet::where('qr_code_id', $qrCodeId)
-            ->with(['primaryImage', 'images', 'organization', 'medicalRecords.vet', 'vaccinations.vet', 'medications.vet'])
             ->firstOrFail();
 
-        return new PetResource($pet);
+        $this->loadPetForApi($request, $pet);
+
+        return (new PetResource($pet))->additional([
+            'meta' => [
+                'can_view_detailed_records' => $this->canViewDetailedRecords($request, $pet),
+            ],
+        ]);
+    }
+
+    private function loadPetForApi(Request $request, Pet $pet): void
+    {
+        $relations = ['primaryImage', 'images', 'organization'];
+
+        if ($this->canViewDetailedRecords($request, $pet)) {
+            $relations = array_merge($relations, [
+                'medicalRecords.vet',
+                'vaccinations.vet',
+                'medications.vet',
+            ]);
+        }
+
+        $pet->load($relations);
+    }
+
+    private function canViewDetailedRecords(Request $request, Pet $pet): bool
+    {
+        $user = $request->user('sanctum');
+
+        if (!$user) {
+            return false;
+        }
+
+        return AdoptionRequest::where('pet_id', $pet->id)
+            ->where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->exists();
     }
 }

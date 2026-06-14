@@ -1,0 +1,202 @@
+{
+  "info": {
+    "name": "ResQNet Mobile API",
+    "description": "Complete API collection for the ResQNet mobile application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "email", "value": "user@example.com", "type": "text" },
+                { "key": "password", "value": "password", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pets (Browse & Search)",
+      "item": [
+        {
+          "name": "Get All Pets",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"]
+            }
+          }
+        },
+        {
+          "name": "Search & Filter Pets",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets?species=dog&size=medium&search=buddy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"],
+              "query": [
+                { "key": "species", "value": "dog" },
+                { "key": "size", "value": "medium" },
+                { "key": "gender", "value": "male" },
+                { "key": "search", "value": "buddy" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pet By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Adoption",
+      "item": [
+        {
+          "name": "Submit Adoption Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "pet_id", "value": "1", "type": "text" },
+                { "key": "message", "value": "I would love to adopt this pet! I have a big backyard.", "type": "text" },
+                { "key": "living_situation", "value": "House with fenced yard", "type": "text" },
+                { "key": "has_other_pets", "value": "1", "type": "text" },
+                { "key": "experience_with_pets", "value": "1", "type": "text" },
+                { "key": "family_members_count", "value": "3", "type": "text" },
+                { "key": "housing_type", "value": "own", "type": "text" },
+                { "key": "employment_status", "value": "Full-time", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/adoptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "adoptions"]
+            }
+          }
+        },
+        {
+          "name": "My Adoption Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "adoptions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saved Pets (Favorites)",
+      "item": [
+        {
+          "name": "Save / Unsave Pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1/save",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1", "save"]
+            }
+          }
+        },
+        {
+          "name": "My Saved Pets",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/saved-pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "saved-pets"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_SANCTUM_TOKEN_HERE"
+    }
+  ]
+}

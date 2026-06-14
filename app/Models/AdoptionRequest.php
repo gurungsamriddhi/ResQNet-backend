@@ -17,6 +17,10 @@ class AdoptionRequest extends Model
         'message',
         'living_situation',
         'has_other_pets',
+        'experience_with_pets',
+        'family_members_count',
+        'housing_type',
+        'employment_status',
         'status',
         'admin_notes',
         'reviewed_at',
@@ -26,6 +30,8 @@ class AdoptionRequest extends Model
     {
         return [
             'has_other_pets' => 'boolean',
+            'experience_with_pets' => 'boolean',
+            'family_members_count' => 'integer',
             'reviewed_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
