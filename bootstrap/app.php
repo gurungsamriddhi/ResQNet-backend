@@ -34,27 +34,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         );
 
-        $middleware->redirectTo(
-            guests: fn() => route('organization.login'), // Where unauthenticated users go
-
-            users: function (\Illuminate\Http\Request $request) {
-                $user = \Illuminate\Support\Facades\Auth::user();
-
-                if ($user) {
-                    // If they are a Superadmin, seamlessly route them to the admin panel
-                    if ($user->hasRole('super_admin')) {
-                        return route('admin.dashboard');
-                    }
-
-                    // If they are an Organization owner/staff, send them to their dashboard
-                    if ($user->hasRole('organization')) {
-                        return route('organization.dashboard');
-                    }
-                }
-
-                // return route('dashboard'); // Fallback for standard users
-            }
-        );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

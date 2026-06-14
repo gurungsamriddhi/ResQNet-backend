@@ -21,6 +21,7 @@ Route::prefix('auth')->group(function () {
 
 
 Route::get('/pets', [PetController::class, 'index']);
+Route::get('/pets/qr/{qrCodeId}', [PetController::class, 'showByQr']);
 Route::get('/pets/{pet}', [PetController::class, 'show']);
 
 // Protected API routes
@@ -38,7 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Adoptions
         Route::get('/adoptions', [AdoptionController::class, 'index']);
         Route::post('/adoptions', [AdoptionController::class, 'store']);
-        Route::get('/adoptions/{request}', [AdoptionController::class, 'show']);
+        Route::get('/adoptions/{adoption}', [AdoptionController::class, 'show']);
 
         // Rescues
         Route::get('/rescues', [RescueController::class, 'index']);

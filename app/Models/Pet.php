@@ -53,6 +53,31 @@ class Pet extends Model
         return $this->hasOne(PetImage::class)->where('is_primary', true);
     }
 
+    public function adoptionRequests()
+    {
+        return $this->hasMany(AdoptionRequest::class);
+    }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(MedicalRecord::class)->orderByDesc('record_date');
+    }
+
+    public function vaccinations()
+    {
+        return $this->hasMany(Vaccination::class)->orderByDesc('date_administered');
+    }
+
+    public function medications()
+    {
+        return $this->hasMany(Medication::class)->orderByDesc('start_date');
+    }
+
+    public function rescueReports()
+    {
+        return $this->hasMany(RescueReport::class);
+    }
+
     protected static function booted()
     {
         static::creating(function ($pet) {

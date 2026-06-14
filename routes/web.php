@@ -51,9 +51,7 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin') ->
     Route::post('/users/{user}/deactivate', [UserManagementController::class, 'deactivate'])->name('users.deactivate');
 
     Route::get('/pets', [AdminPetController::class, 'index'])->name('pets.index');
-    Route::post('/pets', [AdminPetController::class, 'store'])->name('pets.store');
-    Route::put('/pets/{pet}', [AdminPetController::class, 'update'])->name('pets.update');
-    Route::delete('/pets/{pet}', [AdminPetController::class, 'destroy'])->name('pets.destroy');
+    Route::get('/pets/{pet}', [AdminPetController::class, 'show'])->name('pets.show');
 
     Route::get('/health', function () {
         return view('admin.health.index');
@@ -79,20 +77,24 @@ Route::middleware(app()->environment('local') ? [] : ['auth', 'is_active', 'role
     Route::post('/pets/{pet}/status', [PetController::class, 'changeStatus'])->name('pets.status');
     Route::get('/pets/{pet}/qr', [PetController::class, 'generateQr'])->name('pets.qr');
     
-    Route::get('/adoptions', function () {
-        return view('admin.adoptions.index');
-    })->name('adoptions.index');
-    Route::post('/adoptions/{request}/approve', [AdoptionController::class, 'approve'])->name('adoptions.approve');
-    Route::post('/adoptions/{request}/reject', [AdoptionController::class, 'reject'])->name('adoptions.reject');
+    Route::get('/adoptions', [AdoptionController::class, 'index'])->name('adoptions.index');
+    Route::post('/adoptions/{adoption}/approve', [AdoptionController::class, 'approve'])->name('adoptions.approve');
+    Route::post('/adoptions/{adoption}/reject', [AdoptionController::class, 'reject'])->name('adoptions.reject');
     
     Route::get('/rescues', [RescueController::class, 'index'])->name('rescues.index');
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
     Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
     
-    Route::get('/health', function () {
-        return view('organization.health.index');
-    })->name('health.index');
-    Route::resource('health', HealthController::class)->except(['index']);
+    Route::get('/health', [HealthController::class, 'index'])->name('health.index');
+    Route::post('/health/medical-records', [HealthController::class, 'storeMedicalRecord'])->name('health.medical-records.store');
+    Route::put('/health/medical-records/{record}', [HealthController::class, 'updateMedicalRecord'])->name('health.medical-records.update');
+    Route::delete('/health/medical-records/{record}', [HealthController::class, 'destroyMedicalRecord'])->name('health.medical-records.destroy');
+    Route::post('/health/vaccinations', [HealthController::class, 'storeVaccination'])->name('health.vaccinations.store');
+    Route::delete('/health/vaccinations/{vaccination}', [HealthController::class, 'destroyVaccination'])->name('health.vaccinations.destroy');
+    Route::post('/health/medications', [HealthController::class, 'storeMedication'])->name('health.medications.store');
+    Route::delete('/health/medications/{medication}', [HealthController::class, 'destroyMedication'])->name('health.medications.destroy');
+    Route::post('/health/vets', [HealthController::class, 'storeVet'])->name('health.vets.store');
+    Route::delete('/health/vets/{vet}', [HealthController::class, 'destroyVet'])->name('health.vets.destroy');
 
     Route::get('/settings', function () {
         return view('organization.settings.index');

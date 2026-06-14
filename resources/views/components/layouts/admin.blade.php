@@ -138,7 +138,7 @@
     <div class="flex h-full min-h-screen overflow-hidden">
         
         <!-- Sidebar Navigation -->
-        <x-admin.sidebar />
+        <x-dashboard.sidebar />
 
         <!-- Flexible Right-side Content Area with Scroll & Scrolled Header Blur -->
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto" x-data="{ scrolled: false }" @scroll="scrolled = ($event.target.scrollTop > 10)">

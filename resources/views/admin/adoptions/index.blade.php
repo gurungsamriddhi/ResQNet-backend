@@ -1,6 +1,11 @@
 <x-layouts.admin>
+    @php
+        $liveListingsJson = isset($liveListings) ? $liveListings->toJson() : '[]';
+        $applicationsJson = isset($applications) ? $applications->toJson() : '[]';
+        $successfulRehomingsCount = $successfulRehomings ?? 0;
+    @endphp
     <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
-         x-data="adoptionManager()"
+         x-data="adoptionManager({{ $liveListingsJson }}, {{ $applicationsJson }}, {{ $successfulRehomingsCount }})"
          x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
 
         <!-- Header -->
@@ -370,63 +375,14 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('adoptionManager', () => ({
+            Alpine.data('adoptionManager', (liveListings, applications, successfulRehomings) => ({
                 activeTab: 'listings',
                 expandedPet: null,
                 expandedApplication: null,
-                successfulRehomings: 4,
-                liveListings: [
-                    {
-                        name: 'Max',
-                        breed: 'Golden Retriever',
-                        color: 'bg-amber-500',
-                        age: '2 years',
-                        weight: '28 kg',
-                        bio: 'Friendly and energetic golden boy who loves outdoor walks and children.',
-                        traits: ['Friendly', 'Trained', 'Kids-friendly'],
-                        healthChecklist: [
-                            { label: 'Fully Vaccinated', done: true },
-                            { label: 'Neutered', done: true },
-                            { label: 'Microchipped', done: true },
-                            { label: 'Dewormed', done: false }
-                        ]
-                    },
-                    {
-                        name: 'Luna',
-                        breed: 'Mixed Breed',
-                        color: 'bg-slate-600',
-                        age: '1.5 years',
-                        weight: '16 kg',
-                        bio: 'Calm and affectionate rescue who warms up quickly to new families.',
-                        traits: ['Calm', 'Affectionate', 'Good with cats'],
-                        healthChecklist: [
-                            { label: 'Fully Vaccinated', done: true },
-                            { label: 'Neutered', done: false },
-                            { label: 'Microchipped', done: true },
-                            { label: 'Dewormed', done: true }
-                        ]
-                    },
-                    {
-                        name: 'Rocky',
-                        breed: 'Beagle',
-                        color: 'bg-orange-600',
-                        age: '3 years',
-                        weight: '14 kg',
-                        bio: 'Playful and curious beagle with a great sense of smell and lots of energy.',
-                        traits: ['Playful', 'Curious', 'Energetic'],
-                        healthChecklist: [
-                            { label: 'Fully Vaccinated', done: true },
-                            { label: 'Neutered', done: true },
-                            { label: 'Microchipped', done: false },
-                            { label: 'Dewormed', done: true }
-                        ]
-                    }
-                ],
-                applications: [
-                    { name: 'Sita Shrestha', email: 'sita@example.com', phone: '+977-9841234567', address: 'Lakeside-6, Pokhara', reason: 'I have a spacious home with a fenced yard and I work from home, so I can give Max all the attention he needs.', pet: 'Max', date: '2026-06-05', status: 'Pending' },
-                    { name: 'Ramesh Adhikari', email: 'ramesh@example.com', phone: '+977-9859876543', address: 'New Baneshwor-4, Kathmandu', reason: 'Looking for a calm companion for my elderly mother. Luna seems like the perfect fit.', pet: 'Luna', date: '2026-06-04', status: 'Pending' },
-                    { name: 'Priya Tamang', email: 'priya@example.com', phone: '+977-9865432109', address: 'Sauraha-2, Chitwan', reason: 'We are a family of four looking to adopt our first pet. Rocky\'s playful nature won our hearts.', pet: 'Rocky', date: '2026-06-03', status: 'Pending' }
-                ],
+                successfulRehomings: successfulRehomings,
+                liveListings: liveListings,
+                applications: applications,
+                csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
 
                 togglePetDetails(name) {
                     this.expandedPet = this.expandedPet === name ? null : name;
@@ -451,24 +407,49 @@
                     }
                 },
 
-                approveApplication(email) {
+                async approveApplication(email) {
                     const app = this.applications.find(a => a.email === email);
-                    if (app) {
+                    if (!app) return;
+                    try {
+                        const res = await fetch(`/organization/adoptions/${app.id}/approve`, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                        });
+                        if (!res.ok) {
+                            const err = await res.json();
+                            alert(err.message || 'Failed to approve application.');
+                            return;
+                        }
                         app.status = 'Approved';
                         this.successfulRehomings++;
+                        this.liveListings = this.liveListings.filter(p => p.id !== app.pet_id);
                         setTimeout(() => {
                             this.applications = this.applications.filter(a => a.email !== email);
                         }, 1500);
+                    } catch (e) {
+                        alert('An error occurred while approving the application.');
                     }
                 },
 
-                declineApplication(email) {
+                async declineApplication(email) {
                     const app = this.applications.find(a => a.email === email);
-                    if (app && confirm(`Decline ${app.name}'s application for ${app.pet}?`)) {
+                    if (!app || !confirm(`Decline ${app.name}'s application for ${app.pet}?`)) return;
+                    try {
+                        const res = await fetch(`/organization/adoptions/${app.id}/reject`, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                        });
+                        if (!res.ok) {
+                            const err = await res.json();
+                            alert(err.message || 'Failed to reject application.');
+                            return;
+                        }
                         app.status = 'Declined';
                         setTimeout(() => {
                             this.applications = this.applications.filter(a => a.email !== email);
                         }, 1000);
+                    } catch (e) {
+                        alert('An error occurred while rejecting the application.');
                     }
                 }
             }));

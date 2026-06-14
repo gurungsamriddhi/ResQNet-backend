@@ -1,7 +1,11 @@
 <x-layouts.admin>
+    @php
+        $recordsJson = isset($records) ? $records->toJson() : '[]';
+        $petsJson = isset($pets) ? $pets->toJson() : '[]';
+    @endphp
     <!-- We wrap the whole page in an Alpine component -->
     <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
-         x-data="healthManager()"
+         x-data="healthManager({{ $recordsJson }}, {{ $petsJson }})"
          x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
 
         <!-- Top Header Banner Section -->
@@ -258,57 +262,53 @@
                 <!-- Form -->
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet Name</label>
-                        <input type="text" x-model="addForm.name"
-                               placeholder="e.g. Max"
-                               class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet</label>
+                        <select x-model="addForm.pet_id"
+                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            <option value="">Select a pet</option>
+                            <template x-for="pet in pets" :key="pet.id">
+                                <option :value="pet.id" x-text="pet.name + (pet.breed ? ' — ' + pet.breed : '')"></option>
+                            </template>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Breed</label>
-                        <input type="text" x-model="addForm.breed"
-                               placeholder="e.g. German Shepherd"
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Record Title</label>
+                        <input type="text" x-model="addForm.title"
+                               placeholder="e.g. Routine Checkup"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Health Status</label>
-                            <select x-model="addForm.status"
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Type</label>
+                            <select x-model="addForm.type"
                                     class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                                <option value="Healthy">Healthy</option>
-                                <option value="Needs Care">Needs Care</option>
-                                <option value="Critical">Critical</option>
+                                <option value="checkup">Checkup</option>
+                                <option value="treatment">Treatment</option>
+                                <option value="surgery">Surgery</option>
+                                <option value="injury">Injury</option>
+                                <option value="observation">Observation</option>
+                                <option value="other">Other</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Last Checkup</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Record Date</label>
                             <input type="date" x-model="addForm.lastCheckup"
                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Next Appointment</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Next Visit</label>
                         <input type="date" x-model="addForm.nextAppointment"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
 
-                    <!-- Vaccinations Setup -->
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-3">Vaccinations Status</label>
-                        <div class="space-y-2.5">
-                            <template x-for="(vaccine, idx) in addForm.vaccinations" :key="vaccine.name">
-                                <div class="flex items-center justify-between p-3 bg-admin-bg/50 border border-admin-border rounded-xl">
-                                    <span class="text-xs font-bold text-admin-textPrimary" x-text="vaccine.name"></span>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" x-model="vaccine.status" class="sr-only peer">
-                                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                                        <span class="ml-2 text-xs font-semibold text-admin-textSecondary" x-text="vaccine.status ? 'Active' : 'Pending'"></span>
-                                    </label>
-                                </div>
-                            </template>
-                        </div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Notes</label>
+                        <textarea x-model="addForm.notes" rows="3"
+                                  class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
                     </div>
                 </div>
 
@@ -586,7 +586,7 @@
     <!-- Script Block for State Logic -->
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('healthManager', () => ({
+            Alpine.data('healthManager', (initialRecords, pets) => ({
                 search: '',
                 isAddModalOpen: false,
                 isEditModalOpen: false,
@@ -597,16 +597,12 @@
                 
                 // Form states
                 addForm: {
-                    name: '',
-                    breed: '',
-                    status: 'Healthy',
+                    pet_id: '',
+                    title: '',
+                    type: 'checkup',
+                    notes: '',
                     lastCheckup: '',
                     nextAppointment: '',
-                    vaccinations: [
-                        { name: 'Rabies', status: false },
-                        { name: 'DHPP', status: false },
-                        { name: 'Bordetella', status: false }
-                    ]
                 },
                 editForm: {
                     id: null,
@@ -618,62 +614,9 @@
                     vaccinations: []
                 },
 
-                records: [
-                    {
-                        id: 1,
-                        name: 'Max',
-                        breed: 'German Shepherd',
-                        avatarLetter: 'M',
-                        status: 'Healthy',
-                        lastCheckup: '2026-05-10',
-                        nextAppointment: '2026-07-15',
-                        vaccinations: [
-                            { name: 'Rabies', status: true },
-                            { name: 'DHPP', status: true },
-                            { name: 'Bordetella', status: false }
-                        ],
-                        history: [
-                            { date: '2026-05-10', title: 'Routine Checkup', notes: 'Overall healthy condition. Weight: 32kg. No concerns.' },
-                            { date: '2026-02-12', title: 'Vaccine Administered', notes: 'DHPP vaccine booster given.' },
-                            { date: '2025-11-05', title: 'Minor Treatment', notes: 'Treated for mild ear infection. Prescribed ear drops for 7 days.' }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: 'Luna',
-                        breed: 'Siberian Husky',
-                        avatarLetter: 'L',
-                        status: 'Needs Care',
-                        lastCheckup: '2026-04-22',
-                        nextAppointment: '2026-06-12',
-                        vaccinations: [
-                            { name: 'Rabies', status: true },
-                            { name: 'DHPP', status: false },
-                            { name: 'Bordetella', status: false }
-                        ],
-                        history: [
-                            { date: '2026-04-22', title: 'Diagnostic Checkup', notes: 'Maxillary dental assessment. Needs cleaning. Slightly underweight (21kg).' },
-                            { date: '2026-01-15', title: 'Vaccine Administered', notes: 'Rabies vaccine booster given.' }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        name: 'Charlie',
-                        breed: 'Golden Retriever',
-                        avatarLetter: 'C',
-                        status: 'Healthy',
-                        lastCheckup: '2026-06-01',
-                        nextAppointment: '2026-08-01',
-                        vaccinations: [
-                            { name: 'Rabies', status: true },
-                            { name: 'DHPP', status: true },
-                            { name: 'Bordetella', status: true }
-                        ],
-                        history: [
-                            { date: '2026-06-01', title: 'Semi-annual Wellness Exam', notes: 'Excellent health. Coat is shiny, teeth are clean. Weight: 30kg.' }
-                        ]
-                    }
-                ],
+                records: initialRecords,
+                pets: pets,
+                csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
 
                 get filteredRecords() {
                     return this.records.filter(r => {
@@ -692,42 +635,47 @@
 
                 openAddModal() {
                     this.addForm = {
-                        name: '',
-                        breed: '',
-                        status: 'Healthy',
+                        pet_id: '',
+                        title: '',
+                        type: 'checkup',
+                        notes: '',
                         lastCheckup: new Date().toISOString().split('T')[0],
                         nextAppointment: '',
-                        vaccinations: [
-                            { name: 'Rabies', status: false },
-                            { name: 'DHPP', status: false },
-                            { name: 'Bordetella', status: false }
-                        ]
                     };
                     this.isAddModalOpen = true;
                 },
 
-                saveNewRecord() {
-                    if (!this.addForm.name.trim() || !this.addForm.breed.trim()) {
-                        alert('Please fill out the pet name and breed.');
+                async saveNewRecord() {
+                    if (!this.addForm.pet_id || !this.addForm.title?.trim()) {
+                        alert('Please select a pet and enter a record title.');
                         return;
                     }
-                    const newId = this.records.length ? Math.max(...this.records.map(r => r.id)) + 1 : 1;
-                    const letter = this.addForm.name.charAt(0).toUpperCase() || 'P';
-                    this.records.unshift({
-                        id: newId,
-                        name: this.addForm.name,
-                        breed: this.addForm.breed,
-                        avatarLetter: letter,
-                        status: this.addForm.status,
-                        lastCheckup: this.addForm.lastCheckup,
-                        nextAppointment: this.addForm.nextAppointment,
-                        vaccinations: JSON.parse(JSON.stringify(this.addForm.vaccinations)),
-                        history: [
-                            { date: this.addForm.lastCheckup, title: 'Record Created', notes: 'Initial health profile created.' }
-                        ]
-                    });
-                    this.isAddModalOpen = false;
-                    this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+                    try {
+                        const res = await fetch('/organization/health/medical-records', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': this.csrfToken,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                pet_id: this.addForm.pet_id,
+                                type: this.addForm.type || 'checkup',
+                                title: this.addForm.title,
+                                notes: this.addForm.notes || '',
+                                record_date: this.addForm.lastCheckup || new Date().toISOString().split('T')[0],
+                                next_visit_date: this.addForm.nextAppointment || null,
+                            }),
+                        });
+                        if (!res.ok) {
+                            const err = await res.json();
+                            alert(err.message || 'Failed to save record.');
+                            return;
+                        }
+                        location.reload();
+                    } catch (e) {
+                        alert('An error occurred while saving the record.');
+                    }
                 },
 
                 openEditModal(record) {
@@ -813,7 +761,7 @@
                         const qrContainer = document.getElementById('pet-qr-code');
                         if (qrContainer) {
                             qrContainer.innerHTML = '';
-                            const scanUrl = `${window.location.origin}${window.location.pathname}?search=${encodeURIComponent(pet.name)}`;
+                            const scanUrl = `${window.location.origin}/api/pets/qr/${pet.qr_code_id}`;
                             new QRCode(qrContainer, {
                                 text: scanUrl,
                                 width: 160,

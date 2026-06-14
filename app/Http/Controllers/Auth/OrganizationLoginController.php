@@ -24,15 +24,13 @@ class OrganizationLoginController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            // BUG FIX #2: You must Auth::logout() BEFORE returning errors!
-            // Otherwise the user stays logged in even though you showed an error.
+           
             if (!$user->is_active) {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Your account is not active. Please contact the administrator.']);
             }
 
-            // BUG FIX #3: Use hasRole() from Spatie, not $user->role
-            // $user->role doesn't exist. Spatie stores roles in a separate table.
+            
             if (!$user->hasRole('organization')) {
                 Auth::logout();
                 return back()->withErrors(['email' => 'You do not have permission to log in as organization.']);
@@ -50,9 +48,7 @@ class OrganizationLoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // BUG FIX #4: You had "redirect->route" (missing parentheses)
-        // and "organizationlogin" (wrong route name — it's "organization.login")
-        // and ">with" (missing arrow) and double semicolons
+        
         return redirect()->route('organization.login')
             ->with('status', 'You have been successfully logged out.');
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Organization;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\TransformsPets;
 use App\Http\Requests\StorePetRequest;
 use App\Http\Requests\UpdatePetRequest;
 use App\Models\Pet;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
 {
+    use TransformsPets;
+
     public function index()
     {
         $user = auth()->user();
@@ -30,7 +33,9 @@ class PetController extends Controller
                 ->map(fn($pet) => $this->transformPet($pet));
         }
 
-        return view('admin.pets.index', compact('pets'));
+        $canEdit = true;
+
+        return view('shared.pets.index', compact('pets', 'canEdit'));
     }
 
     public function create()
@@ -61,8 +66,9 @@ class PetController extends Controller
         if ($pet->organization_id !== auth()->user()?->organization?->id) {
             abort(403);
         }
-        $pet->load(['primaryImage', 'images']);
-        return response()->json(['pet' => $this->transformPet($pet)]);
+        $pet->load(['primaryImage', 'images', 'organization', 'adoptionRequests']);
+        $canEdit = true;
+        return view('shared.pets.show', compact('pet', 'canEdit'));
     }
 
     public function edit(Pet $pet)
@@ -77,6 +83,13 @@ class PetController extends Controller
         }
 
         $data = $request->safe()->except(['primary_image', 'images', 'remove_image_ids']);
+        if (isset($data['status'])) {
+            if ($data['status'] === 'adopted') {
+                $data['adopted_at'] = $pet->adopted_at ?? now();
+            } elseif ($pet->status === 'adopted') {
+                $data['adopted_at'] = null;
+            }
+        }
         $pet->update($data);
 
         if ($request->hasFile('primary_image')) {
@@ -138,7 +151,13 @@ class PetController extends Controller
             abort(403);
         }
         $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive']);
-        $pet->update(['status' => $request->status]);
+        $data = ['status' => $request->status];
+        if ($request->status === 'adopted') {
+            $data['adopted_at'] = $pet->adopted_at ?? now();
+        } elseif ($pet->status === 'adopted') {
+            $data['adopted_at'] = null;
+        }
+        $pet->update($data);
         return response()->json(['message' => 'Status updated.', 'pet' => $this->transformPet($pet)]);
     }
 
@@ -173,32 +192,4 @@ class PetController extends Controller
         }
     }
 
-    private function transformPet($pet): array
-    {
-        return [
-            'id' => $pet->id,
-            'name' => $pet->name,
-            'species' => $pet->species,
-            'breed' => $pet->breed,
-            'age_months' => $pet->age_months,
-            'gender' => $pet->gender,
-            'size' => $pet->size,
-            'color' => $pet->color,
-            'description' => $pet->description,
-            'health_status' => $pet->health_status,
-            'is_vaccinated' => $pet->is_vaccinated,
-            'is_neutered' => $pet->is_neutered,
-            'status' => $pet->status,
-            'qr_code_id' => $pet->qr_code_id,
-            'organization' => auth()->user()?->organization?->name ?? '',
-            'organization_id' => $pet->organization_id,
-            'created_at' => $pet->created_at?->toDateTimeString(),
-            'updated_at' => $pet->updated_at?->toDateTimeString(),
-            'primary_image' => $pet->primaryImage?->image_url,
-            'images' => $pet->images->sortBy('sort_order')
-                ->map(fn($img) => ['id' => $img->id, 'url' => $img->image_url])
-                ->values()
-                ->toArray(),
-        ];
-    }
 }
