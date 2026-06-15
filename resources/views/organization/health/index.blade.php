@@ -1,288 +1,534 @@
 <x-layouts.admin>
-    @php
-        $recordsJson = isset($records) ? $records->toJson() : '[]';
-        $petsJson = isset($pets) ? $pets->toJson() : '[]';
-    @endphp
-    <!-- We wrap the whole page in an Alpine component -->
+    <div id="flash-container">
+        @if(session('success'))
+            <div class="mx-4 sm:mx-6 md:mx-8 mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                {{ session('success') }}
+            </div>
+        @endif
+    </div>
+
     <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
-         x-data="healthManager({{ $recordsJson }}, {{ $petsJson }})"
+         x-data="healthTable()"
          x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
 
-        <!-- Top Header Banner Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-admin-textPrimary font-extrabold text-3xl tracking-tight">
                     Health Records
                 </h1>
                 <p class="text-admin-textSecondary text-sm mt-1 font-medium">
-                    Monitor and update medical histories, vaccination status, and upcoming checkups.
+                    All medical records and vaccinations across every pet.
                 </p>
             </div>
-            
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary-50 border border-secondary-500/20 text-xs font-semibold text-secondary-500 shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></span>
-                    Interactive Database
-                </span>
-            </div>
-        </div>
-
-        <!-- 1. Top Search & Command Bar -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center gap-4">
-            <!-- Sleek Search Input -->
-            <div class="relative flex-1 w-full">
-                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-admin-textSecondary/60">
-                    <i data-lucide="search" class="w-4.5 h-4.5"></i>
-                </div>
-                <input type="text"
-                       x-model="search"
-                       placeholder="Search by pet name or breed..."
-                       class="w-full pl-10 pr-4 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-xs sm:text-sm text-admin-textPrimary placeholder-admin-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all duration-200">
-                <button x-show="search.length" @click="search = ''"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-admin-textSecondary/60 hover:text-admin-textPrimary transition-colors">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+            <div class="flex items-center gap-3">
+                <button @click="addMedicalOpen = true"
+                        class="bg-brand-orange text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brand-orange/90 transition-all flex items-center gap-2 shadow-md shadow-brand-orange/10">
+                    <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+                    Add Medical Record
+                </button>
+                <button @click="addVaccineOpen = true"
+                        class="bg-admin-primary text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-admin-primaryPress transition-all flex items-center gap-2 shadow-md">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    Add Vaccination
                 </button>
             </div>
-            
-            <!-- Prominent action button "+ Add New Record" -->
-            <button @click="isAddModalOpen = true; openAddModal()"
-                    class="w-full sm:w-auto bg-brand-orange text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brand-orange/90 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 shadow-md shadow-brand-orange/10">
-                <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
-                <span>+ Add New Record</span>
-            </button>
         </div>
 
-        <!-- Empty State -->
-        <div x-show="filteredRecords.length === 0"
-             class="flex flex-col items-center justify-center py-16 px-6 bg-admin-surface border border-admin-border rounded-2xl shadow-sm">
-            <div class="w-16 h-16 rounded-2xl bg-admin-bg/50 flex items-center justify-center mb-4 border border-admin-border/60">
-                <i data-lucide="search-x" class="w-8 h-8 text-admin-textSecondary/30" style="stroke-width: 1.5;"></i>
-            </div>
-            <h3 class="text-base font-extrabold text-admin-textPrimary mb-1">No medical records found</h3>
-            <p class="text-xs text-admin-textSecondary/70">Try adjusting your search query.</p>
-        </div>
-
-        <!-- 2. Multi-Tiered Pet Health Row Cards -->
-        <div class="space-y-4" x-show="filteredRecords.length > 0">
-            <template x-for="pet in filteredRecords" :key="pet.id">
-                <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                    
-                    <!-- Top Header Banner Row (Clickable to Expand) -->
-                    <div class="p-5 flex items-center justify-between cursor-pointer select-none"
-                         @click="toggleExpand(pet.id)">
-                        
-                        <!-- Left side avatar + info + status badge -->
-                        <div class="flex items-center gap-4">
-                            <!-- Avatar Letter Card Badge -->
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-sm border border-slate-100 dark:border-slate-700/50"
-                                 :class="statusAvatarClass(pet.status)">
-                                <span x-text="pet.avatarLetter"></span>
-                            </div>
-                            
-                            <div>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h3 class="text-sm sm:text-base font-bold text-admin-textPrimary" x-text="pet.name"></h3>
-                                    
-                                    <!-- Health Status Pill -->
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border"
-                                          :class="statusPillClass(pet.status)">
-                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 animate-pulse" :class="statusBulletClass(pet.status)"></span>
-                                        <span x-text="pet.status"></span>
-                                    </span>
-                                </div>
-                                <p class="text-xs text-admin-textSecondary mt-0.5 font-medium" x-text="pet.breed"></p>
-                            </div>
-                        </div>
-
-                        <!-- Right side: Last Checkup & Expansion Indicator -->
-                        <div class="flex items-center gap-4 text-xs font-medium text-admin-textSecondary">
-                            <div class="hidden sm:block">
-                                <span class="text-slate-400">Last Checkup:</span>
-                                <span class="font-bold text-admin-textPrimary" x-text="pet.lastCheckup"></span>
-                            </div>
-                            
-                            <!-- Chevron icon rotating on expand -->
-                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"
-                               :class="{ 'rotate-180 text-brand-orange': expandedRecordId === pet.id, 'text-slate-400': expandedRecordId !== pet.id }"></i>
-                        </div>
-
-                    </div>
-
-                    <!-- Middle Detailed Flex Columns (Expandable View) -->
-                    <div x-show="expandedRecordId === pet.id"
-                         class="border-t border-admin-border/60 bg-admin-bg/10 p-5 space-y-6">
-                        
-                        <!-- Grid layout split into two columns: Vaccinations and Appointments -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            
-                            <!-- Left Column: VACCINATIONS -->
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
-                                    <i data-lucide="shield" class="w-4 h-4 text-emerald-500"></i>
-                                    <span>VACCINATIONS</span>
-                                </div>
-                                
-                                <div class="space-y-2">
-                                    <template x-for="vaccine in pet.vaccinations" :key="vaccine.name">
-                                        <div class="flex items-center justify-between p-3 bg-admin-surface border border-admin-border/60 rounded-xl shadow-xs hover:shadow transition-shadow">
-                                            <div class="flex items-center gap-3">
-                                                <!-- Green checkmark for active, amber clock/alert for missing -->
-                                                <template x-if="vaccine.status">
-                                                    <div class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                                                        <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>
-                                                    </div>
-                                                </template>
-                                                <template x-if="!vaccine.status">
-                                                    <div class="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                                                        <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                                                    </div>
-                                                </template>
-                                                <span class="text-xs font-semibold text-admin-textPrimary" x-text="vaccine.name"></span>
-                                            </div>
-                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
-                                                  :class="vaccine.status ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400'">
-                                                <span x-text="vaccine.status ? 'Up to Date' : 'Pending'"></span>
-                                            </span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-
-                            <!-- Right Column: APPOINTMENTS -->
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
-                                    <i data-lucide="calendar" class="w-4 h-4 text-brand-orange"></i>
-                                    <span>APPOINTMENTS</span>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <!-- Last Checkup Card -->
-                                    <div class="p-4 bg-admin-surface border border-admin-border/60 rounded-xl shadow-xs">
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Last Checkup</span>
-                                        <div class="mt-2 flex items-center gap-2.5">
-                                            <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500">
-                                                <i data-lucide="calendar-days" class="w-4.5 h-4.5"></i>
-                                            </div>
-                                            <span class="text-sm font-bold text-admin-textPrimary" x-text="pet.lastCheckup"></span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Next Appointment Card -->
-                                    <div class="p-4 bg-admin-surface border border-admin-border/60 rounded-xl shadow-xs">
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Next Appointment</span>
-                                        <div class="mt-2 flex items-center gap-2.5">
-                                            <div class="p-1.5 bg-brand-orange/10 rounded-lg text-brand-orange">
-                                                <i data-lucide="clock" class="w-4.5 h-4.5"></i>
-                                            </div>
-                                            <span class="text-sm font-bold text-admin-textPrimary" x-text="pet.nextAppointment || 'None Scheduled'"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Management Action Triggers (Edit, View, Delete) -->
-                        <div class="flex items-center justify-end gap-3 pt-3 border-t border-admin-border/60">
-                            <!-- Generate QR -->
-                            <button @click.stop="generateQrCode(pet)"
-                                    class="text-xs border border-brand-navy/20 text-brand-navy dark:border-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold transition-colors">
-                                <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
-                                <span>Generate QR</span>
-                            </button>
-
-                            <!-- View History -->
-                            <button @click.stop="openViewHistory(pet)"
-                                    class="text-xs border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5">
-                                <i data-lucide="history" class="w-3.5 h-3.5"></i>
-                                <span>View History</span>
-                            </button>
-
-                            <!-- Edit Record -->
-                            <button @click.stop="openEditModal(pet)"
-                                    class="text-xs border border-brand-orange/30 text-brand-orange hover:bg-brand-cream dark:hover:bg-brand-orange/10 px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5">
-                                <i data-lucide="edit" class="w-3.5 h-3.5"></i>
-                                <span>Edit Record</span>
-                            </button>
-
-                            <!-- Delete -->
-                            <button @click.stop="deleteRecord(pet.id)"
-                                    class="text-xs text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                <span>Delete</span>
-                            </button>
-                        </div>
-
-                    </div>
+        <template x-if="groupedRecords.length === 0">
+            <div class="flex flex-col items-center justify-center py-16 px-6 bg-admin-surface border border-admin-border rounded-2xl shadow-sm">
+                <div class="w-16 h-16 rounded-2xl bg-admin-bg/50 flex items-center justify-center mb-4 border border-admin-border/60">
+                    <i data-lucide="clipboard-list" class="w-8 h-8 text-admin-textSecondary/30" style="stroke-width: 1.5;"></i>
                 </div>
-            </template>
+                <h3 class="text-base font-extrabold text-admin-textPrimary mb-1">No health records found</h3>
+                <p class="text-xs text-admin-textSecondary/70">Add a medical record or vaccination from any pet profile to see it here.</p>
+            </div>
+        </template>
+
+        <template x-if="groupedRecords.length > 0">
+            <div class="bg-admin-surface border border-admin-border rounded-2xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-admin-border bg-admin-bg/30">
+                                <th class="text-left px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Pet</th>
+                                <th class="text-left px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Records</th>
+                                <th class="text-left px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Latest Activity</th>
+                                <th class="text-right px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-admin-border/50">
+                            <template x-for="group in groupedRecords" :key="group.pet_id">
+                                <tr class="hover:bg-admin-bg/20 transition-colors">
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <template x-if="group.pet_image">
+                                                <img :src="group.pet_image" :alt="group.pet_name"
+                                                     class="w-9 h-9 rounded-lg object-cover shadow-sm border border-slate-100 dark:border-slate-700/50 shrink-0">
+                                            </template>
+                                            <template x-if="!group.pet_image">
+                                                <div class="w-9 h-9 rounded-lg flex items-center justify-center font-extrabold text-sm shadow-sm border border-slate-100 dark:border-slate-700/50 bg-admin-primary/10 text-admin-primary shrink-0"
+                                                     x-text="group.pet_name.charAt(0).toUpperCase()">
+                                                </div>
+                                            </template>
+                                            <div>
+                                                <a :href="'{{ url('organization/pets') }}/' + group.pet_id" class="font-bold text-admin-textPrimary hover:text-admin-primary transition-colors" x-text="group.pet_name"></a>
+                                                <p class="text-[11px] text-admin-textSecondary/70 font-medium" x-text="group.pet_breed || group.pet_species || ''"></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            <template x-if="group.medical_count > 0">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-admin-primary/10 text-admin-primary border border-admin-primary/20">
+                                                    <i data-lucide="file-text" class="w-3 h-3"></i>
+                                                    <span x-text="group.medical_count + ' Medical'"></span>
+                                                </span>
+                                            </template>
+                                            <template x-if="group.vaccination_count > 0">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-orange/10 text-brand-orange border border-brand-orange/20">
+                                                    <i data-lucide="syringe" class="w-3 h-3"></i>
+                                                    <span x-text="group.vaccination_count + ' Vaccination'"></span>
+                                                </span>
+                                            </template>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-4 whitespace-nowrap">
+                                        <span class="text-admin-textSecondary" x-text="group.latest_date || '—'"></span>
+                                        <p class="text-[11px] text-admin-textSecondary/60 font-medium mt-0.5" x-text="group.total + ' total record' + (group.total !== 1 ? 's' : '')"></p>
+                                    </td>
+                                    <td class="px-5 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button type="button"
+                                                    @click="openViewModal(group.pet_id)"
+                                                    class="text-admin-primary hover:text-opacity-80 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                                                <i data-lucide="eye" class="w-3.5 h-3.5 inline mr-1"></i>
+                                                View
+                                            </button>
+                                            <button type="button"
+                                                    @click="openAddMedicalForPet(group.pet_id)"
+                                                    class="text-brand-orange hover:text-opacity-80 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                                                <i data-lucide="heart-pulse" class="w-3.5 h-3.5 inline mr-1"></i>
+                                                Medical
+                                            </button>
+                                            <button type="button"
+                                                    @click="openAddVaccineForPet(group.pet_id)"
+                                                    class="text-admin-primary hover:text-opacity-80 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                                                <i data-lucide="shield-check" class="w-3.5 h-3.5 inline mr-1"></i>
+                                                Vaccine
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <div class="text-xs text-admin-textSecondary/60 font-medium">
+            Showing <span x-text="groupedRecords.length"></span> pet(s) with records
         </div>
 
-        <!-- ================= ADD RECORD MODAL ================= -->
-        <div x-show="isAddModalOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-             style="display: none;"
-             @keydown.escape.window="isAddModalOpen = false">
+        {{-- Edit Health Record Modal (inside parent scope) --}}
+        <div x-show="openEditHealthModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             style="display: none;" @keydown.escape.window="openEditHealthModal = false">
 
-            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm"
-                 @click="isAddModalOpen = false"></div>
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="openEditHealthModal = false"></div>
 
-            <div x-show="isAddModalOpen"
-                 x-transition:enter="transition ease-out duration-300"
+            <div x-show="openEditHealthModal" x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
                  x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
                  class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
-                 @click.away="isAddModalOpen = false">
+                 @click.away="openEditHealthModal = false">
 
-                <!-- Header -->
+                <form @submit.prevent="submitEditRecord">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="relative bg-gradient-to-br from-brand-orange/20 via-brand-orange/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
+                        <button type="button" @click="openEditHealthModal = false"
+                                class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary transition-all">
+                            <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                        </button>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                                <i data-lucide="pencil" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-admin-textPrimary" x-text="'Edit ' + (selectedRecord.type_label || 'Record')"></h2>
+                                <p class="text-xs text-admin-textSecondary" x-text="'Updating ' + (selectedRecord.pet_name ? selectedRecord.pet_name + '\'s ' : '') + 'record'"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        {{-- Pet name (read-only) --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet</label>
+                            <p class="text-sm font-semibold text-admin-textPrimary" x-text="selectedRecord.pet_name"></p>
+                        </div>
+
+                        {{-- Title / Vaccine Name --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">
+                                <span x-text="selectedRecord.model === 'vaccination' ? 'Vaccine Name' : 'Title'"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" x-model="selectedRecord.title" required
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+
+                        {{-- Type (medical only) --}}
+                        <div x-show="selectedRecord.model === 'medical'">
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Type <span class="text-red-500">*</span></label>
+                            <select x-model="selectedRecord.type" required
+                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                                <option value="checkup">Checkup</option>
+                                <option value="treatment">Treatment</option>
+                                <option value="surgery">Surgery</option>
+                                <option value="injury">Injury</option>
+                                <option value="observation">Observation</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        {{-- Date --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">
+                                <span x-text="selectedRecord.model === 'vaccination' ? 'Date Administered' : 'Record Date'"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" x-model="selectedRecord.date" required
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+
+                        {{-- Next Due Date --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">
+                                <span x-text="selectedRecord.model === 'vaccination' ? 'Next Due Date' : 'Next Visit Date'"></span>
+                            </label>
+                            <input type="date" x-model="selectedRecord.next_date"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+
+                        {{-- Status badge (read-only) --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Status</label>
+                            <div>
+                                <template x-if="selectedRecord.model === 'vaccination' && selectedRecord.next_date && new Date(selectedRecord.next_date) < new Date()">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        Overdue
+                                    </span>
+                                </template>
+                                <template x-if="selectedRecord.next_date && !(selectedRecord.model === 'vaccination' && new Date(selectedRecord.next_date) < new Date())">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                </template>
+                                <template x-if="!selectedRecord.next_date">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-200">
+                                        Completed
+                                    </span>
+                                </template>
+                            </div>
+                        </div>
+
+                        {{-- Assigned Veterinarian (hardcoded) --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Assigned Veterinarian</label>
+                            <select x-model="selectedRecord.vet_name"
+                                    class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm p-2.5 rounded-xl focus:outline-none">
+                                <option value="">Select Veterinarian (Optional)</option>
+                                <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
+                                <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
+                                <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
+                                <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                            </select>
+                        </div>
+
+                        {{-- Notes --}}
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Notes</label>
+                            <textarea x-model="selectedRecord.notes" rows="2"
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
+                        <button type="button" @click="openEditHealthModal = false"
+                                class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all">
+                            Cancel
+                        </button>
+                        <button type="submit" :disabled="savingEdit"
+                                class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span x-text="savingEdit ? 'Saving...' : 'Save Changes'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+{{-- View Pet Health Modal --}}
+    <div x-show="viewPetOpen" x-cloak class="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 pt-8 sm:pt-12"
+         style="display: none;" @keydown.escape.window="viewPetOpen = false">
+
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="viewPetOpen = false"></div>
+
+        <div x-show="viewPetOpen" x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl">
+
+            {{-- Rich Pet Header --}}
+            <div class="bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
+                <button type="button" @click="viewPetOpen = false"
+                        class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary transition-all">
+                    <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                </button>
+                <div class="flex items-start gap-5">
+                    <template x-if="getPetById(viewPetId)?.pet_image">
+                        <img :src="getPetById(viewPetId).pet_image" :alt="getPetById(viewPetId)?.name || 'Pet'"
+                             class="w-16 h-16 rounded-2xl object-cover shadow-md shrink-0">
+                    </template>
+                    <template x-if="!getPetById(viewPetId)?.pet_image">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-md bg-admin-primary/15 text-admin-primary shrink-0"
+                             x-text="(getPetById(viewPetId)?.name || '?').charAt(0).toUpperCase()">
+                        </div>
+                    </template>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-2xl font-extrabold text-admin-textPrimary truncate" x-text="getPetById(viewPetId)?.name || 'Pet Details'"></h2>
+                        <p class="text-sm text-admin-textSecondary mt-0.5">
+                            <span x-text="getPetById(viewPetId)?.breed || ''"></span>
+                            <span x-show="getPetById(viewPetId)?.breed && getPetById(viewPetId)?.species"> · </span>
+                            <span x-text="getPetById(viewPetId)?.species || ''"></span>
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                                <i data-lucide="venus-and-mars" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
+                                <span x-text="getPetById(viewPetId)?.gender || 'Unknown'"></span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                                <i data-lucide="palette" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
+                                <span x-text="getPetById(viewPetId)?.color || 'Unknown'"></span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                                <i data-lucide="cake" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
+                                <span x-text="getPetById(viewPetId)?.date_of_birth ? getPetAge(getPetById(viewPetId).date_of_birth) : 'Unknown'"></span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold shadow-sm">
+                                <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
+                                <span x-text="petRecords.length + ' record' + (petRecords.length !== 1 ? 's' : '')"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Records --}}
+            <div class="p-6 space-y-6">
+
+                {{-- Medical Reports --}}
+                <template x-if="medicalRecords.length > 0">
+                    <div>
+                        <h3 class="text-sm font-bold text-admin-textPrimary mb-3 flex items-center gap-2">
+                            <i data-lucide="file-text" class="w-4 h-4 text-admin-primary"></i>
+                            Medical Reports (<span x-text="medicalRecords.length"></span>)
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="rec in medicalRecords" :key="'med-' + rec.id">
+                                <div class="bg-white dark:bg-slate-800/50 border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 mb-2">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-admin-primary/10 text-admin-primary border border-admin-primary/20 capitalize" x-text="rec.type"></span>
+                                                <template x-if="!rec.next_date">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                                                        Completed
+                                                    </span>
+                                                </template>
+                                                <template x-if="rec.next_date">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        Active
+                                                    </span>
+                                                </template>
+                                            </div>
+                                            <h4 class="text-sm font-bold text-admin-textPrimary" x-text="rec.title"></h4>
+                                            <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-admin-textSecondary">
+                                                <span class="flex items-center gap-1">
+                                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    <span x-text="rec.date"></span>
+                                                </span>
+                                                <span class="flex items-center gap-1" x-show="rec.next_date">
+                                                    <i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    Next: <span class="font-semibold text-brand-orange" x-text="rec.next_date"></span>
+                                                </span>
+                                                <span class="flex items-center gap-1" x-show="rec.vet_name">
+                                                    <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    <span x-text="rec.vet_name"></span>
+                                                </span>
+                                            </div>
+                                            <p x-show="rec.description" class="mt-3 text-xs text-admin-textSecondary/90 bg-admin-bg/50 rounded-lg p-3 border border-admin-border/50 leading-relaxed" x-text="rec.description"></p>
+                                            <p x-show="rec.notes" class="mt-2 text-xs text-admin-textSecondary/60 italic flex items-start gap-1">
+                                                <i data-lucide="message-square-text" class="w-3 h-3 mt-0.5 shrink-0"></i>
+                                                <span x-text="rec.notes"></span>
+                                            </p>
+                                        </div>
+                                        <button type="button" @click="deleteRecord(rec)"
+                                                class="shrink-0 w-7 h-7 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-600 flex items-center justify-center transition-all"
+                                                title="Delete record">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                {{-- Vaccinations --}}
+                <template x-if="vaccinationRecords.length > 0">
+                    <div>
+                        <h3 class="text-sm font-bold text-admin-textPrimary mb-3 flex items-center gap-2">
+                            <i data-lucide="syringe" class="w-4 h-4 text-brand-orange"></i>
+                            Vaccination Records (<span x-text="vaccinationRecords.length"></span>)
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="rec in vaccinationRecords" :key="'vac-' + rec.id">
+                                <div class="bg-white dark:bg-slate-800/50 border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 mb-2">
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-orange/10 text-brand-orange border border-brand-orange/20">
+                                                    <i data-lucide="syringe" class="w-3 h-3"></i>
+                                                    Vaccination
+                                                </span>
+                                                <template x-if="rec.next_date && new Date(rec.next_date) < new Date()">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                        Overdue
+                                                    </span>
+                                                </template>
+                                                <template x-if="rec.next_date && !(new Date(rec.next_date) < new Date())">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        Active
+                                                    </span>
+                                                </template>
+                                                <template x-if="!rec.next_date">
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                                                        Completed
+                                                    </span>
+                                                </template>
+                                            </div>
+                                            <h4 class="text-sm font-bold text-admin-textPrimary" x-text="rec.title"></h4>
+                                            <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-admin-textSecondary">
+                                                <span class="flex items-center gap-1">
+                                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    Administered: <span class="font-semibold" x-text="rec.date"></span>
+                                                </span>
+                                                <span class="flex items-center gap-1" x-show="rec.next_date">
+                                                    <i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    Due: <span class="font-semibold text-brand-orange" x-text="rec.next_date"></span>
+                                                </span>
+                                                <span class="flex items-center gap-1" x-show="rec.vet_name">
+                                                    <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                                    <span x-text="rec.vet_name"></span>
+                                                </span>
+                                            </div>
+                                            <p x-show="rec.notes" class="mt-3 text-xs text-admin-textSecondary/60 italic flex items-start gap-1 bg-admin-bg/30 rounded-lg p-3 border border-admin-border/30">
+                                                <i data-lucide="message-square-text" class="w-3 h-3 mt-0.5 shrink-0"></i>
+                                                <span x-text="rec.notes"></span>
+                                            </p>
+                                        </div>
+                                        <button type="button" @click="deleteRecord(rec)"
+                                                class="shrink-0 w-7 h-7 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-600 flex items-center justify-center transition-all"
+                                                title="Delete record">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                {{-- Empty State --}}
+                <template x-if="petRecords.length === 0">
+                    <div class="flex flex-col items-center justify-center py-16 px-6 bg-admin-bg/30 rounded-2xl border border-dashed border-admin-border">
+                        <div class="w-14 h-14 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-4 shadow-sm border border-admin-border">
+                            <i data-lucide="clipboard-list" class="w-7 h-7 text-admin-textSecondary/40"></i>
+                        </div>
+                        <p class="text-base font-bold text-admin-textPrimary mb-1">No health records yet</p>
+                        <p class="text-sm text-admin-textSecondary/70">Add a medical record or vaccination from the pet's profile to get started.</p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    {{-- Add Medical Record Modal --}}
+    <div x-show="addMedicalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+         style="display: none;" @keydown.escape.window="addMedicalOpen = false">
+
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="addMedicalOpen = false"></div>
+
+        <div x-show="addMedicalOpen" x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
+             @click.away="addMedicalOpen = false">
+
+            <form @submit.prevent="med_submitRecord">
+                @csrf
                 <div class="relative bg-gradient-to-br from-brand-orange/20 via-brand-orange/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
-                    <button @click="isAddModalOpen = false"
-                            class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200">
+                    <button type="button" @click="addMedicalOpen = false"
+                            class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary transition-all">
                         <i data-lucide="x" class="w-4.5 h-4.5"></i>
                     </button>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center shadow-inner">
-                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-admin-textPrimary">Add Health Record</h2>
-                            <p class="text-xs text-admin-textSecondary">Initialize a new pet medical entry.</p>
+                            <h2 class="text-lg font-bold text-admin-textPrimary">Add Medical Record</h2>
+                            <p class="text-xs text-admin-textSecondary">Log a health event for a pet.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Form -->
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet</label>
-                        <select x-model="addForm.pet_id"
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet <span class="text-red-500">*</span></label>
+                        <select x-model="med_pet_id" required
                                 class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                             <option value="">Select a pet</option>
-                            <template x-for="pet in pets" :key="pet.id">
-                                <option :value="pet.id" x-text="pet.name + (pet.breed ? ' — ' + pet.breed : '')"></option>
-                            </template>
+                            @foreach($pets as $pet)
+                                <option value="{{ $pet->id }}">{{ $pet->name }}{{ $pet->breed ? ' — ' . $pet->breed : '' }}</option>
+                            @endforeach
                         </select>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Record Title</label>
-                        <input type="text" x-model="addForm.title"
-                               placeholder="e.g. Routine Checkup"
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Title</label>
+                        <input type="text" x-model="med_title" placeholder="e.g. Routine Checkup"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Type</label>
-                            <select x-model="addForm.type"
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Type <span class="text-red-500">*</span></label>
+                            <select x-model="med_type" required
                                     class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                                 <option value="checkup">Checkup</option>
                                 <option value="treatment">Treatment</option>
@@ -293,579 +539,535 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Record Date</label>
-                            <input type="date" x-model="addForm.lastCheckup"
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Record Date <span class="text-red-500">*</span></label>
+                            <input type="date" x-model="med_record_date" required
                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Next Visit</label>
-                        <input type="date" x-model="addForm.nextAppointment"
+                        <input type="date" x-model="med_next_visit_date"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
-
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Veterinarian</label>
+                        <select x-model="med_vet_name"
+                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            <option value="">Select Veterinarian (Optional)</option>
+                            <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
+                            <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
+                            <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
+                            <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Description</label>
+                        <textarea x-model="med_description" rows="2"
+                                  class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                    </div>
                     <div>
                         <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Notes</label>
-                        <textarea x-model="addForm.notes" rows="3"
+                        <textarea x-model="med_notes" rows="2"
                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
                     </div>
                 </div>
 
-                <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
-                    <button @click="isAddModalOpen = false"
-                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                    <button type="button" @click="addMedicalOpen = false"
+                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all">
                         Cancel
                     </button>
-                    <button @click="saveNewRecord()"
-                            class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all duration-200 font-semibold">
-                        Create Record
+                    <button type="submit" :disabled="med_saving"
+                            class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-text="med_saving ? 'Saving...' : 'Create Record'"></span>
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
+    </div>
 
-        <!-- ================= EDIT RECORD MODAL ================= -->
-        <div x-show="isEditModalOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
+    {{-- Add Vaccination Modal --}}
+    <div x-show="addVaccineOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+         style="display: none;" @keydown.escape.window="addVaccineOpen = false">
+
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="addVaccineOpen = false"></div>
+
+        <div x-show="addVaccineOpen" x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
              x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-             style="display: none;"
-             @keydown.escape.window="isEditModalOpen = false">
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+             class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
+             @click.away="addVaccineOpen = false">
 
-            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm"
-                 @click="isEditModalOpen = false"></div>
-
-            <div x-show="isEditModalOpen"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
-                 @click.away="isEditModalOpen = false">
-
-                <!-- Header -->
-                <div class="relative bg-gradient-to-br from-brand-orange/20 via-brand-orange/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
-                    <button @click="isEditModalOpen = false"
-                            class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200">
+            <form @submit.prevent="vac_submitVaccine">
+                @csrf
+                <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
+                    <button type="button" @click="addVaccineOpen = false"
+                            class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary transition-all">
                         <i data-lucide="x" class="w-4.5 h-4.5"></i>
                     </button>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center shadow-inner">
-                            <i data-lucide="edit" class="w-5 h-5"></i>
+                        <div class="w-10 h-10 rounded-xl bg-admin-primary/10 text-admin-primary flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-admin-textPrimary">Edit Health Record</h2>
-                            <p class="text-xs text-admin-textSecondary">Update medical information for <span x-text="editForm.name" class="font-bold text-brand-orange"></span>.</p>
+                            <h2 class="text-lg font-bold text-admin-textPrimary">Add Vaccination</h2>
+                            <p class="text-xs text-admin-textSecondary">Record a vaccination for a pet.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Form -->
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet Name</label>
-                        <input type="text" x-model="editForm.name"
-                               class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Pet <span class="text-red-500">*</span></label>
+                        <select x-model="vac_pet_id" required
+                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            <option value="">Select a pet</option>
+                            @foreach($pets as $pet)
+                                <option value="{{ $pet->id }}">{{ $pet->name }}{{ $pet->breed ? ' — ' . $pet->breed : '' }}</option>
+                            @endforeach
+                        </select>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Breed</label>
-                        <input type="text" x-model="editForm.breed"
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Vaccine Name <span class="text-red-500">*</span></label>
+                        <input type="text" x-model="vac_vaccine_name" required placeholder="e.g. Rabies, DHPP"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Health Status</label>
-                            <select x-model="editForm.status"
-                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                                <option value="Healthy">Healthy</option>
-                                <option value="Needs Care">Needs Care</option>
-                                <option value="Critical">Critical</option>
-                            </select>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Batch Number</label>
+                            <input type="text" x-model="vac_batch_number" placeholder="e.g. B12345"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Last Checkup</label>
-                            <input type="date" x-model="editForm.lastCheckup"
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Date Admin. <span class="text-red-500">*</span></label>
+                            <input type="date" x-model="vac_date_administered" required
                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                         </div>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Next Appointment</label>
-                        <input type="date" x-model="editForm.nextAppointment"
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Next Due Date</label>
+                        <input type="date" x-model="vac_next_due_date"
                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                     </div>
-
-                    <!-- Vaccinations Setup -->
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-3">Vaccinations Status</label>
-                        <div class="space-y-2.5">
-                            <template x-for="(vaccine, idx) in editForm.vaccinations" :key="vaccine.name">
-                                <div class="flex items-center justify-between p-3 bg-admin-bg/50 border border-admin-border rounded-xl">
-                                    <span class="text-xs font-bold text-admin-textPrimary" x-text="vaccine.name"></span>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" x-model="vaccine.status" class="sr-only peer">
-                                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                                        <span class="ml-2 text-xs font-semibold text-admin-textSecondary" x-text="vaccine.status ? 'Active' : 'Pending'"></span>
-                                    </label>
-                                </div>
-                            </template>
-                        </div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Veterinarian</label>
+                        <select x-model="vac_vet_name"
+                                class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            <option value="">Select Veterinarian (Optional)</option>
+                            <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
+                            <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
+                            <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
+                            <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Notes</label>
+                        <textarea x-model="vac_notes" rows="2"
+                                  class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
                     </div>
                 </div>
 
-                <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
-                    <button @click="isEditModalOpen = false"
-                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                    <button type="button" @click="addVaccineOpen = false"
+                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all">
                         Cancel
                     </button>
-                    <button @click="saveEditRecord()"
-                            class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all duration-200 font-semibold">
-                        Save Changes
+                    <button type="submit" :disabled="vac_saving"
+                            class="px-4 py-2 rounded-xl bg-admin-primary text-white font-semibold text-xs hover:bg-admin-primaryPress transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-text="vac_saving ? 'Saving...' : 'Add Vaccination'"></span>
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
-
-        <!-- ================= VIEW HISTORY MODAL ================= -->
-        <div x-show="isViewHistoryOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-             style="display: none;"
-             @keydown.escape.window="isViewHistoryOpen = false">
-
-            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm"
-                 @click="isViewHistoryOpen = false"></div>
-
-            <div x-show="isViewHistoryOpen"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
-                 @click.away="isViewHistoryOpen = false">
-
-                <!-- Header -->
-                <div class="relative bg-gradient-to-br from-brand-orange/20 via-brand-orange/5 to-admin-bg rounded-t-2xl pt-8 pb-6 px-6 border-b border-admin-border/60">
-                    <button @click="isViewHistoryOpen = false"
-                            class="absolute top-4 right-4 p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200">
-                        <i data-lucide="x" class="w-4.5 h-4.5"></i>
-                    </button>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center shadow-inner">
-                            <i data-lucide="history" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-bold text-admin-textPrimary">Medical History Timeline</h2>
-                            <p class="text-xs text-admin-textSecondary">Full medical archive for <span x-text="activeRecord?.name" class="font-bold text-brand-orange"></span>.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline Body -->
-                <div class="p-6 space-y-6">
-                    <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 space-y-6">
-                        <template x-for="item in activeRecord?.history" :key="item.date">
-                            <div class="relative">
-                                <!-- Dot indicator -->
-                                <span class="absolute -left-[31px] top-1 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-admin-surface border-2 border-brand-orange shadow-sm animate-pulse">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-brand-orange"></span>
-                                </span>
-                                
-                                <div>
-                                    <span class="inline-block text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded" x-text="item.date"></span>
-                                    <h4 class="text-sm font-extrabold text-admin-textPrimary mt-1.5" x-text="item.title"></h4>
-                                    <p class="text-xs text-admin-textSecondary mt-1 leading-relaxed font-medium" x-text="item.notes"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end rounded-b-2xl">
-                    <button @click="isViewHistoryOpen = false"
-                            class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
-                        Close History
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= QR CODE MODAL ================= -->
-        <div x-show="isQrModalOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-             style="display: none;"
-             @keydown.escape.window="isQrModalOpen = false">
-
-            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm"
-                 @click="isQrModalOpen = false"></div>
-
-            <div x-show="isQrModalOpen"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 class="relative w-full max-w-sm bg-brand-cream border border-brand-orange/20 rounded-2xl shadow-2xl overflow-hidden p-6 text-center"
-                 @click.away="isQrModalOpen = false">
-
-                <!-- Top: Header -->
-                <div class="mb-4">
-                    <h2 class="text-sm font-extrabold text-brand-navy tracking-wider uppercase">ResQNet Digital Animal ID Tag</h2>
-                    <p class="text-xs text-brand-orange mt-1 font-bold">
-                        <span x-text="activeRecord?.name"></span> &bull; <span x-text="activeRecord?.breed" class="font-semibold text-slate-500"></span>
-                    </p>
-                </div>
-
-                <!-- Center: QR Code Container -->
-                <div class="flex flex-col items-center my-6">
-                    <div id="pet-qr-code" class="flex justify-center p-4 bg-white rounded-xl shadow-sm border border-slate-100"></div>
-                    
-                    <!-- Simulated Scan Action Link -->
-                    <a href="#" @click.prevent="search = activeRecord.name; isQrModalOpen = false; expandedRecordId = activeRecord.id"
-                       class="text-xs text-brand-orange hover:text-brand-orange/80 hover:underline font-bold mt-4 inline-flex items-center gap-1">
-                        <i data-lucide="scan" class="w-3.5 h-3.5"></i>
-                        <span>Simulate Scan (Scan Link)</span>
-                    </a>
-
-                    <!-- Action Buttons: Download & Print -->
-                    <div class="flex items-center justify-center gap-4 mt-4 w-full">
-                        <button @click="downloadQrCode()"
-                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                            <span>Download</span>
-                        </button>
-                        <button @click="printQrCode()"
-                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
-                            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-                            <span>Print</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Bottom: Instruction and Close Button -->
-                <div class="space-y-4">
-                    <p class="text-[11px] text-slate-500 leading-relaxed font-medium">
-                        Scan this QR code with a mobile device to instantly fetch and display this pet's live vaccination and checkup tracking history.
-                    </p>
-                    <button @click="isQrModalOpen = false"
-                            class="w-full py-2.5 bg-brand-navy text-white hover:bg-brand-navy/90 text-xs font-bold rounded-xl transition-all duration-200 shadow-md">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Script Block for State Logic -->
+    {{-- Delete Confirmation Modal --}}
+    <div x-show="confirmDeleteOpen" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4"
+         style="display: none;" @keydown.escape.window="cancelDelete()">
+
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="cancelDelete()"></div>
+
+        <div x-show="confirmDeleteOpen" x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+             class="relative w-full max-w-sm bg-admin-surface border border-admin-border rounded-2xl shadow-2xl p-6">
+
+            <div class="flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
+                    <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-admin-textPrimary mb-2">Delete Record?</h3>
+                <p class="text-sm text-admin-textSecondary/80 mb-1">
+                    Do you really want to delete this
+                    <span class="font-semibold text-admin-textPrimary" x-text="(confirmDeleteRecord?.type_label || 'record').toLowerCase()"></span>
+                    for
+                    <span class="font-semibold text-admin-textPrimary" x-text="confirmDeleteRecord?.pet_name || 'this pet'"></span>?
+                </p>
+                <p class="text-xs text-red-500/80 font-medium">This action cannot be undone.</p>
+            </div>
+
+            <div class="mt-6 flex items-center gap-3 justify-end">
+                <button type="button" @click="cancelDelete()"
+                        class="px-4 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all flex-1">
+                    Cancel
+                </button>
+                <button type="button" @click="executeDelete()"
+                        class="px-4 py-2.5 rounded-xl bg-red-500 text-white font-semibold text-xs hover:bg-red-600 transition-all flex-1">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('healthManager', (initialRecords, pets) => ({
-                search: '',
-                isAddModalOpen: false,
-                isEditModalOpen: false,
-                isViewHistoryOpen: false,
-                isQrModalOpen: false,
-                expandedRecordId: null,
-                activeRecord: null,
-                
-                // Form states
-                addForm: {
-                    pet_id: '',
-                    title: '',
-                    type: 'checkup',
-                    notes: '',
-                    lastCheckup: '',
-                    nextAppointment: '',
-                },
-                editForm: {
-                    id: null,
-                    name: '',
-                    breed: '',
-                    status: 'Healthy',
-                    lastCheckup: '',
-                    nextAppointment: '',
-                    vaccinations: []
-                },
+            Alpine.data('healthTable', () => ({
+                addMedicalOpen: false,
+                addVaccineOpen: false,
+                openEditHealthModal: false,
+                selectedRecord: {},
+                savingEdit: false,
+                viewPetOpen: false,
+                viewPetId: null,
+                allRecords: [],
+                petsData: [],
+                preselectedPetId: null,
+                preselectedPetName: '',
+                med_pet_id: '',
+                med_title: '',
+                med_type: 'checkup',
+                med_record_date: new Date().toISOString().split('T')[0],
+                med_next_visit_date: '',
+                med_description: '',
+                med_notes: '',
+                med_vet_name: '',
+                med_saving: false,
+                vac_pet_id: '',
+                vac_vaccine_name: '',
+                vac_batch_number: '',
+                vac_date_administered: new Date().toISOString().split('T')[0],
+                vac_next_due_date: '',
+                vac_notes: '',
+                vac_vet_name: '',
+                vac_saving: false,
+                confirmDeleteOpen: false,
+                confirmDeleteRecord: null,
 
-                records: initialRecords,
-                pets: pets,
-                csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
-
-                get filteredRecords() {
-                    return this.records.filter(r => {
-                        const q = this.search.toLowerCase();
-                        return r.name.toLowerCase().includes(q) || r.breed.toLowerCase().includes(q);
+                init() {
+                    this.allRecords = window.healthRecordsList || [];
+                    this.petsData = window.petsList || [];
+                    window.addEventListener('close-add-medical', () => {
+                        this.addMedicalOpen = false;
+                        window.location.reload();
+                    });
+                    window.addEventListener('close-add-vaccine', () => {
+                        this.addVaccineOpen = false;
+                        window.location.reload();
                     });
                 },
 
-                toggleExpand(id) {
-                    if (this.expandedRecordId === id) {
-                        this.expandedRecordId = null;
-                    } else {
-                        this.expandedRecordId = id;
-                    }
+                get groupedRecords() {
+                    const map = new Map();
+                    this.allRecords.forEach(r => {
+                        if (!map.has(r.pet_id)) {
+                            map.set(r.pet_id, {
+                                pet_id: r.pet_id,
+                                pet_name: r.pet_name,
+                                pet_breed: r.pet_breed,
+                                pet_species: r.pet_species,
+                                pet_image: r.pet_image || null,
+                                medical_count: 0,
+                                vaccination_count: 0,
+                                total: 0,
+                                latest_date: null,
+                            });
+                        }
+                        const g = map.get(r.pet_id);
+                        if (r.pet_image && !g.pet_image) g.pet_image = r.pet_image;
+                        if (r.model === 'medical') g.medical_count++;
+                        else g.vaccination_count++;
+                        g.total++;
+                        if (!g.latest_date || r.date > g.latest_date) g.latest_date = r.date;
+                    });
+                    return Array.from(map.values()).sort((a, b) => a.pet_name.localeCompare(b.pet_name));
                 },
 
-                openAddModal() {
-                    this.addForm = {
-                        pet_id: '',
-                        title: '',
-                        type: 'checkup',
-                        notes: '',
-                        lastCheckup: new Date().toISOString().split('T')[0],
-                        nextAppointment: '',
-                    };
-                    this.isAddModalOpen = true;
+                getPetById(id) {
+                    return this.petsData.find(p => p.id === id);
                 },
 
-                async saveNewRecord() {
-                    if (!this.addForm.pet_id || !this.addForm.title?.trim()) {
-                        alert('Please select a pet and enter a record title.');
-                        return;
-                    }
+                get petRecords() {
+                    return this.allRecords.filter(r => r.pet_id === this.viewPetId);
+                },
+
+                get medicalRecords() {
+                    return this.petRecords.filter(r => r.model === 'medical');
+                },
+
+                get vaccinationRecords() {
+                    return this.petRecords.filter(r => r.model === 'vaccination');
+                },
+
+                getPetAge(dateOfBirth) {
+                    if (!dateOfBirth) return '';
+                    const dob = new Date(dateOfBirth);
+                    const now = new Date();
+                    const diff = now - dob;
+                    const years = Math.floor(diff / (365.25 * 24 * 60 * 60 * 1000));
+                    const months = Math.floor((diff % (365.25 * 24 * 60 * 60 * 1000)) / (30.44 * 24 * 60 * 60 * 1000));
+                    if (years > 0) return `${years}y ${months}m`;
+                    if (months > 0) return `${months}m`;
+                    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+                    return `${days}d`;
+                },
+
+                openAddMedicalForPet(petId) {
+                    this.preselectedPetId = petId;
+                    const pet = this.petsData.find(p => p.id === petId);
+                    this.preselectedPetName = pet ? pet.name : '';
+                    this.med_pet_id = petId;
+                    this.med_title = '';
+                    this.med_type = 'checkup';
+                    this.med_record_date = new Date().toISOString().split('T')[0];
+                    this.med_next_visit_date = '';
+                    this.med_description = '';
+                    this.med_notes = '';
+                    this.med_vet_name = '';
+                    this.med_saving = false;
+                    this.addMedicalOpen = true;
+                },
+
+                openAddVaccineForPet(petId) {
+                    this.preselectedPetId = petId;
+                    const pet = this.petsData.find(p => p.id === petId);
+                    this.preselectedPetName = pet ? pet.name : '';
+                    this.vac_pet_id = petId;
+                    this.vac_vaccine_name = '';
+                    this.vac_batch_number = '';
+                    this.vac_date_administered = new Date().toISOString().split('T')[0];
+                    this.vac_next_due_date = '';
+                    this.vac_notes = '';
+                    this.vac_vet_name = '';
+                    this.vac_saving = false;
+                    this.addVaccineOpen = true;
+                },
+
+                openViewModal(petId) {
+                    this.viewPetId = petId;
+                    this.viewPetOpen = true;
+                    this.$nextTick(() => {
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    });
+                },
+
+                deleteRecord(rec) {
+                    this.confirmDeleteRecord = rec;
+                    this.confirmDeleteOpen = true;
+                    this.$nextTick(() => {
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    });
+                },
+
+                cancelDelete() {
+                    this.confirmDeleteOpen = false;
+                    this.confirmDeleteRecord = null;
+                },
+
+                async executeDelete() {
+                    const rec = this.confirmDeleteRecord;
+                    if (!rec) return;
+                    const label = rec.type_label || 'record';
                     try {
-                        const res = await fetch('/organization/health/medical-records', {
+                        const url = rec.model === 'medical'
+                            ? '{{ route("organization.health.medical-records.destroy", "") }}' + '/' + rec.id
+                            : '{{ route("organization.health.vaccinations.destroy", "") }}' + '/' + rec.id;
+                        const res = await fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                        });
+                        if (!res.ok) {
+                            let msg = 'Failed to delete record.';
+                            try {
+                                const err = await res.json();
+                                msg = err.message || msg;
+                            } catch (e) {}
+                            alert(msg);
+                            return;
+                        }
+                        this.allRecords = this.allRecords.filter(r => !(r.id === rec.id && r.model === rec.model));
+                        this.confirmDeleteOpen = false;
+                        this.confirmDeleteRecord = null;
+                    } catch (e) {
+                        alert('An error occurred while deleting the record.');
+                    }
+                },
+
+                async submitEditRecord() {
+                    if (!this.selectedRecord.title?.trim()) return;
+                    this.savingEdit = true;
+                    try {
+                        const isMedical = this.selectedRecord.model === 'medical';
+                        const recordId = this.selectedRecord.id;
+                        const baseUrl = isMedical
+                            ? '{{ route("organization.health.medical-records.update", "") }}'
+                            : '{{ route("organization.health.vaccinations.update", "") }}';
+                        const url = baseUrl + '/' + recordId;
+
+                        const body = isMedical
+                            ? {
+                                title: this.selectedRecord.title,
+                                type: this.selectedRecord.type,
+                                record_date: this.selectedRecord.date,
+                                next_visit_date: this.selectedRecord.next_date || null,
+                                description: this.selectedRecord.description || null,
+                                notes: this.selectedRecord.notes || null,
+                                vet_name: this.selectedRecord.vet_name || null,
+                            }
+                            : {
+                                vaccine_name: this.selectedRecord.title,
+                                date_administered: this.selectedRecord.date,
+                                next_due_date: this.selectedRecord.next_date || null,
+                                notes: this.selectedRecord.notes || null,
+                                vet_name: this.selectedRecord.vet_name || null,
+                            };
+
+                        const res = await fetch(url, {
+                            method: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(body),
+                        });
+                        if (!res.ok) {
+                            let msg = 'Failed to update record.';
+                            try {
+                                const err = await res.json();
+                                msg = err.message || msg;
+                            } catch (e) {}
+                            alert(msg);
+                            return;
+                        }
+                        sessionStorage.setItem('flash_success', 'Record updated successfully.');
+                        window.location.reload();
+                    } catch (e) {
+                        alert('An error occurred while updating the record.');
+                    } finally {
+                        this.savingEdit = false;
+                    }
+                },
+
+                async med_submitRecord() {
+                    const petId = this.preselectedPetId || this.med_pet_id;
+                    if (!petId) return;
+                    this.med_saving = true;
+                    try {
+                        const res = await fetch('{{ route("organization.health.medical-records.store") }}', {
                             method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': this.csrfToken,
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                pet_id: this.addForm.pet_id,
-                                type: this.addForm.type || 'checkup',
-                                title: this.addForm.title,
-                                notes: this.addForm.notes || '',
-                                record_date: this.addForm.lastCheckup || new Date().toISOString().split('T')[0],
-                                next_visit_date: this.addForm.nextAppointment || null,
+                                pet_id: petId,
+                                title: this.med_title,
+                                type: this.med_type,
+                                record_date: this.med_record_date,
+                                next_visit_date: this.med_next_visit_date || null,
+                                description: this.med_description || null,
+                                notes: this.med_notes || null,
+                                vet_name: this.med_vet_name || null,
                             }),
                         });
                         if (!res.ok) {
-                            const err = await res.json();
-                            alert(err.message || 'Failed to save record.');
+                            let msg = 'Failed to save record.';
+                            try {
+                                const err = await res.json();
+                                msg = err.message || msg;
+                            } catch (e) {}
+                            alert(msg);
                             return;
                         }
-                        location.reload();
+                        sessionStorage.setItem('flash_success', 'Medical record added successfully.');
+                        window.dispatchEvent(new CustomEvent('close-add-medical'));
                     } catch (e) {
                         alert('An error occurred while saving the record.');
+                    } finally {
+                        this.med_saving = false;
                     }
                 },
 
-                openEditModal(record) {
-                    this.activeRecord = record;
-                    this.editForm = JSON.parse(JSON.stringify(record));
-                    this.isEditModalOpen = true;
-                },
-
-                saveEditRecord() {
-                    if (!this.editForm.name.trim() || !this.editForm.breed.trim()) {
-                        alert('Please fill out the pet name and breed.');
-                        return;
-                    }
-                    const idx = this.records.findIndex(r => r.id === this.editForm.id);
-                    if (idx !== -1) {
-                        this.records[idx] = JSON.parse(JSON.stringify(this.editForm));
-                        this.records[idx].avatarLetter = this.editForm.name.charAt(0).toUpperCase() || 'P';
-                    }
-                    this.isEditModalOpen = false;
-                    this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
-                },
-
-                openViewHistory(record) {
-                    this.activeRecord = record;
-                    this.isViewHistoryOpen = true;
-                },
-
-                deleteRecord(id) {
-                    if (confirm("Are you sure you want to remove this animal's medical history?")) {
-                        this.records = this.records.filter(r => r.id !== id);
-                        if (this.expandedRecordId === id) {
-                            this.expandedRecordId = null;
+                async vac_submitVaccine() {
+                    const petId = this.preselectedPetId || this.vac_pet_id;
+                    if (!petId || !this.vac_vaccine_name.trim()) return;
+                    this.vac_saving = true;
+                    try {
+                        const res = await fetch('{{ route("organization.health.vaccinations.store") }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                pet_id: petId,
+                                vaccine_name: this.vac_vaccine_name,
+                                batch_number: this.vac_batch_number || null,
+                                date_administered: this.vac_date_administered,
+                                next_due_date: this.vac_next_due_date || null,
+                                notes: this.vac_notes || null,
+                                vet_name: this.vac_vet_name || null,
+                            }),
+                        });
+                        if (!res.ok) {
+                            let msg = 'Failed to save vaccination.';
+                            try {
+                                const err = await res.json();
+                                msg = err.message || msg;
+                            } catch (e) {}
+                            alert(msg);
+                            return;
                         }
+                        sessionStorage.setItem('flash_success', 'Vaccination record added successfully.');
+                        window.dispatchEvent(new CustomEvent('close-add-vaccine'));
+                    } catch (e) {
+                        alert('An error occurred while saving the vaccination.');
+                    } finally {
+                        this.vac_saving = false;
                     }
                 },
-
-                statusAvatarClass(status) {
-                    if (status === 'Healthy') return 'bg-emerald-500 text-white';
-                    if (status === 'Needs Care') return 'bg-amber-500 text-white';
-                    return 'bg-rose-500 text-white';
-                },
-
-                statusPillClass(status) {
-                    if (status === 'Healthy') return 'bg-emerald-50 text-emerald-700 border-emerald-200/50 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30';
-                    if (status === 'Needs Care') return 'bg-amber-50 text-amber-700 border-amber-200/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30';
-                    return 'bg-rose-50 text-rose-700 border-rose-200/50 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30';
-                },
-
-                statusBulletClass(status) {
-                    if (status === 'Healthy') return 'bg-emerald-500';
-                    if (status === 'Needs Care') return 'bg-amber-500';
-                    return 'bg-rose-500';
-                },
-
-                init() {
-                    // Check URL parameters for simulated scan on page load
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const searchQuery = urlParams.get('search');
-                    if (searchQuery) {
-                        this.search = searchQuery;
-                        const matched = this.records.find(r => r.name.toLowerCase() === searchQuery.trim().toLowerCase());
-                        if (matched) {
-                            this.expandedRecordId = matched.id;
-                        }
-                    }
-                    
-                    // Watch search input to instantly filter & expand matching pet card
-                    this.$watch('search', value => {
-                        const cleanVal = value.trim().toLowerCase();
-                        if (cleanVal) {
-                            const matched = this.records.find(r => r.name.toLowerCase() === cleanVal);
-                            if (matched) {
-                                this.expandedRecordId = matched.id;
-                            }
-                        }
-                    });
-                },
-
-                generateQrCode(pet) {
-                    this.activeRecord = pet;
-                    this.isQrModalOpen = true;
-                    this.$nextTick(() => {
-                        const qrContainer = document.getElementById('pet-qr-code');
-                        if (qrContainer) {
-                            qrContainer.innerHTML = '';
-                            const scanUrl = `${window.location.origin}/api/pets/qr/${pet.qr_code_id}`;
-                            new QRCode(qrContainer, {
-                                text: scanUrl,
-                                width: 160,
-                                height: 160,
-                                colorDark : "#111827",
-                                colorLight : "#ffffff",
-                                correctLevel : QRCode.CorrectLevel.H
-                            });
-                        }
-                    });
-                },
-
-                downloadQrCode() {
-                    const qrContainer = document.getElementById('pet-qr-code');
-                    const img = qrContainer.querySelector('img');
-                    const canvas = qrContainer.querySelector('canvas');
-                    let dataUrl = '';
-                    
-                    if (img && img.src) {
-                        dataUrl = img.src;
-                    } else if (canvas) {
-                        dataUrl = canvas.toDataURL('image/png');
-                    }
-                    
-                    if (dataUrl) {
-                        const link = document.createElement('a');
-                        link.href = dataUrl;
-                        link.download = `${this.activeRecord.name}_QR_Code.png`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    } else {
-                        alert('Failed to download QR code. Please try again.');
-                    }
-                },
-
-                printQrCode() {
-                    const qrContainer = document.getElementById('pet-qr-code');
-                    const img = qrContainer.querySelector('img');
-                    const canvas = qrContainer.querySelector('canvas');
-                    let imgHtml = '';
-                    
-                    if (img && img.src) {
-                        imgHtml = `<img src="${img.src}" style="width: 250px; height: 250px;" />`;
-                    } else if (canvas) {
-                        imgHtml = `<img src="${canvas.toDataURL('image/png')}" style="width: 250px; height: 250px;" />`;
-                    }
-                    
-                    if (imgHtml) {
-                        const printWindow = window.open('', '_blank');
-                        printWindow.document.write(`
-                            <html>
-                                <head>
-                                    <title>Print QR Code - ${this.activeRecord.name}</title>
-                                    <style>
-                                        body {
-                                            font-family: system-ui, -apple-system, sans-serif;
-                                            display: flex;
-                                            flex-direction: column;
-                                            align-items: center;
-                                            justify-content: center;
-                                            height: 100vh;
-                                            margin: 0;
-                                            text-align: center;
-                                            background-color: #FEF7ED;
-                                            color: #111827;
-                                        }
-                                        .container {
-                                            border: 2px solid #EA7235;
-                                            border-radius: 20px;
-                                            padding: 30px;
-                                            background-color: white;
-                                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                                        }
-                                        h1 { font-size: 20px; margin: 0 0 5px 0; letter-spacing: 0.05em; text-transform: uppercase; color: #0F172A; }
-                                        h2 { font-size: 16px; margin: 0 0 20px 0; color: #EA7235; }
-                                        p { font-size: 11px; color: #64748B; max-width: 280px; margin-top: 15px; }
-                                    </style>
-                                </head>
-                                <body>
-                                    <div class="container">
-                                        <h1>ResQNet Digital ID Tag</h1>
-                                        <h2>${this.activeRecord.name} &bull; ${this.activeRecord.breed}</h2>
-                                        ${imgHtml}
-                                        <p>Scan this QR code with a mobile device to instantly fetch and display this pet's live vaccination and checkup tracking history.</p>
-                                    </div>
-                                    <script>
-                                        window.onload = function() {
-                                            window.print();
-                                            setTimeout(function() { window.close(); }, 500);
-                                        };
-                                    <\/script>
-                                </body>
-                            </html>
-                        `);
-                        printWindow.document.close();
-                    } else {
-                        alert('Failed to print QR code. Please try again.');
-                    }
-                }
             }));
         });
     </script>
-    
-    <!-- QRCode Generator Engine Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        window.healthRecordsList = @json($healthRecords->values());
+        window.petsList = @json($pets);
+    </script>
+
+    <script>
+        (function() {
+            var msg = sessionStorage.getItem('flash_success');
+            if (msg) {
+                sessionStorage.removeItem('flash_success');
+                var container = document.getElementById('flash-container');
+                if (container) {
+                    var div = document.createElement('div');
+                    div.className = 'mx-4 sm:mx-6 md:mx-8 mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700';
+                    div.textContent = msg;
+                    container.prepend(div);
+                }
+            }
+        })();
+    </script>
 </x-layouts.admin>

@@ -223,7 +223,7 @@
                         </div>
                     </div>
                 </div>
-            </div>iv>
+            </div>
 
             <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/40 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
                 <i data-lucide="heart" class="w-4 h-4 text-admin-btnRed flex-shrink-0 mt-0.5 fill-admin-btnRed/25"></i>

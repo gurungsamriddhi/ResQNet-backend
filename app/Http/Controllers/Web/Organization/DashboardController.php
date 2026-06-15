@@ -30,6 +30,6 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('admin.dashboard', compact('stats'));
+        return view('organization.dashboard', compact('stats'));
     }
 }

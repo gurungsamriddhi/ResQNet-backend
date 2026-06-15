@@ -63,7 +63,8 @@ class PetController extends Controller
 
     public function show(Pet $pet)
     {
-        if ($pet->organization_id !== auth()->user()?->organization?->id) {
+        $orgId = auth()->user()?->organization?->id;
+        if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
         $pet->load([
@@ -80,7 +81,14 @@ class PetController extends Controller
         $canEdit = true;
         $isSuperAdmin = false;
         $analytics = $this->buildAnalytics($pet);
-        return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics'));
+
+        $orgId = auth()->user()?->organization?->id;
+        $vets = \App\Models\Vet::where(function ($q) use ($orgId) {
+            $q->where('organization_id', $orgId)
+              ->orWhereNull('organization_id');
+        })->where('is_active', true)->orderBy('name')->get();
+
+        return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics', 'vets'));
     }
 
     public function edit(Pet $pet)
@@ -90,7 +98,8 @@ class PetController extends Controller
 
     public function update(UpdatePetRequest $request, Pet $pet)
     {
-        if ($pet->organization_id !== auth()->user()?->organization?->id) {
+        $orgId = auth()->user()?->organization?->id;
+        if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
 
@@ -142,15 +151,20 @@ class PetController extends Controller
 
         $pet->load(['primaryImage', 'images']);
 
-        return response()->json([
-            'message' => 'Pet updated successfully.',
-            'pet' => $this->transformPet($pet),
-        ]);
+        if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Pet updated successfully.',
+                'pet' => $this->transformPet($pet),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pet updated successfully.');
     }
 
     public function destroy(Pet $pet)
     {
-        if ($pet->organization_id !== auth()->user()?->organization?->id) {
+        $orgId = auth()->user()?->organization?->id;
+        if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
         $pet->delete();
@@ -159,7 +173,8 @@ class PetController extends Controller
 
     public function changeStatus(Request $request, Pet $pet)
     {
-        if ($pet->organization_id !== auth()->user()?->organization?->id) {
+        $orgId = auth()->user()?->organization?->id;
+        if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
         $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive']);
@@ -175,7 +190,8 @@ class PetController extends Controller
 
     public function generateQr(Request $request, Pet $pet)
     {
-        if ($pet->organization_id !== auth()->user()?->organization?->id) {
+        $orgId = auth()->user()?->organization?->id;
+        if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
         return response()->json(['qr_code_id' => $pet->qr_code_id]);
@@ -210,7 +226,7 @@ class PetController extends Controller
         $approvedRequests = $pet->adoptionRequests->where('status', 'approved')->count();
 
         return [
-            'days_in_care' => $pet->created_at->diffInDays(now()),
+            'days_in_care' => (int) $pet->created_at->diffInDays(now()),
             'total_medical_records' => $pet->medicalRecords->count(),
             'total_vaccinations' => $pet->vaccinations->count(),
             'total_medications' => $pet->medications->count(),

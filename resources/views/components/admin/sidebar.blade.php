@@ -170,10 +170,10 @@
         <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2" x-data="{ logoutModalOpen: false }">
             <div class="flex items-center gap-3 overflow-hidden">
                 <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
-                    {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                    {{ substr(auth()->user()?->name ?? 'U', 0, 1) }}
                 </div>
                 <div class="flex flex-col min-w-0">
-                    <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()->name ?? 'User' }}</span>
+                    <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()?->name ?? 'User' }}</span>
                     <span class="text-[9px] text-slate-500 truncate uppercase tracking-wider font-bold">Super Admin</span>
                 </div>
             </div>
@@ -378,10 +378,10 @@
                 <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2 mt-auto" x-data="{ mobileLogoutModalOpen: false }">
                     <div class="flex items-center gap-3 overflow-hidden">
                         <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
-                            {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                            {{ substr(auth()->user()?->name ?? 'U', 0, 1) }}
                         </div>
                         <div class="flex flex-col min-w-0">
-                            <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()->name ?? 'User' }}</span>
+                            <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()?->name ?? 'User' }}</span>
                             <span class="text-[9px] text-slate-500 truncate uppercase tracking-wider font-bold">Super Admin</span>
                         </div>
                     </div>

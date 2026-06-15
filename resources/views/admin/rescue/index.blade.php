@@ -1,10 +1,11 @@
 <x-layouts.admin>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
          x-data="rescuesApp()"
          x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
 
         <!-- Toast Notification -->
-        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-6 right-6 z-[70] max-w-sm bg-white border border-admin-border rounded-xl shadow-2xl p-4 flex items-start gap-3">
+        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-4 right-4 sm:top-6 sm:right-6 z-[70] max-w-[calc(100vw-2rem)] sm:max-w-sm bg-white border border-admin-border rounded-xl shadow-2xl p-4 flex items-start gap-3">
             <div class="w-8 h-8 rounded-full bg-[#5BA44C]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i data-lucide="check-circle" class="w-4 h-4 text-[#5BA44C]"></i>
             </div>
@@ -18,9 +19,9 @@
         </div>
 
         <!-- Assign Team Modal -->
-        <div x-show="assignModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div x-show="assignModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
             <div @click="assignModalOpen = false" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" @click.outside="assignModalOpen = false">
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden mx-auto" @click.outside="assignModalOpen = false">
                 <div class="bg-brand-navy px-6 py-5 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
@@ -84,8 +85,8 @@
         </div>
 
         <!-- Map -->
-        <div class="bg-brand-cream border border-brand-orange/20 rounded-2xl p-6 shadow-sm">
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-brand-orange/10">
+        <div class="bg-brand-cream border border-brand-orange/20 rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-brand-orange/10">
                 <div>
                     <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight">
                         Active rescue reports
@@ -99,7 +100,7 @@
                     3 Active
                 </span>
             </div>
-            <div id="rescue-map" class="w-full h-[350px] rounded-xl overflow-hidden shadow-inner"></div>
+            <div id="rescue-map" class="w-full h-[200px] sm:h-[300px] md:h-[350px] rounded-xl overflow-hidden shadow-inner"></div>
         </div>
 
         @php
@@ -156,8 +157,8 @@
         @endphp
 
         <!-- Main Content: Rescue Cards + Sidebar -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 lg:col-span-2 shadow-sm">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-4 sm:p-6 lg:col-span-2 shadow-sm">
                 <div class="flex items-center justify-between pb-4 mb-6 border-b border-admin-border/60">
                     <div>
                         <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
@@ -184,40 +185,40 @@
                         <div :class="{ 'opacity-60': currentStatus === 'RESOLVED', 'opacity-65': currentStatus === 'CANCELLED' }">
                             <div class="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                 <!-- Left: Icon + Content -->
-                                <div class="flex items-start gap-4 min-w-0 flex-1">
+                                <div class="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
                                     <!-- Status Icon -->
                                     <div class="flex-shrink-0 mt-0.5">
                                         <template x-if="currentStatus === 'CRITICAL'">
                                             <div class="relative">
                                                 <span class="absolute inset-0 rounded-full bg-red-500 opacity-25 animate-ping"></span>
-                                                <div class="relative w-12 h-12 rounded-full bg-red-100 text-red-600 border border-red-200 flex items-center justify-center shadow-sm animate-pulse">
-                                                    <i data-lucide="bell-ring" class="w-5 h-5 text-red-600 fill-red-200"></i>
+                                                <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-100 text-red-600 border border-red-200 flex items-center justify-center shadow-sm animate-pulse">
+                                                    <i data-lucide="bell-ring" class="w-4 h-4 sm:w-5 sm:h-5 text-red-600 fill-red-200"></i>
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'URGENT'">
-                                            <div class="w-12 h-12 rounded-full bg-orange-50 text-brand-orange border border-orange-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="alert-triangle" class="w-5 h-5 text-brand-orange"></i>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-50 text-brand-orange border border-orange-200 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="alert-triangle" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-orange"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'MODERATE'">
-                                            <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="bell" class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'ASSIGNED'">
-                                            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="truck" class="w-5 h-5 text-blue-500"></i>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="truck" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'RESOLVED'">
-                                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="check-circle" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'CANCELLED'">
-                                            <div class="w-12 h-12 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="slash" class="w-5 h-5 text-slate-400"></i>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="slash" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-400"></i>
                                             </div>
                                         </template>
                                     </div>
@@ -231,7 +232,7 @@
                                             <span :class="badgeClasses" x-text="currentStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase">{{ $rescue['status'] }}</span>
                                         </div>
                                         <p class="text-xs text-admin-textSecondary mt-1.5 leading-relaxed line-clamp-2">{{ $rescue['description'] }}</p>
-                                        <div class="flex items-center gap-3.5 mt-2 text-xs text-admin-textSecondary flex-wrap">
+                                        <div class="flex items-center gap-2 sm:gap-3.5 mt-2 text-xs text-admin-textSecondary flex-wrap">
                                             <span class="flex items-center gap-1">
                                                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
                                                 <span>{{ $rescue['location'] }}</span>
@@ -256,52 +257,52 @@
                                 </div>
 
                                 <!-- Right: Action buttons -->
-                                <div class="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                <div class="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                                     <template x-if="currentStatus === 'CRITICAL' || currentStatus === 'URGENT' || currentStatus === 'MODERATE'">
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <button @click="dispatchHelp()" class="bg-brand-orange hover:bg-[#E25338] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
-                                                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                                            <button @click="dispatchHelp()" class="flex-1 sm:flex-none bg-brand-orange hover:bg-[#E25338] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
+                                                <i data-lucide="zap" class="w-3.5 h-3.5 shrink-0"></i>
                                                 Help Now
                                             </button>
-                                            <button @click="openAssign()" class="bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
-                                                <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                                            <button @click="openAssign()" class="flex-1 sm:flex-none bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
+                                                <i data-lucide="users" class="w-3.5 h-3.5 shrink-0"></i>
                                                 Assign Team
                                             </button>
-                                            <button @click="markComplete()" class="border-2 border-[#5BA44C] text-[#5BA44C] hover:bg-[#5BA44C] hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
-                                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                            <button @click="markComplete()" class="flex-1 sm:flex-none border-2 border-[#5BA44C] text-[#5BA44C] hover:bg-[#5BA44C] hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
+                                                <i data-lucide="check-circle" class="w-3.5 h-3.5 shrink-0"></i>
                                                 Mark Complete
                                             </button>
                                         </div>
                                     </template>
 
                                     <template x-if="currentStatus === 'ASSIGNED'">
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <button @click="markComplete()" class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
-                                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                                            <button @click="markComplete()" class="flex-1 sm:flex-none bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
+                                                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
                                                 Mark Complete
                                             </button>
-                                            <button @click="cancelCase()" class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
+                                            <button @click="cancelCase()" class="flex-1 sm:flex-none border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
                                                 Cancel
                                             </button>
                                         </div>
                                     </template>
 
                                     <template x-if="currentStatus === 'CANCELLED'">
-                                        <span class="border border-slate-200 text-slate-400 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-default">
-                                            <i data-lucide="slash" class="w-3.5 h-3.5"></i>
+                                        <span class="w-full sm:w-auto border border-slate-200 text-slate-400 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center justify-center gap-1.5 cursor-default">
+                                            <i data-lucide="slash" class="w-3.5 h-3.5 shrink-0"></i>
                                             Passed / Cancelled
                                         </span>
                                     </template>
 
                                     <template x-if="currentStatus === 'RESOLVED'">
-                                        <span class="bg-[#5BA44C] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-1.5 cursor-default">
-                                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                        <span class="w-full sm:w-auto bg-[#5BA44C] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm inline-flex items-center justify-center gap-1.5 cursor-default">
+                                            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
                                             Resolved
                                         </span>
                                     </template>
 
-                                    <button @click="expanded = !expanded" class="text-xs text-slate-400 hover:text-brand-orange transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap flex-shrink-0">
-                                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                    <button @click="expanded = !expanded" class="text-xs text-slate-400 hover:text-brand-orange transition-colors cursor-pointer flex items-center justify-center gap-1 whitespace-nowrap flex-shrink-0 py-2 sm:py-0">
+                                        <i data-lucide="eye" class="w-3.5 h-3.5 shrink-0"></i>
                                         <span x-text="expanded ? 'Hide Info' : 'View Info'"></span>
                                     </button>
                                 </div>
@@ -310,7 +311,7 @@
 
                         <!-- Expandable Detail Panel -->
                         <div x-show="expanded" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="border-t border-admin-border/60 bg-gray-50/50">
-                            <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
                                 <!-- Column 1: Case Details -->
                                 <div class="bg-white border border-admin-border rounded-xl p-4 space-y-4">
                                     <h4 class="text-[11px] font-bold text-admin-textSecondary uppercase tracking-wider flex items-center gap-1.5">
@@ -333,7 +334,7 @@
                                     </div>
                                     <div>
                                         <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Image Evidence</p>
-                                        <div class="mt-1.5 w-full h-28 rounded-lg bg-slate-100 border border-dashed border-slate-200 flex items-center justify-center text-slate-400">
+                                        <div class="mt-1.5 w-full h-20 sm:h-28 rounded-lg bg-slate-100 border border-dashed border-slate-200 flex items-center justify-center text-slate-400">
                                             <div class="text-center">
                                                 <i data-lucide="image" class="w-6 h-6 mx-auto mb-1"></i>
                                                 <span class="text-[10px]">No image attached</span>
@@ -480,7 +481,7 @@
             </div>
 
             <!-- Right Sidebar: Rescue Summary -->
-            <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 shadow-sm">
+            <div class="bg-admin-surface border border-admin-border rounded-2xl p-4 sm:p-6 shadow-sm">
                 <div class="border-b border-admin-border/60 pb-4 mb-6">
                     <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
                         Rescue Summary
@@ -536,6 +537,19 @@
 
     <style>
         [x-cloak] { display: none !important; }
+        .leaflet-marker-critical .pulse-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 44px; height: 44px;
+            margin: -22px 0 0 -22px;
+            border-radius: 50%;
+            background: rgba(220, 38, 38, 0.3);
+            animation: leaflet-pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes leaflet-pulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
     </style>
 
     <script>
@@ -635,110 +649,70 @@
             const mapElement = document.getElementById('rescue-map');
             if (!mapElement) return;
 
-            const map = new google.maps.Map(mapElement, {
-                center: { lat: 28.2096, lng: 83.9856 },
+            const map = L.map(mapElement, {
+                center: [28.2096, 83.9856],
                 zoom: 14,
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false,
-                styles: [
-                    { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-                    { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-                ],
+                zoomControl: false,
             });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19,
+            }).addTo(map);
 
             rescueCoordinates.forEach(coord => {
-                let markerIcon;
-                let infoContent;
+                let icon;
+                let popupContent;
 
                 if (coord.status === 'Critical') {
-                    markerIcon = {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 14,
-                        fillColor: '#DC2626',
-                        fillOpacity: 1,
-                        strokeColor: '#991B1B',
-                        strokeWeight: 3,
-                    };
-                    const marker = new google.maps.Marker({
-                        position: { lat: coord.lat, lng: coord.lng },
-                        map: map,
-                        icon: markerIcon,
-                        title: coord.title,
-                        animation: google.maps.Animation.DROP,
+                    icon = L.divIcon({
+                        html: '<div class="leaflet-marker-critical" style="width:28px;height:28px;position:relative"><div class="pulse-ring"></div><div style="position:absolute;inset:3px;border-radius:50%;background:#DC2626;border:3px solid #991B1B"></div></div>',
+                        className: '',
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14],
                     });
-                    let pulseState = false;
-                    setInterval(() => {
-                        pulseState = !pulseState;
-                        marker.setIcon({
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: pulseState ? 16 : 14,
-                            fillColor: pulseState ? '#EF4444' : '#DC2626',
-                            fillOpacity: pulseState ? 0.7 : 1,
-                            strokeColor: '#991B1B',
-                            strokeWeight: pulseState ? 2 : 3,
-                        });
-                    }, 600);
-                    infoContent = `
-                        <div style="background: #0F1A2E; padding: 12px 16px; border-radius: 8px; min-width: 200px; max-width: 260px;">
-                            <p style="color: #fff; font-size: 14px; font-weight: 700; margin: 0; letter-spacing: 0.3px;">⚠️ CRITICAL CASE DETECTED</p>
-                            <p style="color: #94A3B8; font-size: 12px; margin: 6px 0 0; font-weight: 500;">${coord.title}</p>
+                    popupContent = `
+                        <div style="background:#0F1A2E;padding:12px 16px;border-radius:8px;min-width:200px;max-width:260px;">
+                            <p style="color:#fff;font-size:14px;font-weight:700;margin:0;letter-spacing:0.3px;">&#9888;&#65039; CRITICAL CASE DETECTED</p>
+                            <p style="color:#94A3B8;font-size:12px;margin:6px 0 0;font-weight:500;">${coord.title}</p>
                         </div>
                     `;
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: infoContent,
-                        pixelOffset: new google.maps.Size(0, -4),
-                    });
-                    marker.addListener('click', () => infoWindow.open(map, marker));
                 } else if (coord.status === 'Urgent') {
-                    markerIcon = {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 10,
-                        fillColor: '#EA7235',
-                        fillOpacity: 1,
-                        strokeColor: '#C2410C',
-                        strokeWeight: 2,
-                    };
-                    const marker = new google.maps.Marker({
-                        position: { lat: coord.lat, lng: coord.lng },
-                        map: map,
-                        icon: markerIcon,
-                        title: coord.title,
+                    icon = L.divIcon({
+                        html: '<div style="width:20px;height:20px;border-radius:50%;background:#EA7235;border:3px solid #C2410C"></div>',
+                        className: '',
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10],
                     });
-                    infoContent = `
-                        <div style="padding: 8px 12px; min-width: 150px;">
-                            <p style="font-size: 13px; font-weight: 600; margin: 0;">${coord.title}</p>
-                            <p style="font-size: 11px; color: #EA7235; margin: 4px 0 0; font-weight: 700; letter-spacing: 0.5px;">URGENT</p>
+                    popupContent = `
+                        <div style="padding:8px 12px;min-width:150px;">
+                            <p style="font-size:13px;font-weight:600;margin:0;">${coord.title}</p>
+                            <p style="font-size:11px;color:#EA7235;margin:4px 0 0;font-weight:700;letter-spacing:0.5px;">URGENT</p>
                         </div>
                     `;
-                    const infoWindow = new google.maps.InfoWindow({ content: infoContent });
-                    marker.addListener('click', () => infoWindow.open(map, marker));
                 } else if (coord.status === 'Moderate') {
-                    markerIcon = {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 9,
-                        fillColor: '#FCD34D',
-                        fillOpacity: 1,
-                        strokeColor: '#B45309',
-                        strokeWeight: 2,
-                    };
-                    const marker = new google.maps.Marker({
-                        position: { lat: coord.lat, lng: coord.lng },
-                        map: map,
-                        icon: markerIcon,
-                        title: coord.title,
+                    icon = L.divIcon({
+                        html: '<div style="width:18px;height:18px;border-radius:50%;background:#FCD34D;border:3px solid #B45309"></div>',
+                        className: '',
+                        iconSize: [18, 18],
+                        iconAnchor: [9, 9],
                     });
-                    infoContent = `
-                        <div style="padding: 8px 12px; min-width: 150px;">
-                            <p style="font-size: 13px; font-weight: 600; margin: 0;">${coord.title}</p>
-                            <p style="font-size: 11px; color: #B45309; margin: 4px 0 0; font-weight: 700; letter-spacing: 0.5px;">MODERATE</p>
+                    popupContent = `
+                        <div style="padding:8px 12px;min-width:150px;">
+                            <p style="font-size:13px;font-weight:600;margin:0;">${coord.title}</p>
+                            <p style="font-size:11px;color:#B45309;margin:4px 0 0;font-weight:700;letter-spacing:0.5px;">MODERATE</p>
                         </div>
                     `;
-                    const infoWindow = new google.maps.InfoWindow({ content: infoContent });
-                    marker.addListener('click', () => infoWindow.open(map, marker));
                 }
+
+                const marker = L.marker([coord.lat, coord.lng], { icon });
+                marker.bindPopup(popupContent);
+                marker.addTo(map);
             });
+
+            setTimeout(() => map.invalidateSize(), 200);
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_FREE_MAPS_API_KEY_PLACEHOLDER&callback=initMap" async defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', initMap)</script>
 </x-layouts.admin>

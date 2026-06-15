@@ -16,6 +16,7 @@ class StoreVaccinationRequest extends FormRequest
         return [
             'pet_id' => 'required|exists:pets,id',
             'vet_id' => 'nullable|exists:vets,id',
+            'vet_name' => 'nullable|string|max:255',
             'vaccine_name' => 'required|string|max:255',
             'batch_number' => 'nullable|string|max:100',
             'date_administered' => 'required|date',
