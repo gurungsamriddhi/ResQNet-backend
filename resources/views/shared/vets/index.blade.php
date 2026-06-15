@@ -246,43 +246,37 @@
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Full Name *</label>
                                     <input type="text" x-model="createForm.name" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" required placeholder="Dr. Jane Doe">
-                                    <p x-show="createErrors.name" x-text="createErrors.name[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.name" x-text="createErrors.name?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Specialization</label>
                                     <input type="text" x-model="createForm.specialization" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="e.g. Feline Specialist">
-                                    <p x-show="createErrors.specialization" x-text="createErrors.specialization[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.specialization" x-text="createErrors.specialization?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
                                     <input type="text" x-model="createForm.phone" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="+1 234 567 8900">
-                                    <p x-show="createErrors.phone" x-text="createErrors.phone[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.phone" x-text="createErrors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
                                     <input type="email" x-model="createForm.email" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="jane@example.com">
-                                    <p x-show="createErrors.email" x-text="createErrors.email[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.email" x-text="createErrors.email?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Clinic Address</label>
                                     <input type="text" x-model="createForm.address" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="123 Vet Street, City">
-                                    <p x-show="createErrors.address" x-text="createErrors.address[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div class="col-span-1 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Clinic Address</label>
-                                    <input type="text" x-model="createForm.address" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="123 Vet Street, City">
-                                    <p x-show="createErrors.address" x-text="createErrors.address[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.address" x-text="createErrors.address?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">License Number</label>
                                     <input type="text" x-model="createForm.license_number" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="e.g. VET-123456">
-                                    <p x-show="createErrors.license_number" x-text="createErrors.license_number[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="createErrors.license_number" x-text="createErrors.license_number?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
 
                                 <div class="col-span-1 md:col-span-2 flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
@@ -291,7 +285,7 @@
                                         <p class="text-xs text-slate-500">Enable or disable this veterinarian immediately</p>
                                     </div>
                                     <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                        <input type="checkbox" x-model="createForm.status" id="create_is_active" class="peer sr-only" true-value="active" false-value="inactive">
+                                        <input type="checkbox" :checked="createForm.status === 'active'" @change="createForm.status = $event.target.checked ? 'active' : 'inactive'" id="create_is_active" class="peer sr-only">
                                         <label for="create_is_active" class="block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer peer-checked:bg-green-500 transition-colors">
                                             <span class="block w-6 h-6 rounded-full bg-white border border-slate-300 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
                                         </label>
@@ -427,37 +421,37 @@
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Full Name *</label>
                                     <input type="text" x-model="editForm.name" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" required>
-                                    <p x-show="editErrors.name" x-text="editErrors.name[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.name" x-text="editErrors.name?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Specialization</label>
                                     <input type="text" x-model="editForm.specialization" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm">
-                                    <p x-show="editErrors.specialization" x-text="editErrors.specialization[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.specialization" x-text="editErrors.specialization?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
                                     <input type="text" x-model="editForm.phone" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm">
-                                    <p x-show="editErrors.phone" x-text="editErrors.phone[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.phone" x-text="editErrors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
                                     <input type="email" x-model="editForm.email" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm">
-                                    <p x-show="editErrors.email" x-text="editErrors.email[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.email" x-text="editErrors.email?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">Clinic Address</label>
                                     <input type="text" x-model="editForm.address" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm">
-                                    <p x-show="editErrors.address" x-text="editErrors.address[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.address" x-text="editErrors.address?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
                                 
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-semibold text-slate-700 mb-1">License Number</label>
                                     <input type="text" x-model="editForm.license_number" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm">
-                                    <p x-show="editErrors.license_number" x-text="editErrors.license_number[0]" class="mt-1 text-xs text-red-600"></p>
+                                    <p x-show="editErrors.license_number" x-text="editErrors.license_number?.[0]" class="mt-1 text-xs text-red-600"></p>
                                 </div>
 
                                 <div class="col-span-1 md:col-span-2 flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
@@ -466,7 +460,7 @@
                                         <p class="text-xs text-slate-500">Enable or disable this veterinarian</p>
                                     </div>
                                     <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                        <input type="checkbox" x-model="editForm.status" id="edit_is_active" class="peer sr-only" true-value="active" false-value="inactive">
+                                        <input type="checkbox" :checked="editForm.status === 'active'" @change="editForm.status = $event.target.checked ? 'active' : 'inactive'" id="edit_is_active" class="peer sr-only">
                                         <label for="edit_is_active" class="block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer peer-checked:bg-green-500 transition-colors">
                                             <span class="block w-6 h-6 rounded-full bg-white border border-slate-300 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
                                         </label>
@@ -621,10 +615,13 @@
                             if (!response.ok) {
                                 if (response.status === 422) {
                                     this.createErrors = data.errors;
+                                    this.showToast('Please check the form for errors.', 'error');
                                 } else {
-                                    this.createErrors = { general: data.error || 'An error occurred while saving.' };
+                                    const msg = data.message || data.error || 'An error occurred while saving.';
+                                    this.createErrors = { general: msg };
+                                    this.showToast(msg, 'error');
                                 }
-                                throw new Error('Validation failed');
+                                throw new Error('Request failed');
                             }
                             
                             // Success
@@ -633,10 +630,12 @@
                             
                             setTimeout(() => {
                                  window.location.reload();
-                            }, 1000); // Reload to show new item
+                            }, 1000);
                             
                         } catch (error) {
-                            // Errors handled above
+                            if (error.message !== 'Request failed') {
+                                this.showToast(error.message || 'An unexpected error occurred.', 'error');
+                            }
                         } finally {
                             this.isSavingCreate = false;
                         }
@@ -708,15 +707,17 @@
                         this.editErrors = {};
                         
                         try {
+                            const payload = { ...this.editForm, _method: 'PUT' };
+                            
                             const response = await fetch(this.editUpdateUrl, {
-                                method: 'PUT',
+                                method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'X-Requested-With': 'XMLHttpRequest',
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                                     'Accept': 'application/json'
                                 },
-                                body: JSON.stringify(this.editForm)
+                                body: JSON.stringify(payload)
                             });
                             
                             const data = await response.json();
@@ -724,10 +725,13 @@
                             if (!response.ok) {
                                 if (response.status === 422) {
                                     this.editErrors = data.errors;
+                                    this.showToast('Please check the form for errors.', 'error');
                                 } else {
-                                    this.editErrors = { general: data.error || 'An error occurred while saving.' };
+                                    const msg = data.message || data.error || 'An error occurred while saving.';
+                                    this.editErrors = { general: msg };
+                                    this.showToast(msg, 'error');
                                 }
-                                throw new Error('Validation failed');
+                                throw new Error('Request failed');
                             }
                             
                             // Success
@@ -738,7 +742,9 @@
                             this.updateRowInTable(data.vet);
                             
                         } catch (error) {
-                            // Errors already handled above
+                            if (error.message !== 'Request failed') {
+                                this.showToast(error.message || 'An unexpected error occurred.', 'error');
+                            }
                         } finally {
                             this.isSavingEdit = false;
                         }
@@ -749,18 +755,22 @@
                         
                         try {
                             const response = await fetch(this.deleteUrl, {
-                                method: 'DELETE',
+                                method: 'POST',
                                 headers: {
+                                    'Content-Type': 'application/json',
                                     'X-Requested-With': 'XMLHttpRequest',
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                                     'Accept': 'application/json'
-                                }
+                                },
+                                body: JSON.stringify({ _method: 'DELETE' })
                             });
                             
                             const data = await response.json();
                             
                             if (!response.ok) {
-                                throw new Error(data.error || 'Failed to delete');
+                                const msg = data.message || data.error || 'Failed to delete';
+                                this.showToast(msg, 'error');
+                                throw new Error('Request failed');
                             }
                             
                             // Success
@@ -773,7 +783,9 @@
                             
                         } catch (error) {
                             this.deleteModalOpen = false;
-                            this.showToast(error.message || 'An error occurred while deleting.', 'error');
+                            if (error.message !== 'Request failed') {
+                                this.showToast(error.message || 'An error occurred while deleting.', 'error');
+                            }
                         } finally {
                             this.isDeleting = false;
                         }
