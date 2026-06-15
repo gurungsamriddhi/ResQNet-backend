@@ -5,73 +5,60 @@ use App\Http\Controllers\Auth\OrganizationLoginController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use Illuminate\Support\Facades\Route;
 
-// ================================================
-//  ADMIN AUTHENTICATION
-// ================================================
+// =========================================================================
+// ⚙️ 1. SYSTEM ADMIN PORTAL ROUTING
+// =========================================================================
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Guest Routes (Login)
+    // Guest Authentication Sub-Group
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'create'])->name('login');
         Route::post('/login', [AdminLoginController::class, 'store'])->name('login.submit');
 
-        // Forgot Password
-        Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
-            ->name('password.request');
-        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->name('password.email');
+        // Contextual Admin Forgot Password
+        Route::get('/forgot-password', [PasswordResetLinkController::class, 'createAdminForm'])->name('password.request');
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendAdminResetLink'])->name('password.email');
+
+        // Contextual Admin Reset Password Links
+        Route::get('/reset-password/{token}', [NewPasswordController::class, 'createAdminForm'])->name('password.reset');
+        Route::post('/reset-password', [NewPasswordController::class, 'storeAdminPassword'])->name('password.store');
     });
 
-    // Password Reset Routes (outside guest middleware because user clicks link from email)
-    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+    // Authenticated Admin Sub-Group
+    Route::middleware(['auth', 'is_active', 'role:super_admin'])->group(function () {
+        Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
 
-    // Logout (must be inside auth, not guest)
-    Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
+        // Settings-driven password modification inside the Admin Dashboard
+        Route::put('/password/update', [PasswordController::class, 'updateAdminPassword'])->name('password.update');
+    });
 });
 
-// ================================================
-//  ORGANIZATION AUTHENTICATION
-// ================================================
+// =========================================================================
+// 🏥 2. ORGANIZATION PORTAL ROUTING
+// =========================================================================
 Route::prefix('organization')->name('organization.')->group(function () {
 
-    // Guest Routes (Login)
+    // Guest Authentication Sub-Group
     Route::middleware('guest')->group(function () {
         Route::get('/login', [OrganizationLoginController::class, 'create'])->name('login');
         Route::post('/login', [OrganizationLoginController::class, 'store'])->name('login.submit');
 
-        // Forgot Password
-        Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
-            ->name('password.request');
-        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->name('password.email');
+        // Contextual Organization Forgot Password
+        Route::get('/forgot-password', [PasswordResetLinkController::class, 'createOrgForm'])->name('password.request');
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendOrgResetLink'])->name('password.email');
+
+        // Contextual Organization Reset Password Links
+        Route::get('/reset-password/{token}', [NewPasswordController::class, 'createOrgForm'])->name('password.reset');
+        Route::post('/reset-password', [NewPasswordController::class, 'storeOrgPassword'])->name('password.store');
     });
 
-    // Password Reset Routes
-    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+    // Authenticated Organization Sub-Group
+    Route::middleware(['auth', 'is_active', 'role:organization'])->group(function () {
+        Route::post('/logout', [OrganizationLoginController::class, 'destroy'])->name('logout');
 
-    // Logout
-    Route::post('/logout', [OrganizationLoginController::class, 'destroy'])->name('logout');
-});
-
-// ================================================
-//  PROTECTED PASSWORD MANAGEMENT (shared)
-// ================================================
-Route::middleware('auth')->group(function () {
-
-    Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
-
-    Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('/password', [PasswordController::class, 'update'])
-        ->name('password.update');
+        // Profile-driven password modification inside the Organization settings page
+        Route::put('/password/update', [PasswordController::class, 'updateOrgPassword'])->name('password.update');
+    });
 });
