@@ -12,36 +12,58 @@ class PetController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pet::with(['primaryImage', 'images', 'organization'])
-            ->where('status', 'available');
+        $validated = $request->validate([
+            'species' => 'nullable|in:dog,cat,bird',
+            'size' => 'nullable|in:small,medium,large',
+            'gender' => 'nullable|in:male,female',
+            'organization_id' => 'nullable|integer|exists:organizations,id',
+            'per_page' => 'nullable|integer|min:1|max:50',
+            'search' => 'nullable|string|max:255',
+        ]);
 
-        if ($request->filled('species')) {
-            $query->where('species', $request->species);
-        }
+        $query = Pet::query()
+            ->with(['primaryImage', 'organization'])
+            ->where('status', 'available')
+            ->orderByDesc('created_at');
 
-        if ($request->filled('size')) {
-            $query->where('size', $request->size);
-        }
+        // Filters (consistent with validated input)
+        $query->when(
+            isset($validated['species']),
+            fn($q) =>
+            $q->where('species', $validated['species'])
+        );
 
-        if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
-        }
+        $query->when(
+            isset($validated['size']),
+            fn($q) =>
+            $q->where('size', $validated['size'])
+        );
 
-        if ($request->filled('organization_id')) {
-            $query->where('organization_id', $request->organization_id);
-        }
+        $query->when(
+            isset($validated['gender']),
+            fn($q) =>
+            $q->where('gender', $validated['gender'])
+        );
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+        $query->when(
+            isset($validated['organization_id']),
+            fn($q) =>
+            $q->where('organization_id', $validated['organization_id'])
+        );
+
+        // Search
+        $query->when(isset($validated['search']), function ($q) use ($validated) {
+            $search = $validated['search'];
+
+            $q->where(function ($sub) use ($search) {
+                $sub->where('name', 'like', "%{$search}%")
                     ->orWhere('breed', 'like', "%{$search}%");
             });
-        }
+        });
 
-        $pets = $query->orderByDesc('created_at')->paginate(
-            min((int) $request->get('per_page', 15), 50)
-        );
+        $perPage = $validated['per_page'] ?? 15;
+
+        $pets = $query->paginate($perPage);
 
         return PetResource::collection($pets);
     }
@@ -52,28 +74,33 @@ class PetController extends Controller
 
         return (new PetResource($pet))->additional([
             'meta' => [
-                'can_view_detailed_records' => $this->canViewDetailedRecords($request, $pet),
+                'can_view_detailed_records' =>
+                $this->canViewDetailedRecords($request, $pet),
             ],
         ]);
     }
 
     public function showByQr(Request $request, string $qrCodeId)
     {
-        $pet = Pet::where('qr_code_id', $qrCodeId)
-            ->firstOrFail();
+        $pet = Pet::where('qr_code_id', $qrCodeId)->firstOrFail();
 
         $this->loadPetForApi($request, $pet);
 
         return (new PetResource($pet))->additional([
             'meta' => [
-                'can_view_detailed_records' => $this->canViewDetailedRecords($request, $pet),
+                'can_view_detailed_records' =>
+                $this->canViewDetailedRecords($request, $pet),
             ],
         ]);
     }
 
     private function loadPetForApi(Request $request, Pet $pet): void
     {
-        $relations = ['primaryImage', 'images', 'organization'];
+        $relations = [
+            'primaryImage',
+            'images',
+            'organization',
+        ];
 
         if ($this->canViewDetailedRecords($request, $pet)) {
             $relations = array_merge($relations, [

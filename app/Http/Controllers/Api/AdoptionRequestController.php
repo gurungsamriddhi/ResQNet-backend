@@ -9,7 +9,7 @@ use App\Models\AdoptionRequest;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 
-class AdoptionController extends Controller
+class AdoptionRequestController extends Controller
 {
     public function index(Request $request)
     {
