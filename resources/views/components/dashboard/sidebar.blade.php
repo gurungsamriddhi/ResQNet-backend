@@ -1,26 +1,26 @@
 <!-- Sidebar Wrapper Component -->
 @php
-    $isSuperAdmin = auth()->user()?->hasRole('super_admin');
-    $petsUrl = $isSuperAdmin ? '/admin/pets' : '/organization/pets';
-    $dashboardUrl = $isSuperAdmin ? '/admin/dashboard' : '/organization/dashboard';
+    $isSuperAdmin = auth()->user()?->hasRole('super_admin') ?? false;
+    $dashboardUrl = $isSuperAdmin ? route('admin.dashboard') : route('organization.dashboard');
+    $petsUrl = $isSuperAdmin ? route('admin.pets.index') : route('organization.pets.index');
     $rescueUrl = route('organization.rescues.index');
-    $healthUrl = $isSuperAdmin ? '/admin/health' : '/organization/health';
-    $isPetsActive = request()->is('admin/pets') || request()->is('organization/pets') || request()->routeIs('organization.pets.*');
-    $isDashboardActive = request()->is('admin/dashboard') || request()->is('organization/dashboard');
-    $isRescueActive = request()->is('admin/rescue') || request()->is('organization/rescues') || request()->routeIs('organization.rescues.*');
-    $isHealthActive = request()->is('admin/health') || request()->is('organization/health') || request()->routeIs('organization.health.*');
-    $settingsUrl = $isSuperAdmin ? '/admin/settings' : '/organization/settings';
-    $isSettingsActive = request()->is('admin/settings') || request()->is('organization/settings') || request()->routeIs('organization.settings.*');
-    $usersUrl = $isSuperAdmin ? '/admin/users' : '/organization/users';
-    $isUsersActive = request()->is('admin/users') || request()->is('organization/users') || request()->routeIs('organization.users.*');
-    $organizationsUrl = '/admin/organizations';
-    $isOrganizationsActive = request()->is('admin/organizations') || request()->routeIs('admin.organizations.*');
-    $adoptionsUrl = $isSuperAdmin ? '/admin/adoptions' : '/organization/adoptions';
-    $isAdoptionsActive = request()->is('admin/adoptions') || request()->is('organization/adoptions') || request()->routeIs('organization.adoptions.*');
-    $volunteersUrl = $isSuperAdmin ? '/admin/volunteers' : '/organization/volunteers';
-    $isVolunteersActive = request()->is('admin/volunteers') || request()->is('organization/volunteers') || request()->routeIs('organization.volunteers.*');
-    $analyticsUrl = $isSuperAdmin ? '/admin/analytics' : '/organization/analytics';
-    $isAnalyticsActive = request()->is('admin/analytics') || request()->is('organization/analytics') || request()->routeIs('organization.analytics.*');
+    $healthUrl = $isSuperAdmin ? route('admin.health.index') : route('organization.health.index');
+    $usersUrl = $isSuperAdmin ? route('admin.users.index') : route('organization.users.index');
+    $organizationsUrl = route('admin.organizations.index');
+    $adoptionsUrl = route('organization.adoptions.index');
+    $volunteersUrl = route('organization.volunteers.index');
+    $analyticsUrl = route('organization.analytics.index');
+    $settingsUrl = $isSuperAdmin ? route('admin.settings.index') : route('organization.settings.index');
+    $isDashboardActive = request()->routeIs('admin.dashboard') || request()->routeIs('organization.dashboard');
+    $isPetsActive = request()->routeIs('admin.pets.*') || request()->routeIs('organization.pets.*');
+    $isRescueActive = request()->routeIs('admin.rescue*') || request()->routeIs('organization.rescues.*');
+    $isHealthActive = request()->routeIs('admin.health.*') || request()->routeIs('organization.health.*');
+    $isUsersActive = request()->routeIs('admin.users.*') || request()->routeIs('organization.users.*');
+    $isOrganizationsActive = request()->routeIs('admin.organizations.*');
+    $isAdoptionsActive = request()->routeIs('admin.adoptions.*') || request()->routeIs('organization.adoptions.*');
+    $isVolunteersActive = request()->routeIs('admin.volunteers.*') || request()->routeIs('organization.volunteers.*');
+    $isAnalyticsActive = request()->routeIs('admin.analytics.*') || request()->routeIs('organization.analytics.*');
+    $isSettingsActive = request()->routeIs('admin.settings.*') || request()->routeIs('organization.settings.*');
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->

@@ -14,17 +14,9 @@
     <!-- CSS / JS Bundles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Lucide Icons, Alpine.js, & Turbo Drive CDN for SPA transitions -->
+    <!-- Alpine.js & Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.es2017-umd.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <script>
-        // Draw Lucide icons instantly on SPA page transitions
-        document.addEventListener("turbo:load", function() {
-            lucide.createIcons();
-        });
-    </script>
 
     <style>
         body {
@@ -138,7 +130,11 @@
     <div class="flex h-full min-h-screen overflow-hidden">
         
         <!-- Sidebar Navigation -->
-        <x-dashboard.sidebar />
+        @if(auth()->user()?->hasRole('super_admin'))
+            <x-admin.sidebar />
+        @else
+            <x-organization.sidebar />
+        @endif
 
         <!-- Flexible Right-side Content Area with Scroll & Scrolled Header Blur -->
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto" x-data="{ scrolled: false }" @scroll="scrolled = ($event.target.scrollTop > 10)">
