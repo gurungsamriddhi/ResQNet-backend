@@ -93,6 +93,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Pet::class, 'saved_pets')->withTimestamps();
     }
 
+    // Add this method inside your User class
+
+    /**
+     * Get the user's profile.
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
     public function sendOtp($type = 'email')
     {
         $cooldownKey = "otp_cooldown_{$type}_{$this->email}";

@@ -4,55 +4,86 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PetController;
-use App\Http\Controllers\Api\AdoptionController;
+use App\Http\Controllers\Api\AdoptionRequestController;
 use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SavedPetController;
 
-// Publicly accessible API routes
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-    Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-});
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+| Base URL: http://yourapp.test/api/
+*/
 
+Route::prefix('v1')->group(function () {   // Optional but recommended: versioning
 
-Route::get('/pets', [PetController::class, 'index']);
-Route::get('/pets/qr/{qrCodeId}', [PetController::class, 'showByQr']);
-Route::get('/pets/{pet}', [PetController::class, 'show']);
+    // ====================== PUBLIC ROUTES ======================
 
-// Protected API routes
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::prefix('auth')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
+    Route::prefix('auth')->name('api.auth.')->group(function () {
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
+        Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend-otp');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
     });
 
-    // The 'is_active' middleware ensures suspended/pending users get a 403 response
-    Route::middleware(['is_active'])->group(function () {
-        // User Profile
-        Route::get('/user', [UserController::class, 'show']);
-        Route::patch('/user', [UserController::class, 'update']);
-        
-        // Saved Pets (Favorites)
-        Route::get('/user/saved-pets', [SavedPetController::class, 'index']);
-        Route::post('/pets/{pet}/save', [SavedPetController::class, 'toggle']);
+    // Public Pet Routes
+    Route::prefix('pets')->name('api.pets.')->group(function () {
+        Route::get('/', [PetController::class, 'index'])->name('index');
+        Route::get('/{pet}', [PetController::class, 'show'])->name('show');
+        Route::get('/qr/{qrCodeId}', [PetController::class, 'showByQr'])->name('qr.show');
+    });
 
-        // Adoptions
-        Route::get('/adoptions', [AdoptionController::class, 'index']);
-        Route::post('/adoptions', [AdoptionController::class, 'store']);
-        Route::get('/adoptions/{adoption}', [AdoptionController::class, 'show']);
+    // ====================== PROTECTED ROUTES ======================
 
-        // Rescues
-        Route::get('/rescues', [RescueController::class, 'index']);
-        Route::post('/rescues', [RescueController::class, 'store']);
-        Route::get('/rescues/{report}', [RescueController::class, 'show']);
+    Route::middleware(['auth:sanctum'])->group(function () {
 
-        // Donations
-        Route::get('/donations', [DonationController::class, 'index']);
-        Route::post('/donations', [DonationController::class, 'store']);
+        // Auth Protected
+        Route::prefix('auth')->name('api.auth.')->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+            Route::post('/change-password', [AuthController::class, 'changePassword']);
+            Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+        });
+
+        // Apply 'is_active' middleware to all user-specific actions
+        Route::middleware(['is_active'])->group(function () {
+
+            // User Profile
+            Route::prefix('user')->name('api.user.')->group(function () {
+                Route::get('/', [UserController::class, 'show'])->name('show');
+                Route::patch('/', [UserController::class, 'update'])->name('update');
+            });
+
+            // Saved Pets (Favorites)
+            Route::prefix('saved-pets')->name('api.saved-pets.')->group(function () {
+                Route::get('/', [SavedPetController::class, 'index'])->name('index');
+                Route::post('/{pet}', [SavedPetController::class, 'toggle'])->name('toggle');
+            });
+
+            // Adoptions
+            Route::prefix('adoptions')->name('api.adoptions.')->group(function () {
+                Route::get('/', [AdoptionRequestController::class, 'index'])->name('index');
+                Route::post('/', [AdoptionRequestController::class, 'store'])->name('store');
+                Route::get('/{adoption}', [AdoptionRequestController::class, 'show'])->name('show');
+                // You may want to add these later:
+                // Route::post('/{adoption}/cancel', [AdoptionController::class, 'cancel'])->name('cancel');
+            });
+
+            // Rescue Reports
+            Route::prefix('rescues')->name('api.rescues.')->group(function () {
+                Route::get('/', [RescueController::class, 'index'])->name('index');
+                Route::post('/', [RescueController::class, 'store'])->name('store');
+                Route::get('/{report}', [RescueController::class, 'show'])->name('show');
+            });
+
+            // Donations
+            Route::prefix('donations')->name('api.donations.')->group(function () {
+                Route::get('/', [DonationController::class, 'index'])->name('index');
+                Route::post('/', [DonationController::class, 'store'])->name('store');
+            });
+        });
     });
 });

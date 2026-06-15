@@ -7,10 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Mail;
-use App\Notifications\SendOtpNotification;
 use Illuminate\Validation\Rules\Password as PasswordRule;
-use Carbon\Carbon;
+
 
 class AuthController extends Controller
 {
@@ -242,6 +240,7 @@ class AuthController extends Controller
                 'message' => 'Invalid or expired OTP. Please request a new one.'], 400);
         }
 
+       
         $user->forceFill(['password' => Hash::make($request->password)])->save();
         
         // Security best practice: invalidate all existing tokens since password changed
@@ -253,37 +252,84 @@ class AuthController extends Controller
             ]);
     }
 
+    // ====================== CHANGE PASSWORD ======================
+    public function changePassword(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => [
+                'required',
+                'string',
+                'confirmed',
+                PasswordRule::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
+            ],
+        ]);
+
+        // verify current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Current password is incorrect.'
+            ], 403);
+        }
+
+        // prevent same password reuse
+        if (Hash::check($request->new_password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'New password cannot be the same as the old password.'
+            ], 422);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // invalidate old tokens
+        $user->tokens()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password changed successfully. Please login again.'
+        ]);
+    }
+
     // ====================== UPDATE PROFILE ======================
     public function updateProfile(Request $request)
     {
         $user = $request->user();
 
         $request->validate([
-            'name'     => 'sometimes|string|max:255',
-            'phone'    => 'sometimes|string|max:20|unique:users,phone,' . $user->id,
-            'address'  => 'sometimes|nullable|string',
-            'avatar'   => 'sometimes|image|mimes:jpg,jpeg,png|max:5120',
-            'password' => 'required|string', // Current password confirmation
+            'name' => 'sometimes|string|max:255',
+            'phone' => 'sometimes|string|max:20|unique:users,phone,' . $user->id,
+            'address' => 'sometimes|nullable|string',
+            'avatar' => 'sometimes|image|mimes:jpg,jpeg,png|max:5120',
+            'password' => 'required|string',
         ]);
 
-        // Verify current password
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status' => 'error', 
-                'message' => 'Current password is incorrect.'], 403);
+            return response()->json(['status' => 'error', 'message' => 'Incorrect password.'], 403);
         }
+
+        $data = $request->only(['name', 'phone', 'address']);
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $path;
+            // If there's an old avatar, consider deleting it here using Storage::delete()
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $user->update($request->only(['name', 'phone', 'address']));
+        $user->update($data);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Profile updated successfully.',
-            'user'    => $user->fresh()->only(['id','name','email','phone','avatar','address'])
+            'user' => $user->fresh()->only(['id', 'name', 'email', 'phone', 'avatar', 'address'])
         ]);
     }
 }
