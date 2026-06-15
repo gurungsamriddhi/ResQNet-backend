@@ -124,11 +124,44 @@
             </template>
         </div>
 
-        <!-- Results count bar -->
-        <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold text-admin-textSecondary/70">
-                <span x-text="filteredPets.length"></span> pet<span x-show="filteredPets.length !== 1">s</span> found
-            </p>
+        <!-- Stats Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-admin-surface border border-admin-border rounded-xl p-4 shadow-sm flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-lg bg-admin-primary/10 flex items-center justify-center text-admin-primary shrink-0">
+                    <i data-lucide="paw-print" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/60">Total Pets</p>
+                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="filteredPets.length"></p>
+                </div>
+            </div>
+            <div class="bg-admin-surface border border-admin-border rounded-xl p-4 shadow-sm flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-lg bg-admin-successBg/50 flex items-center justify-center text-admin-successText shrink-0">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/60">Available</p>
+                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="pets.filter(p => p.status === 'available').length"></p>
+                </div>
+            </div>
+            <div class="bg-admin-surface border border-admin-border rounded-xl p-4 shadow-sm flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/60">Adopted</p>
+                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="pets.filter(p => p.status === 'adopted').length"></p>
+                </div>
+            </div>
+            <div class="bg-admin-surface border border-admin-border rounded-xl p-4 shadow-sm flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/60">In Care</p>
+                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="pets.filter(p => p.status === 'unavailable').length"></p>
+                </div>
+            </div>
         </div>
 
         <!-- Modern Pet Directory Data Table Card -->
@@ -149,9 +182,9 @@
                     </thead>
                     <tbody class="divide-y divide-admin-border/60">
                         <template x-for="pet in filteredPets" :key="pet.qr_code_id">
-                            <tr class="hover:bg-admin-bg/30 transition-colors duration-200 group">
+                            <tr class="hover:bg-admin-bg/30 transition-colors duration-200 group relative">
                                 <!-- Name + Avatar -->
-                                <td class="py-6 px-6">
+                                <td class="py-5 px-6">
                                     <div class="flex items-center gap-3.5">
                                         <template x-if="pet.primary_image">
                                             <img :src="pet.primary_image" alt=""
@@ -163,17 +196,20 @@
                                                 <span x-text="pet.name.charAt(0).toUpperCase()"></span>
                                             </div>
                                         </template>
-                                        <span class="font-bold text-admin-textPrimary text-sm"
-                                            x-text="pet.name"></span>
+                                        <div>
+                                            <span class="font-bold text-admin-textPrimary text-sm"
+                                                x-text="pet.name"></span>
+                                            <p class="text-[11px] text-admin-textSecondary/50 mt-0.5" x-text="pet.breed || 'No breed'"></p>
+                                        </div>
                                     </div>
                                 </td>
                                 <!-- Breed -->
-                                <td class="py-6 px-6">
-                                    <span class="text-sm font-semibold text-admin-textSecondary"
-                                        x-text="pet.breed"></span>
+                                <td class="py-5 px-6">
+                                    <span class="text-sm font-semibold text-admin-textSecondary capitalize"
+                                        x-text="pet.breed || '-'"></span>
                                 </td>
                                 <!-- Gender -->
-                                <td class="py-6 px-6">
+                                <td class="py-5 px-6">
                                     <div class="flex items-center gap-2">
                                         <span x-show="pet.gender === 'male'"><i data-lucide="mars"
                                                 class="w-4 h-4 text-blue-400"></i></span>
@@ -186,12 +222,12 @@
                                     </div>
                                 </td>
                                 <!-- Age -->
-                                <td class="py-6 px-6">
+                                <td class="py-5 px-6">
                                     <span class="text-sm font-semibold text-admin-textSecondary"
                                         x-text="formatAge(pet.age_months)"></span>
                                 </td>
                                 <!-- Status -->
-                                <td class="py-6 px-6">
+                                <td class="py-5 px-6">
                                     <span
                                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm border"
                                         :class="statusClass(pet.status)">
@@ -204,23 +240,14 @@
                                     </span>
                                 </td>
                                 <!-- Actions -->
-                                <td class="py-6 px-6 text-right">
-                                    <div class="flex items-center justify-end gap-2.5">
+                                <td class="py-5 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-2">
                                         <a :href="petsBase + '/' + pet.id"
-                                            class="inline-block p-2 text-admin-textSecondary hover:text-admin-primary hover:bg-admin-bg rounded-xl transition-all duration-300 hover:scale-105"
-                                            title="View details">
-                                            <i data-lucide="eye" class="w-4.5 h-4.5"></i>
+                                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-xs tracking-wide transition-all duration-200 shadow-sm shadow-admin-primary/20 hover:shadow-md hover:shadow-admin-primary/30 active:scale-95"
+                                            title="View full profile">
+                                            <i data-lucide="eye" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+                                            <span>Profile</span>
                                         </a>
-                                        <button x-show="canEdit" @click="openEditModal(pet)"
-                                            class="p-2 text-admin-textSecondary hover:text-admin-btnGreen hover:bg-admin-bg rounded-xl transition-all duration-300 hover:scale-105"
-                                            title="Edit pet">
-                                            <i data-lucide="pencil" class="w-4.5 h-4.5"></i>
-                                        </button>
-                                        <button x-show="canEdit" @click="confirmDelete(pet)"
-                                            class="p-2 text-admin-textSecondary hover:text-admin-btnRed hover:bg-admin-bg rounded-xl transition-all duration-300 hover:scale-105"
-                                            title="Delete pet">
-                                            <i data-lucide="trash-2" class="w-4.5 h-4.5 text-admin-btnRed"></i>
-                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -244,21 +271,14 @@
                 </button>
             </div>
 
-            <!-- Pagination Footer -->
+            <!-- Table Footer -->
             <div x-show="filteredPets.length > 0"
                 class="px-6 py-4 bg-admin-bg/20 border-t border-admin-border flex items-center justify-between flex-wrap gap-4 text-xs font-semibold text-admin-textSecondary">
-                <span
-                    x-text="'Showing all ' + filteredPets.length + ' pet' + (filteredPets.length !== 1 ? 's' : '')"></span>
-                <div class="flex items-center gap-2">
-                    <button
-                        class="px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin-surface text-admin-textSecondary transition-all duration-200 opacity-50"
-                        disabled>Previous</button>
-                    <button
-                        class="w-8 h-8 rounded-xl bg-admin-primary text-white flex items-center justify-center font-bold shadow-sm shadow-admin-primary/10">1</button>
-                    <button
-                        class="px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin-surface text-admin-textSecondary transition-all duration-200 opacity-50"
-                        disabled>Next</button>
-                </div>
+                <span class="flex items-center gap-2">
+                    <i data-lucide="list" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
+                    <span x-text="'Showing ' + filteredPets.length + ' of ' + pets.length + ' pet' + (pets.length !== 1 ? 's' : '')"></span>
+                </span>
+                <span class="text-admin-textSecondary/50">Click <i data-lucide="eye" class="w-3 h-3 inline"></i> View to see full details</span>
             </div>
         </div>
 

@@ -31,7 +31,7 @@
         </div>
     </x-slot>
 
-    <div class="px-4 sm:px-6 md:px-8 py-8" x-data="{ activeTab: 'overview' }" x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
+    <div class="px-4 sm:px-6 md:px-8 py-8" x-data="{ activeTab: 'overview', deleteModalOpen: false, openEditModal: false, addHealthModalOpen: false }" x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
         
         @if($pet->isSuspended())
             <div class="mb-6 bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 p-4 rounded-xl flex items-start gap-3">
@@ -144,8 +144,11 @@
                     <div class="mt-6 flex flex-wrap gap-4 items-center justify-between">
                         <div class="flex gap-4">
                             @if($canEdit)
-                            <button class="bg-admin-primary hover:bg-admin-primaryPress text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
+                            <button @click="openEditModal = true" class="bg-admin-primary hover:bg-admin-primaryPress text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
                                 <i data-lucide="pencil" class="w-4 h-4"></i> Edit Profile
+                            </button>
+                            <button @click="deleteModalOpen = true" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
                             </button>
                             <button class="bg-admin-surface border border-admin-border hover:bg-admin-bg text-admin-textPrimary font-semibold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
                                 <i data-lucide="share-2" class="w-4 h-4 text-admin-textSecondary"></i> Share
@@ -304,7 +307,7 @@
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-extrabold text-admin-textPrimary">Medical History</h3>
                         @if($canEdit)
-                        <button class="bg-admin-primary/10 text-admin-primary hover:bg-admin-primary/20 font-bold py-2 px-4 rounded-xl transition-colors text-sm border border-admin-primary/20 flex items-center gap-2">
+                        <button @click="addHealthModalOpen = true" class="bg-admin-primary/10 text-admin-primary hover:bg-admin-primary/20 font-bold py-2 px-4 rounded-xl transition-colors text-sm border border-admin-primary/20 flex items-center gap-2">
                             <i data-lucide="plus" class="w-4 h-4"></i> Add Record
                         </button>
                         @endif
@@ -470,6 +473,317 @@
             </div>
             @endif
 
+        <!-- Delete Confirmation Modal -->
+        <div x-show="deleteModalOpen" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" @keydown.escape.window="deleteModalOpen = false">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="deleteModalOpen = false"></div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+                <div class="inline-block align-bottom bg-white dark:bg-admin-bg rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full border border-admin-border">
+                    <form method="POST" action="{{ route('organization.pets.destroy', $pet) }}">
+                        @csrf
+                        @method('DELETE')
+                        <div class="bg-white dark:bg-admin-bg px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="sm:flex sm:items-start">
+                                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+                                    <i data-lucide="alert-triangle" class="h-6 w-6 text-red-600 dark:text-red-400"></i>
+                                </div>
+                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                    <h3 class="text-lg font-extrabold text-admin-textPrimary">Delete {{ $pet->name }}?</h3>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-admin-textSecondary">This action cannot be undone. The pet profile and all associated records will be permanently removed.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-admin-surface px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-admin-border">
+                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Delete
+                            </button>
+                            <button type="button" @click="deleteModalOpen = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-admin-border shadow-sm px-4 py-2 bg-white dark:bg-admin-bg text-base font-medium text-admin-textPrimary hover:bg-gray-50 dark:hover:bg-admin-surface focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div x-show="openEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             style="display: none;" @keydown.escape.window="openEditModal = false">
+
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="openEditModal = false"></div>
+
+            <div x-show="openEditModal" x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
+                 @click.away="openEditModal = false">
+
+                <form method="POST" action="{{ route('organization.pets.update', $pet) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
+                        <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
+                            <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-admin-primary blur-3xl"></div>
+                            <div class="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-admin-navActive blur-3xl"></div>
+                        </div>
+                        <div class="absolute top-4 right-4 z-10">
+                            <button type="button" @click="openEditModal = false"
+                                    class="p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200 shadow-sm">
+                                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center text-center relative z-[5]">
+                            <div class="w-20 h-20 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xl border-4 border-admin-surface ring-2 ring-admin-primary/20 bg-admin-primary/20 text-admin-primary">
+                                <i data-lucide="pencil" class="w-8 h-8 stroke-[2.5]"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-admin-textPrimary mt-4">Edit {{ $pet->name }}</h2>
+                            <p class="text-sm text-admin-textSecondary/70 mt-0.5">Update the pet's profile information.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Name</label>
+                                <input type="text" name="name" value="{{ old('name', $pet->name) }}"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Breed</label>
+                                <input type="text" name="breed" value="{{ old('breed', $pet->breed) }}"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Species</label>
+                                <select name="species"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="dog" {{ $pet->species == 'dog' ? 'selected' : '' }}>Dog</option>
+                                    <option value="cat" {{ $pet->species == 'cat' ? 'selected' : '' }}>Cat</option>
+                                    <option value="bird" {{ $pet->species == 'bird' ? 'selected' : '' }}>Bird</option>
+                                    <option value="rabbit" {{ $pet->species == 'rabbit' ? 'selected' : '' }}>Rabbit</option>
+                                    <option value="other" {{ $pet->species == 'other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Gender</label>
+                                <select name="gender"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="male" {{ $pet->gender == 'male' ? 'selected' : '' }}>Male</option>
+                                    <option value="female" {{ $pet->gender == 'female' ? 'selected' : '' }}>Female</option>
+                                    <option value="unknown" {{ $pet->gender == 'unknown' ? 'selected' : '' }}>Unknown</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Age (months)</label>
+                                <input type="number" name="age_months" value="{{ old('age_months', $pet->age_months) }}" min="0"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Size</label>
+                                <select name="size"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="small" {{ $pet->size == 'small' ? 'selected' : '' }}>Small</option>
+                                    <option value="medium" {{ $pet->size == 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="large" {{ $pet->size == 'large' ? 'selected' : '' }}>Large</option>
+                                    <option value="xl" {{ $pet->size == 'xl' ? 'selected' : '' }}>Extra Large</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Color</label>
+                                <input type="text" name="color" value="{{ old('color', $pet->color) }}"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Status</label>
+                                <select name="status"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="available" {{ $pet->status == 'available' ? 'selected' : '' }}>Available</option>
+                                    <option value="adopted" {{ $pet->status == 'adopted' ? 'selected' : '' }}>Adopted</option>
+                                    <option value="unavailable" {{ $pet->status == 'unavailable' ? 'selected' : '' }}>In Care</option>
+                                    <option value="inactive" {{ $pet->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Description</label>
+                            <textarea name="description" rows="3"
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">{{ old('description', $pet->description) }}</textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Health Status</label>
+                            <textarea name="health_status" rows="2"
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">{{ old('health_status', $pet->health_status) }}</textarea>
+                        </div>
+
+                        <div class="flex items-center gap-6">
+                            <label class="flex items-center gap-2.5 cursor-pointer">
+                                <input type="checkbox" name="is_vaccinated" value="1" {{ $pet->is_vaccinated ? 'checked' : '' }}
+                                       class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
+                                <span class="text-sm font-semibold text-admin-textPrimary">Vaccinated</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer">
+                                <input type="checkbox" name="is_neutered" value="1" {{ $pet->is_neutered ? 'checked' : '' }}
+                                       class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
+                                <span class="text-sm font-semibold text-admin-textPrimary">Neutered / Spayed</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-2">Profile Photo</label>
+                            <div class="flex items-center gap-4">
+                                @if($pet->primaryImage)
+                                    <div class="relative w-20 h-20 rounded-xl overflow-hidden border border-admin-border/40 flex-shrink-0">
+                                        <img src="{{ Storage::url($pet->primaryImage->image_path) }}" alt="" class="w-full h-full object-cover">
+                                    </div>
+                                @else
+                                    <div class="w-20 h-20 rounded-xl bg-admin-bg border-2 border-dashed border-admin-border/50 flex items-center justify-center text-admin-textSecondary/40 flex-shrink-0">
+                                        <i data-lucide="camera" class="w-6 h-6"></i>
+                                    </div>
+                                @endif
+                                <div>
+                                    <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                                        <i data-lucide="upload" class="w-4 h-4"></i>
+                                        <span>Change Image</span>
+                                        <input type="file" name="primary_image" accept="image/*" class="hidden">
+                                    </label>
+                                    <p class="text-[11px] text-admin-textSecondary/50 mt-1.5">JPG, PNG or GIF. 1:1 ratio recommended.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Additional Photos</label>
+                                <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-admin-surface border border-admin-border text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                    <span>Add Photos</span>
+                                    <input type="file" name="additional_images[]" accept="image/*" multiple class="hidden">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-8 py-5 border-t border-admin-border bg-admin-bg/20 flex items-center justify-between rounded-b-2xl">
+                        <button type="button" @click="openEditModal = false"
+                                class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                            <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
+                        </button>
+                        <button type="submit"
+                                class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm">
+                            <i data-lucide="check" class="w-4 h-4 inline mr-1.5"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Health Record Modal -->
+        <div x-show="addHealthModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             style="display: none;" @keydown.escape.window="addHealthModalOpen = false">
+
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="addHealthModalOpen = false"></div>
+
+            <div x-show="addHealthModalOpen" x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
+                 @click.away="addHealthModalOpen = false"
+                 x-data="healthRecordForm({{ $pet->id }})">
+
+                <form @submit.prevent="submitRecord">
+                    @csrf
+                    <input type="hidden" name="pet_id" value="{{ $pet->id }}">
+
+                    <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
+                        <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
+                            <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-admin-primary blur-3xl"></div>
+                            <div class="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-admin-navActive blur-3xl"></div>
+                        </div>
+                        <div class="absolute top-4 right-4 z-10">
+                            <button type="button" @click="addHealthModalOpen = false"
+                                    class="p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200 shadow-sm">
+                                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center text-center relative z-[5]">
+                            <div class="w-20 h-20 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xl border-4 border-admin-surface ring-2 ring-admin-primary/20 bg-admin-primary/20 text-admin-primary">
+                                <i data-lucide="heart-pulse" class="w-8 h-8 stroke-[2.5]"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-admin-textPrimary mt-4">Add Medical Record</h2>
+                            <p class="text-sm text-admin-textSecondary/70 mt-0.5">Record a health event for {{ $pet->name }}.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Title <span class="text-red-500">*</span></label>
+                                <input type="text" name="title" x-model="title" required
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Type <span class="text-red-500">*</span></label>
+                                <select name="type" x-model="type" required
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="checkup">Checkup</option>
+                                    <option value="treatment">Treatment</option>
+                                    <option value="surgery">Surgery</option>
+                                    <option value="injury">Injury</option>
+                                    <option value="observation">Observation</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Record Date <span class="text-red-500">*</span></label>
+                                <input type="date" name="record_date" x-model="recordDate" required
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Next Visit Date</label>
+                                <input type="date" name="next_visit_date" x-model="nextVisitDate"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Description</label>
+                            <textarea name="description" x-model="description" rows="3"
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Notes</label>
+                            <textarea name="notes" x-model="notes" rows="2"
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="px-8 py-5 border-t border-admin-border bg-admin-bg/20 flex items-center justify-between rounded-b-2xl">
+                        <button type="button" @click="addHealthModalOpen = false"
+                                class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                            <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
+                        </button>
+                        <button type="submit" :disabled="saving"
+                                class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i data-lucide="plus" class="w-4 h-4 inline mr-1.5"></i>
+                            <span x-text="saving ? 'Saving...' : 'Add Record'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         </div>
     </div>
 
@@ -514,4 +828,54 @@
         </div>
     </div>
     @endif
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('healthRecordForm', (petId) => ({
+            petId: petId,
+            title: '',
+            type: 'checkup',
+            recordDate: new Date().toISOString().split('T')[0],
+            nextVisitDate: '',
+            description: '',
+            notes: '',
+            saving: false,
+
+            async submitRecord() {
+                if (!this.title.trim()) return;
+                this.saving = true;
+                try {
+                    const res = await fetch('{{ route("organization.health.medical-records.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            pet_id: this.petId,
+                            title: this.title,
+                            type: this.type,
+                            record_date: this.recordDate,
+                            next_visit_date: this.nextVisitDate || null,
+                            description: this.description || null,
+                            notes: this.notes || null,
+                        }),
+                    });
+                    if (!res.ok) {
+                        const err = await res.json();
+                        alert(err.message || 'Failed to save record.');
+                        return;
+                    }
+                    window.location.reload();
+                } catch (e) {
+                    console.error('Save failed', e);
+                    alert('An error occurred while saving the record.');
+                } finally {
+                    this.saving = false;
+                }
+            },
+        }));
+    });
+</script>
 </x-layouts.admin>
