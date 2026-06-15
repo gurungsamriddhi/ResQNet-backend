@@ -3,23 +3,23 @@
     $isSuperAdmin = auth()->user()?->hasRole('super_admin') ?? false;
     $dashboardUrl = $isSuperAdmin ? route('admin.dashboard') : route('organization.dashboard');
     $petsUrl = $isSuperAdmin ? route('admin.pets.index') : route('organization.pets.index');
-    $rescueUrl = route('organization.rescues.index');
-    $healthUrl = $isSuperAdmin ? route('admin.health.index') : route('organization.health.index');
-    $usersUrl = $isSuperAdmin ? route('admin.users.index') : route('organization.users.index');
-    $organizationsUrl = route('admin.organizations.index');
-    $adoptionsUrl = route('organization.adoptions.index');
-    $volunteersUrl = route('organization.volunteers.index');
-    $analyticsUrl = route('organization.analytics.index');
+    $rescueUrl = $isSuperAdmin ? '#' : route('organization.rescues.index');
+    $healthUrl = $isSuperAdmin ? route('admin.medical-records.index') : route('organization.health.index');
+    $usersUrl = $isSuperAdmin ? route('admin.users.index') : route('organization.staff.index');
+    $organizationsUrl = $isSuperAdmin ? route('admin.organizations.index') : '#';
+    $adoptionsUrl = $isSuperAdmin ? '#' : route('organization.adoptions.index');
+    $volunteersUrl = $isSuperAdmin ? route('admin.volunteers.index') : route('organization.volunteers.index');
+    $analyticsUrl = $isSuperAdmin ? route('admin.analytics.index') : '#';
     $settingsUrl = $isSuperAdmin ? route('admin.settings.index') : route('organization.settings.index');
     $isDashboardActive = request()->routeIs('admin.dashboard') || request()->routeIs('organization.dashboard');
     $isPetsActive = request()->routeIs('admin.pets.*') || request()->routeIs('organization.pets.*');
     $isRescueActive = request()->routeIs('admin.rescue*') || request()->routeIs('organization.rescues.*');
-    $isHealthActive = request()->routeIs('admin.health.*') || request()->routeIs('organization.health.*');
-    $isUsersActive = request()->routeIs('admin.users.*') || request()->routeIs('organization.users.*');
+    $isHealthActive = request()->routeIs('admin.medical-records.*') || request()->routeIs('organization.health.*');
+    $isUsersActive = request()->routeIs('admin.users.*') || request()->routeIs('organization.staff.*');
     $isOrganizationsActive = request()->routeIs('admin.organizations.*');
-    $isAdoptionsActive = request()->routeIs('admin.adoptions.*') || request()->routeIs('organization.adoptions.*');
+    $isAdoptionsActive = request()->routeIs('organization.adoptions.*');
     $isVolunteersActive = request()->routeIs('admin.volunteers.*') || request()->routeIs('organization.volunteers.*');
-    $isAnalyticsActive = request()->routeIs('admin.analytics.*') || request()->routeIs('organization.analytics.*');
+    $isAnalyticsActive = request()->routeIs('admin.analytics.*');
     $isSettingsActive = request()->routeIs('admin.settings.*') || request()->routeIs('organization.settings.*');
 @endphp
 <div>

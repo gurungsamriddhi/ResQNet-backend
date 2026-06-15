@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreMedicationRequest extends FormRequest
 {
@@ -15,7 +16,17 @@ class StoreMedicationRequest extends FormRequest
     {
         return [
             'pet_id' => 'required|exists:pets,id',
-            'vet_id' => 'nullable|exists:vets,id',
+            'vet_id' => [
+                'nullable',
+                Rule::exists('vets', 'id')->where(function ($query) {
+                    $orgId = auth()->user()?->organization?->id;
+                    $query->where('is_global', true)
+                          ->orWhere(function ($q) use ($orgId) {
+                              $q->where('is_global', false)
+                                ->where('organization_id', $orgId);
+                          });
+                }),
+            ],
             'medicine_name' => 'required|string|max:255',
             'dosage' => 'required|string|max:255',
             'frequency' => 'nullable|string|max:255',

@@ -150,14 +150,20 @@
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
 
-                    <!-- Persistent Sleek Search Input -->
-                    <div class="relative max-w-md w-full hidden sm:block">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-admin-textSecondary/60">
-                            <i data-lucide="search" class="w-4 h-4"></i>
+                    @if(isset($header) && $header->isNotEmpty())
+                        <div class="w-full flex items-center">
+                            {{ $header }}
                         </div>
-                        <input type="text" placeholder="Search pets, rescue requests, adoption status..." 
-                               class="w-full pl-9 pr-4 py-2 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary placeholder-admin-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all duration-200">
-                    </div>
+                    @else
+                        <!-- Persistent Sleek Search Input -->
+                        <div class="relative max-w-md w-full hidden sm:block">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-admin-textSecondary/60">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                            </div>
+                            <input type="text" placeholder="Search pets, rescue requests, adoption status..." 
+                                   class="w-full pl-9 pr-4 py-2 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary placeholder-admin-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all duration-200">
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right: Actions & User Profile -->

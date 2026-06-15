@@ -8,82 +8,168 @@ use Illuminate\Http\Request;
 
 class VetController extends Controller
 {
+    protected string $routePrefix = 'admin.vets.';
+
     public function index()
     {
+        $this->authorize('viewAny', Vet::class);
         $vets = Vet::global()->latest()->paginate(10);
-        return view('shared.vets.index', compact('vets'));
+        return view('shared.vets.index', [
+            'vets' => $vets,
+            'routePrefix' => $this->routePrefix,
+        ]);
     }
 
     public function create()
     {
-        return view('shared.vets.create');
+        $this->authorize('create', Vet::class);
+        return view('shared.vets.create', [
+            'routePrefix' => $this->routePrefix,
+        ]);
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Vet::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
             'specialization' => 'nullable|string|max:255',
             'license_number' => 'nullable|string|max:100',
-            'is_active' => 'boolean',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'The veterinarian\'s full name is required.',
+            'name.max' => 'The name must not exceed 255 characters.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.max' => 'The email must not exceed 255 characters.',
+            'phone.max' => 'The phone number must not exceed 20 characters.',
         ]);
 
         $validated['organization_id'] = null; // Enforce global vet
-        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['is_global'] = true;
 
-        Vet::create($validated);
+        $vet = Vet::create($validated);
 
-        return redirect()->route('admin.vets.index')->with('success', 'Global Vet created successfully.');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Global Vet created successfully.',
+                'vet' => $vet
+            ], 201);
+        }
+
+        return redirect()->route($this->routePrefix . 'index')->with('success', 'Global Vet created successfully.');
     }
 
     public function show(Vet $vet)
     {
-        if ($vet->organization_id !== null) {
-            abort(403, 'Unauthorized action. This is not a global vet.');
+        $this->authorize('view', $vet);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'id' => $vet->id,
+                'name' => $vet->name,
+                'email' => $vet->email,
+                'phone' => $vet->phone,
+                'address' => $vet->address,
+                'specialization' => $vet->specialization,
+                'license_number' => $vet->license_number,
+                'status' => $vet->status,
+                'created_at' => $vet->created_at->format('M d, Y'),
+                'updated_at' => $vet->updated_at->format('M d, Y'),
+                'medical_records_count' => $vet->medicalRecords()->count(),
+                'vaccinations_count' => $vet->vaccinations()->count(),
+                'medications_count' => $vet->medications()->count(),
+            ]);
         }
-        return view('shared.vets.show', compact('vet'));
+
+        return view('shared.vets.show', [
+            'vet' => $vet,
+            'routePrefix' => $this->routePrefix,
+        ]);
     }
 
     public function edit(Vet $vet)
     {
-        if ($vet->organization_id !== null) {
-            abort(403, 'Unauthorized action. This is not a global vet.');
+        $this->authorize('update', $vet);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'id' => $vet->id,
+                'name' => $vet->name,
+                'email' => $vet->email,
+                'phone' => $vet->phone,
+                'address' => $vet->address,
+                'specialization' => $vet->specialization,
+                'license_number' => $vet->license_number,
+                'status' => $vet->status,
+            ]);
         }
-        return view('shared.vets.edit', compact('vet'));
+
+        return view('shared.vets.edit', [
+            'vet' => $vet,
+            'routePrefix' => $this->routePrefix,
+        ]);
     }
 
     public function update(Request $request, Vet $vet)
     {
-        if ($vet->organization_id !== null) {
-            abort(403, 'Unauthorized action. This is not a global vet.');
-        }
+        $this->authorize('update', $vet);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
             'specialization' => 'nullable|string|max:255',
             'license_number' => 'nullable|string|max:100',
-            'is_active' => 'boolean',
+            'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'The veterinarian\'s full name is required.',
+            'name.max' => 'The name must not exceed 255 characters.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.max' => 'The email must not exceed 255 characters.',
+            'phone.max' => 'The phone number must not exceed 20 characters.',
         ]);
-
-        $validated['is_active'] = $request->boolean('is_active', true);
 
         $vet->update($validated);
 
-        return redirect()->route('admin.vets.index')->with('success', 'Global Vet updated successfully.');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Global Vet updated successfully.',
+                'vet' => [
+                    'id' => $vet->id,
+                    'name' => $vet->name,
+                    'email' => $vet->email,
+                    'phone' => $vet->phone,
+                    'address' => $vet->address,
+                    'specialization' => $vet->specialization,
+                    'license_number' => $vet->license_number,
+                    'status' => $vet->status,
+                ],
+            ]);
+        }
+
+        return redirect()->route($this->routePrefix . 'index')->with('success', 'Global Vet updated successfully.');
     }
 
     public function destroy(Vet $vet)
     {
-        if ($vet->organization_id !== null) {
-            abort(403, 'Unauthorized action. This is not a global vet.');
-        }
+        $this->authorize('delete', $vet);
 
         $vet->delete();
 
-        return redirect()->route('admin.vets.index')->with('success', 'Global Vet deleted successfully.');
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Global Vet deleted successfully.',
+            ]);
+        }
+
+        return redirect()->route($this->routePrefix . 'index')->with('success', 'Global Vet deleted successfully.');
     }
 }

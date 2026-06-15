@@ -4,20 +4,24 @@
     $petsUrl = route('organization.pets.index');
     $rescueUrl = route('organization.rescues.index');
     $healthUrl = route('organization.health.index');
-    $usersUrl = route('organization.users.index');
+    $staffUrl = route('organization.staff.index');
     $adoptionsUrl = route('organization.adoptions.index');
     $volunteersUrl = route('organization.volunteers.index');
-    $analyticsUrl = route('organization.analytics.index');
+    $vetsUrl = route('organization.vets.index');
+    $financeUrl = route('organization.finance.index');
     $settingsUrl = route('organization.settings.index');
+    $profileUrl = route('organization.profile.edit');
     $isDashboardActive = request()->routeIs('organization.dashboard');
     $isPetsActive = request()->routeIs('organization.pets.*');
     $isRescueActive = request()->routeIs('organization.rescues.*');
     $isHealthActive = request()->routeIs('organization.health.*');
-    $isUsersActive = request()->routeIs('organization.users.*');
+    $isStaffActive = request()->routeIs('organization.staff.*');
     $isAdoptionsActive = request()->routeIs('organization.adoptions.*');
     $isVolunteersActive = request()->routeIs('organization.volunteers.*');
-    $isAnalyticsActive = request()->routeIs('organization.analytics.*');
+    $isVetsActive = request()->routeIs('organization.vets.*');
+    $isFinanceActive = request()->routeIs('organization.finance.*');
     $isSettingsActive = request()->routeIs('organization.settings.*');
+    $isProfileActive = request()->routeIs('organization.profile.*');
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
@@ -29,7 +33,7 @@
             </div>
             <div>
                 <span class="font-bold text-sm tracking-wider uppercase text-slate-100">ResQNet</span>
-                <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase">Admin Hub</span>
+                <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase">Org Hub</span>
             </div>
         </div>
 
@@ -86,17 +90,6 @@
                             <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
                         </a>
                     </li>
-
-                    <!-- Users -->
-                    <li>
-                        <a href="{{ $usersUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Users</span>
-                            </div>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
@@ -112,7 +105,17 @@
                                 <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Adoptions</span>
                             </div>
-                            <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
+                        </a>
+                    </li>
+
+                    <!-- Staff -->
+                    <li>
+                        <a href="{{ $staffUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isStaffActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="user-cog" class="w-4 h-4 {{ $isStaffActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Staff</span>
+                            </div>
                         </a>
                     </li>
 
@@ -124,17 +127,44 @@
                                 <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Volunteers</span>
                             </div>
-                            <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
                         </a>
                     </li>
 
-                    <!-- Analytics -->
+                    <!-- Veterinarians -->
                     <li>
-                        <a href="{{ $analyticsUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                        <a href="{{ $vetsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="bar-chart-3" class="w-4 h-4 {{ $isAnalyticsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Analytics</span>
+                                <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Veterinarians</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Finance -->
+                    <li>
+                        <a href="{{ $financeUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Finance</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Account Section -->
+            <div>
+                <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Account</span>
+                <ul class="space-y-1.5">
+                    <!-- Profile -->
+                    <li>
+                        <a href="{{ $profileUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isProfileActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="user-circle" class="w-4 h-4 {{ $isProfileActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Profile</span>
                             </div>
                         </a>
                     </li>
@@ -244,7 +274,7 @@
                     </div>
                     <div>
                         <span class="font-bold text-sm tracking-wider uppercase text-slate-100">ResQNet</span>
-                        <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase text-left">Admin Hub</span>
+                        <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase text-left">Org Hub</span>
                     </div>
                 </div>
 
@@ -294,15 +324,6 @@
                                      <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
                                  </a>
                               </li>
-                              <li>
-                                 <a href="{{ $usersUrl }}" 
-                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                     <div class="flex items-center gap-3">
-                                         <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                         <span>Users</span>
-                                     </div>
-                                 </a>
-                              </li>
                          </ul>
                     </div>
 
@@ -317,7 +338,15 @@
                                         <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Adoptions</span>
                                     </div>
-                                    <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ $staffUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isStaffActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="user-cog" class="w-4 h-4 {{ $isStaffActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Staff</span>
+                                    </div>
                                 </a>
                             </li>
                             <li>
@@ -327,15 +356,39 @@
                                         <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Volunteers</span>
                                     </div>
-                                    <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ $analyticsUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                <a href="{{ $vetsUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
-                                        <i data-lucide="bar-chart-3" class="w-4 h-4 {{ $isAnalyticsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Analytics</span>
+                                        <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Veterinarians</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ $financeUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Finance</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Account Section -->
+                    <div>
+                        <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Account</span>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="{{ $profileUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isProfileActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="user-circle" class="w-4 h-4 {{ $isProfileActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Profile</span>
                                     </div>
                                 </a>
                             </li>

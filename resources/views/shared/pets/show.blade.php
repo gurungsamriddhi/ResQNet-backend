@@ -150,9 +150,9 @@
                             <button @click="deleteModalOpen = true" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
                             </button>
-                            <button class="bg-admin-surface border border-admin-border hover:bg-admin-bg text-admin-textPrimary font-semibold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
+                            <!--<button class="bg-admin-surface border border-admin-border hover:bg-admin-bg text-admin-textPrimary font-semibold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
                                 <i data-lucide="share-2" class="w-4 h-4 text-admin-textSecondary"></i> Share
-                            </button>
+                            </button>-->
                             @endif
                         </div>
                         

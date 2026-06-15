@@ -2,23 +2,25 @@
 @php
     $dashboardUrl = route('admin.dashboard');
     $petsUrl = route('admin.pets.index');
-    $rescueUrl = route('organization.rescues.index');
-    $healthUrl = route('admin.health.index');
+    $rescueUrl = '#'; // No admin rescue route yet
+    $healthUrl = route('admin.medical-records.index');
+    $vetsUrl = route('admin.vets.index');
     $usersUrl = route('admin.users.index');
     $organizationsUrl = route('admin.organizations.index');
-    $adoptionsUrl = route('organization.adoptions.index');
-    $volunteersUrl = route('organization.volunteers.index');
-    $analyticsUrl = route('organization.analytics.index');
+    $adoptionsUrl = '#'; // No admin adoptions route yet
+    $volunteersUrl = route('admin.volunteers.index');
+    $analyticsUrl = route('admin.analytics.index');
     $settingsUrl = route('admin.settings.index');
     $isDashboardActive = request()->routeIs('admin.dashboard');
     $isPetsActive = request()->routeIs('admin.pets.*');
-    $isRescueActive = request()->routeIs('admin.rescue*') || request()->routeIs('organization.rescues.*');
-    $isHealthActive = request()->routeIs('admin.health.*');
+    $isRescueActive = request()->routeIs('admin.rescue*');
+    $isHealthActive = request()->routeIs('admin.medical-records.*');
+    $isVetsActive = request()->routeIs('admin.vets.*');
     $isUsersActive = request()->routeIs('admin.users.*');
     $isOrganizationsActive = request()->routeIs('admin.organizations.*');
-    $isAdoptionsActive = request()->routeIs('admin.adoptions.*') || request()->routeIs('organization.adoptions.*');
-    $isVolunteersActive = request()->routeIs('admin.volunteers.*') || request()->routeIs('organization.volunteers.*');
-    $isAnalyticsActive = request()->routeIs('admin.analytics.*') || request()->routeIs('organization.analytics.*');
+    $isAdoptionsActive = request()->routeIs('admin.adoptions.*');
+    $isVolunteersActive = request()->routeIs('admin.volunteers.*');
+    $isAnalyticsActive = request()->routeIs('admin.analytics.*');
     $isSettingsActive = request()->routeIs('admin.settings.*');
 @endphp
 <div>
@@ -74,6 +76,17 @@
                                 <span>Health Records</span>
                             </div>
                             <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
+                        </a>
+                    </li>
+
+                    <!-- Veterinarians -->
+                    <li>
+                        <a href="{{ $vetsUrl }}"
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Veterinarians</span>
+                            </div>
                         </a>
                     </li>
 
@@ -141,7 +154,7 @@
                         </a>
                     </li>
 
-                    <!-- Analytics -->
+                    {{-- <!-- Analytics -->
                     <li>
                         <a href="{{ $analyticsUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
@@ -150,7 +163,7 @@
                                 <span>Analytics</span>
                             </div>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <!-- Settings -->
                     <li>
@@ -298,15 +311,24 @@
                                 </a>
                              </li>
                              <li>
-                                 <a href="{{ $rescueUrl }}" 
-                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                     <div class="flex items-center gap-3">
-                                         <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                         <span>Rescue Cases</span>
-                                     </div>
-                                     <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
-                                 </a>
-                              </li>
+                                  <a href="{{ $vetsUrl }}"
+                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                      <div class="flex items-center gap-3">
+                                          <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                          <span>Veterinarians</span>
+                                      </div>
+                                  </a>
+                               </li>
+                               <li>
+                                  <a href="{{ $rescueUrl }}" 
+                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                      <div class="flex items-center gap-3">
+                                          <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                          <span>Rescue Cases</span>
+                                      </div>
+                                      <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
+                                  </a>
+                               </li>
                               <li>
                                  <a href="{{ $usersUrl }}" 
                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
@@ -352,7 +374,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ $analyticsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAnalyticsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
@@ -360,7 +382,7 @@
                                         <span>Analytics</span>
                                     </div>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li>
                                 <a href="{{ $settingsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">

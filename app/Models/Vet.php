@@ -14,20 +14,32 @@ class Vet extends Model
 
     protected $fillable = [
         'organization_id',
+        'is_global',
         'name',
         'phone',
         'email',
+        'address',
         'specialization',
         'license_number',
-        'is_active',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'is_global' => 'boolean',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    public function isGlobal(): bool
+    {
+        return $this->is_global;
+    }
+
+    public function isOwnedBy(?int $orgId): bool
+    {
+        return !$this->is_global && $this->organization_id === $orgId && $orgId !== null;
     }
 
     public function organization(): BelongsTo
@@ -52,14 +64,26 @@ class Vet extends Model
 
     public function scopeGlobal($query)
     {
-        return $query->whereNull('organization_id');
+        return $query->where('is_global', true);
     }
 
-    public function scopeOrganization($query, $organizationId = null)
+    public function scopeOwnedByOrganization($query, $organizationId)
     {
-        if ($organizationId) {
-            return $query->where('organization_id', $organizationId);
-        }
-        return $query->whereNotNull('organization_id');
+        return $query->where('is_global', false)
+                     ->where('organization_id', $organizationId);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeAvailableForOrganization($query, $organizationId)
+    {
+        return $query->where('is_global', true)
+                     ->orWhere(function ($q) use ($organizationId) {
+                         $q->where('is_global', false)
+                           ->where('organization_id', $organizationId);
+                     });
     }
 }
