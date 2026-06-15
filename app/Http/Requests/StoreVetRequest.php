@@ -22,4 +22,15 @@ class StoreVetRequest extends FormRequest
             'is_active' => 'boolean',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'The veterinarian\'s full name is required.',
+            'name.max' => 'The name must not exceed 255 characters.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.max' => 'The email must not exceed 255 characters.',
+            'phone.max' => 'The phone number must not exceed 20 characters.',
+        ];
+    }
 }

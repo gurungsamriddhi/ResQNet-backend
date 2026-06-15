@@ -18,6 +18,7 @@ class AdoptionRequestSeeder extends Seeder
         $sita = User::where('email', 'sita@example.com')->firstOrFail();
         $ramesh = User::where('email', 'ramesh@example.com')->firstOrFail();
         $priya = User::where('email', 'priya@example.com')->firstOrFail();
+        $orgAdmin = User::where('email', 'org1@resqnet.com')->firstOrFail();
 
         $requests = [
             [
@@ -26,7 +27,11 @@ class AdoptionRequestSeeder extends Seeder
                 'message' => 'I have a spacious home with a fenced yard and I work from home, so I can give Max all the attention he needs.',
                 'living_situation' => 'House with fenced yard, Lakeside-6, Pokhara',
                 'has_other_pets' => false,
-                'status' => 'pending',
+                'experience_with_pets' => true,
+                'family_members_count' => 3,
+                'housing_type' => 'house',
+                'employment_status' => 'employed',
+                'status' => 'under_review',
             ],
             [
                 'pet_id' => $luna->id,
@@ -34,6 +39,10 @@ class AdoptionRequestSeeder extends Seeder
                 'message' => 'Looking for a calm companion for my elderly mother. Luna seems like the perfect fit.',
                 'living_situation' => 'Apartment, New Baneshwor-4, Kathmandu',
                 'has_other_pets' => true,
+                'experience_with_pets' => true,
+                'family_members_count' => 2,
+                'housing_type' => 'apartment',
+                'employment_status' => 'employed',
                 'status' => 'pending',
             ],
             [
@@ -42,6 +51,10 @@ class AdoptionRequestSeeder extends Seeder
                 'message' => 'We are a family of four looking to adopt our first pet. Rocky\'s playful nature won our hearts.',
                 'living_situation' => 'House with garden, Sauraha-2, Chitwan',
                 'has_other_pets' => false,
+                'experience_with_pets' => false,
+                'family_members_count' => 4,
+                'housing_type' => 'house',
+                'employment_status' => 'employed',
                 'status' => 'pending',
             ],
             [
@@ -50,8 +63,12 @@ class AdoptionRequestSeeder extends Seeder
                 'message' => 'Previously interested in Rocky but also open to Max if available.',
                 'living_situation' => 'House with garden, Sauraha-2, Chitwan',
                 'has_other_pets' => false,
+                'experience_with_pets' => false,
+                'family_members_count' => 4,
+                'housing_type' => 'house',
+                'employment_status' => 'employed',
                 'status' => 'rejected',
-                'admin_notes' => 'Applicant chose another pet.',
+                'organization_response' => 'Applicant chose another pet.',
                 'reviewed_at' => now()->subDays(5),
             ],
         ];
@@ -61,7 +78,6 @@ class AdoptionRequestSeeder extends Seeder
                 [
                     'pet_id' => $request['pet_id'],
                     'user_id' => $request['user_id'],
-                    'status' => $request['status'],
                 ],
                 $request
             );

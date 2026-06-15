@@ -62,8 +62,6 @@ class DonationSeeder extends Seeder
         ];
 
         foreach ($donations as $donation) {
-            $key = $donation['transaction_id'] ?? $donation['remarks'] . '-' . $donation['amount'];
-
             Donation::firstOrCreate(
                 [
                     'user_id' => $donation['user_id'],

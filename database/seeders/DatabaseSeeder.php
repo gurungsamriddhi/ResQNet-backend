@@ -7,12 +7,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * Order matters — each seeder depends on the ones before it:
-     *   roles → users → organizations → vets → pets → health → adoptions → rescues → donations
-     */
     public function run(): void
     {
         $this->call([
@@ -31,7 +25,7 @@ class DatabaseSeeder extends Seeder
             ['email' => env('ADMIN_EMAIL', 'admin@resqnet.com')],
             [
                 'name' => env('ADMIN_NAME', 'Super Admin'),
-                'password' => bcrypt(env('ADMIN_PASSWORD', 'password')),
+                'password' => bcrypt(env('ADMIN_PASSWORD', '12345678')),
                 'is_active' => true,
                 'email_verified_at' => now(),
             ]

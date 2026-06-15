@@ -10,21 +10,11 @@ class DemoUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $password = Hash::make('password');
+        $password = Hash::make('12345678');
 
         $orgUsers = [
-            [
-                'name' => 'Paws & Claws Admin',
-                'email' => 'org1@resqnet.com',
-                'phone' => '+9779841111111',
-                'role' => 'organization',
-            ],
-            [
-                'name' => 'Kathmandu Rescue Admin',
-                'email' => 'org2@resqnet.com',
-                'phone' => '+9779842222222',
-                'role' => 'organization',
-            ],
+            ['name' => 'Paws & Claws Admin', 'email' => 'org1@resqnet.com', 'phone' => '+9779841111111', 'role' => 'organization'],
+            ['name' => 'Kathmandu Rescue Admin', 'email' => 'org2@resqnet.com', 'phone' => '+9779842222222', 'role' => 'organization'],
         ];
 
         foreach ($orgUsers as $data) {
