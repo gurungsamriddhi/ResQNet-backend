@@ -9,8 +9,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        // TODO: Implement index
-        return response()->json(['message' => 'Not implemented yet - index']);
+        return view('admin.users.index');
     }
 
     public function deactivate(Request $request)
