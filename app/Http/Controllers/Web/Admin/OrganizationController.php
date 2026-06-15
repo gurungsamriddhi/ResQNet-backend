@@ -12,14 +12,14 @@ use App\Mail\OrganizationApproved;
 use App\Mail\OrganizationRejected;
 use App\Mail\OrganizationSuspended;
 
-class OrganizationManagementController extends Controller
+class OrganizationController extends Controller
 {
     public function index()
     {
-        $pendingOrganizations=Organization::with(['user', 'media'])
-             ->where('status','pending')
-             ->latest()
-             ->get();
+        $pendingOrganizations = Organization::with(['user', 'media'])
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
 
         $verifiedOrganizations = Organization::with('user')
             ->where('status', 'active')
@@ -80,7 +80,7 @@ class OrganizationManagementController extends Controller
 
         $reasonString = implode("\n- ", $reasonParts);
         $reasonString = "- " . $reasonString; // Add bullet to first item
-    
+
         DB::transaction(function () use ($organization, $reasonString) {
             $organization->update([
                 'status' => 'rejected',
@@ -122,7 +122,7 @@ class OrganizationManagementController extends Controller
             'status' => 'suspended',
             'suspension_reason' => $reasonString,
         ]);
-        
+
         if ($organization->user) {
             $organization->user->update(['is_active' => false]);
         }
