@@ -27,6 +27,7 @@ class StoreMedicalRecordRequest extends FormRequest
                           });
                 }),
             ],
+            'vet_name' => 'nullable|string|max:255',
             'type' => 'required|in:checkup,treatment,surgery,injury,observation,other',
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',

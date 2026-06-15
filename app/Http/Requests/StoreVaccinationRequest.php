@@ -27,6 +27,7 @@ class StoreVaccinationRequest extends FormRequest
                           });
                 }),
             ],
+            'vet_name' => 'nullable|string|max:255',
             'vaccine_name' => 'required|string|max:255',
             'batch_number' => 'nullable|string|max:100',
             'date_administered' => 'required|date',
