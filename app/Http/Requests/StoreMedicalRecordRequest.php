@@ -28,7 +28,7 @@ class StoreMedicalRecordRequest extends FormRequest
                 }),
             ],
             'type' => 'required|in:checkup,treatment,surgery,injury,observation,other',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'notes' => 'nullable|string',
             'record_date' => 'required|date',

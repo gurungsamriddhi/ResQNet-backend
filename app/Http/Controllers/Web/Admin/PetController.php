@@ -44,7 +44,9 @@ class PetController extends Controller
         // Analytics data for the analytics tab
         $analytics = $this->buildAnalytics($pet);
 
-        return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics'));
+        $vets = \App\Models\Vet::where('is_active', true)->orderBy('name')->get();
+
+        return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics', 'vets'));
     }
 
     /**
@@ -96,7 +98,7 @@ class PetController extends Controller
         $approvedRequests = $pet->adoptionRequests->where('status', 'approved')->count();
 
         return [
-            'days_in_care' => $pet->created_at->diffInDays(now()),
+            'days_in_care' => (int) $pet->created_at->diffInDays(now()),
             'total_medical_records' => $pet->medicalRecords->count(),
             'total_vaccinations' => $pet->vaccinations->count(),
             'total_medications' => $pet->medications->count(),

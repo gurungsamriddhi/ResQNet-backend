@@ -31,8 +31,24 @@
         </div>
     </x-slot>
 
-    <div class="px-4 sm:px-6 md:px-8 py-8" x-data="{ activeTab: 'overview', deleteModalOpen: false, openEditModal: false, addHealthModalOpen: false }" x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
+    <div class="px-4 sm:px-6 md:px-8 py-8" x-data="{ activeTab: (window.location.hash && ['overview', 'health-records', 'adoptions', 'rescue', 'analytics'].includes(window.location.hash.substring(1))) ? window.location.hash.substring(1) : 'overview', deleteModalOpen: false, openEditModal: false, addHealthModalOpen: false, addVaccineModalOpen: false }" x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons()); if (activeTab) window.location.hash = activeTab">
         
+        <div id="flash-container">
+            @if(session('success'))
+                <div class="mb-6 bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 p-4 rounded-xl flex items-center justify-between gap-3 shadow-sm" x-data="{ show: true }" x-show="show">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 shrink-0 text-emerald-500"></i>
+                        <div>
+                            <p class="text-sm font-semibold">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="show = false" class="text-emerald-700 dark:text-emerald-400 hover:opacity-75 transition-opacity">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            @endif
+        </div>
+
         @if($pet->isSuspended())
             <div class="mb-6 bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 p-4 rounded-xl flex items-start gap-3">
                 <i data-lucide="alert-triangle" class="w-6 h-6 shrink-0 mt-0.5"></i>
@@ -141,33 +157,30 @@
                             <div><strong class="text-admin-textPrimary">Color:</strong> {{ $pet->color ?? 'Unknown' }}</div>
                         </div>
                     </div>
-                    <div class="mt-6 flex flex-wrap gap-4 items-center justify-between">
-                        <div class="flex gap-4">
+                    <div class="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-4 items-start sm:items-center justify-between">
+                        <div class="flex flex-col w-full sm:w-auto sm:flex-row gap-3">
                             @if($canEdit)
-                            <button @click="openEditModal = true" class="bg-admin-primary hover:bg-admin-primaryPress text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                                <i data-lucide="pencil" class="w-4 h-4"></i> Edit Profile
+                            <button @click="openEditModal = true" class="w-full sm:w-auto bg-admin-primary hover:bg-admin-primaryPress text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                <i data-lucide="pencil" class="w-4 h-4 shrink-0"></i> Edit Profile
                             </button>
-                            <button @click="deleteModalOpen = true" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
+                            <button @click="deleteModalOpen = true" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                <i data-lucide="trash-2" class="w-4 h-4 shrink-0"></i> Delete
                             </button>
-                            <!--<button class="bg-admin-surface border border-admin-border hover:bg-admin-bg text-admin-textPrimary font-semibold py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                                <i data-lucide="share-2" class="w-4 h-4 text-admin-textSecondary"></i> Share
-                            </button>-->
                             @endif
                         </div>
                         
                         @if($isSuperAdmin ?? false)
-                            <div>
+                            <div class="w-full sm:w-auto">
                                 @if($pet->isSuspended())
-                                    <form action="{{ route('admin.pets.reactivate', $pet) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.pets.reactivate', $pet) }}" method="POST" class="inline w-full sm:w-auto">
                                         @csrf
-                                        <button type="submit" class="bg-green-500/10 text-green-600 hover:bg-green-500/20 font-bold py-2.5 px-6 rounded-xl transition-all border border-green-500/20 flex items-center gap-2">
-                                            <i data-lucide="check-circle" class="w-4 h-4"></i> Reactivate Profile
+                                        <button type="submit" class="w-full sm:w-auto bg-green-500/10 text-green-600 hover:bg-green-500/20 font-bold py-2.5 px-6 rounded-xl transition-all border border-green-500/20 flex items-center justify-center gap-2">
+                                            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i> Reactivate Profile
                                         </button>
                                     </form>
                                 @else
-                                    <button onclick="document.getElementById('suspendModal').classList.remove('hidden')" class="bg-red-500/10 text-red-600 hover:bg-red-500/20 font-bold py-2.5 px-6 rounded-xl transition-all border border-red-500/20 flex items-center gap-2">
-                                        <i data-lucide="ban" class="w-4 h-4"></i> Suspend Profile
+                                    <button onclick="document.getElementById('suspendModal').classList.remove('hidden')" class="w-full sm:w-auto bg-red-500/10 text-red-600 hover:bg-red-500/20 font-bold py-2.5 px-6 rounded-xl transition-all border border-red-500/20 flex items-center justify-center gap-2">
+                                        <i data-lucide="ban" class="w-4 h-4 shrink-0"></i> Suspend Profile
                                     </button>
                                 @endif
                             </div>
@@ -209,8 +222,8 @@
                         <i data-lucide="info" class="w-4 h-4"></i> Overview
                     </button>
 
-                    <button @click="activeTab = 'health'" 
-                            :class="{ 'border-admin-primary text-admin-primary': activeTab === 'health', 'border-transparent text-admin-textSecondary hover:text-admin-textPrimary hover:border-admin-border': activeTab !== 'health' }"
+                    <button @click="activeTab = 'health-records'" 
+                            :class="{ 'border-admin-primary text-admin-primary': activeTab === 'health-records', 'border-transparent text-admin-textSecondary hover:text-admin-textPrimary hover:border-admin-border': activeTab !== 'health-records' }"
                             class="whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm transition-colors flex items-center gap-2">
                         <i data-lucide="heart-pulse" class="w-4 h-4"></i> Health Records
                     </button>
@@ -261,7 +274,7 @@
                             </div>
                             <div>
                                 <div class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/70">Days in Care</div>
-                                <div class="font-extrabold text-admin-textPrimary">{{ $pet->created_at->diffInDays(now()) }} Days</div>
+                                <div class="font-extrabold text-admin-textPrimary">{{ (int) $pet->created_at->diffInDays(now()) }} Days</div>
                             </div>
                         </div>
                     </div>
@@ -303,58 +316,147 @@
                 </div>
 
                 <!-- 2. Health Records Tab -->
-                <div x-cloak x-show="activeTab === 'health'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-                    <div class="flex justify-between items-center mb-6">
+                <div x-cloak x-show="activeTab === 'health-records'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <h3 class="text-xl font-extrabold text-admin-textPrimary">Medical History</h3>
                         @if($canEdit)
-                        <button @click="addHealthModalOpen = true" class="bg-admin-primary/10 text-admin-primary hover:bg-admin-primary/20 font-bold py-2 px-4 rounded-xl transition-colors text-sm border border-admin-primary/20 flex items-center gap-2">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Add Record
-                        </button>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button @click="addHealthModalOpen = true" class="bg-admin-primary/10 text-admin-primary hover:bg-admin-primary/20 font-bold py-2 px-4 rounded-xl transition-colors text-sm border border-admin-primary/20 flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add Medical Record
+                            </button>
+                            <button @click="addVaccineModalOpen = true" class="bg-brand-orange/10 text-brand-orange hover:bg-brand-orange/20 font-bold py-2 px-4 rounded-xl transition-colors text-sm border border-brand-orange/20 flex items-center gap-2">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i> Add Vaccination
+                            </button>
+                        </div>
                         @endif
                     </div>
                     
-                    @if($pet->medicalRecords && $pet->medicalRecords->count() > 0)
-                        <div class="space-y-4">
-                            @foreach($pet->medicalRecords as $record)
-                                <div class="bg-admin-surface rounded-xl border border-admin-border p-5 shadow-sm">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <div>
-                                            <h4 class="font-bold text-admin-textPrimary">{{ $record->title }}</h4>
-                                            <p class="text-xs text-admin-textSecondary flex items-center gap-2 mt-1">
-                                                <i data-lucide="calendar" class="w-3 h-3"></i> {{ $record->record_date?->format('M d, Y') ?? 'N/A' }}
-                                                <span class="px-2 py-0.5 bg-admin-primary/10 text-admin-primary rounded uppercase text-[10px] font-bold">{{ $record->type }}</span>
-                                            </p>
+                    <div class="space-y-6">
+                        <!-- Vaccinations Section -->
+                        <div class="bg-admin-surface rounded-2xl border border-admin-border p-6 shadow-sm">
+                            <div class="flex items-center gap-2 mb-4">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-brand-orange"></i>
+                                <h4 class="text-lg font-extrabold text-admin-textPrimary">Vaccinations</h4>
+                            </div>
+
+                             <div class="divide-y divide-admin-border/50">
+                                @forelse($pet->vaccinations as $vaccine)
+                                    <div class="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                                        <div class="flex items-start gap-3 min-w-0">
+                                            <div class="p-2 bg-brand-orange/10 rounded-lg text-brand-orange mt-0.5 shrink-0">
+                                                <i data-lucide="syringe" class="w-4 h-4"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <h5 class="font-bold text-slate-800 dark:text-slate-200 text-base leading-snug">{{ $vaccine->vaccine_name }}</h5>
+                                                <div class="text-xs text-admin-textSecondary flex flex-wrap gap-x-4 gap-y-1 mt-1 font-medium">
+                                                    <span>Administered: <strong class="text-admin-textPrimary">{{ $vaccine->date_administered?->format('M d, Y') ?? 'N/A' }}</strong></span>
+                                                    @if($vaccine->next_due_date)
+                                                        <span>Next Due: <strong class="text-admin-textPrimary">{{ $vaccine->next_due_date->format('M d, Y') }}</strong></span>
+                                                    @endif
+                                                </div>
+                                                @if($vaccine->batch_number || $vaccine->vet || $vaccine->notes)
+                                                    <div class="mt-2 space-y-1">
+                                                        @if($vaccine->batch_number)
+                                                            <div class="text-xs text-admin-textSecondary font-medium">
+                                                                <span class="inline-flex items-center gap-1.5"><i data-lucide="hash" class="w-3 h-3"></i> Batch: <strong class="text-admin-textPrimary">{{ $vaccine->batch_number }}</strong></span>
+                                                            </div>
+                                                        @endif
+                                                        @if($vaccine->vet)
+                                                            <div class="text-xs text-admin-textSecondary font-medium">
+                                                                <span class="inline-flex items-center gap-1.5"><i data-lucide="stethoscope" class="w-3 h-3"></i> Veterinarian: <strong class="text-admin-textPrimary">{{ $vaccine->vet->name }}</strong></span>
+                                                            </div>
+                                                        @endif
+                                                        @if($vaccine->notes)
+                                                            <div class="text-xs text-admin-textSecondary font-medium">
+                                                                <span class="inline-flex items-start gap-1.5"><i data-lucide="file-text" class="w-3 h-3 mt-0.5 shrink-0"></i> Notes: <span class="text-admin-textPrimary">{{ $vaccine->notes }}</span></span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
-                                        @if($record->vet)
-                                            <div class="text-right">
-                                                <p class="text-sm font-semibold text-admin-textPrimary">{{ $record->vet->name }}</p>
-                                                <p class="text-xs text-admin-textSecondary">Veterinarian</p>
+                                        <div class="flex items-center gap-3">
+                                            @php
+                                                $isOverdue = $vaccine->next_due_date && ($vaccine->next_due_date->isPast() || $vaccine->next_due_date->isToday());
+                                            @endphp
+                                            @if($isOverdue)
+                                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1.5 shadow-sm">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                    Upcoming/Overdue
+                                                </span>
+                                            @else
+                                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5 shadow-sm">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                    Administered
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="py-6 text-center">
+                                        <i data-lucide="shield-alert" class="w-10 h-10 text-admin-textSecondary/30 mx-auto mb-2.5"></i>
+                                        <p class="text-admin-textSecondary text-sm font-semibold">No vaccination records found for this pet.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <!-- Medical Reports & Logs Section -->
+                        <div class="bg-admin-surface rounded-2xl border border-admin-border p-6 shadow-sm">
+                            <div class="flex items-center gap-2 mb-6">
+                                <i data-lucide="file-text" class="w-5 h-5 text-brand-orange"></i>
+                                <h4 class="text-lg font-extrabold text-admin-textPrimary">Medical History & Reports</h4>
+                            </div>
+
+                            @forelse($pet->medicalRecords as $report)
+                                <div class="bg-admin-bg/30 border border-admin-border rounded-xl p-5 shadow-sm mb-4 last:mb-0">
+                                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+                                        <div>
+                                            <h5 class="font-extrabold text-slate-900 dark:text-slate-100 text-lg leading-tight">{{ $report->title }}</h5>
+                                            <div class="text-xs text-admin-textSecondary flex items-center gap-2 mt-1.5 font-medium">
+                                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i> 
+                                                {{ $report->record_date?->format('M d, Y') ?? 'N/A' }}
+                                                <span class="px-2 py-0.5 bg-admin-primary/10 text-admin-primary rounded uppercase text-[10px] font-bold border border-admin-primary/20">{{ $report->type }}</span>
+                                            </div>
+                                        </div>
+                                        @if($report->vet)
+                                            <div class="flex items-center gap-2 sm:text-right">
+                                                <div class="w-8 h-8 rounded-lg bg-admin-primary/10 flex items-center justify-center text-admin-primary">
+                                                    <i data-lucide="user" class="w-4 h-4"></i>
+                                                </div>
+                                                <div class="text-left sm:text-right">
+                                                    <p class="text-xs text-admin-textSecondary font-medium">Veterinarian</p>
+                                                    <p class="text-sm font-bold text-admin-textPrimary leading-none mt-0.5">{{ $report->vet->name }}</p>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
-                                    <p class="text-sm text-admin-textSecondary mt-2">{{ $record->description }}</p>
-                                    @if($record->notes)
-                                        <div class="mt-3 bg-admin-bg p-3 rounded-lg text-sm text-admin-textSecondary border border-admin-border/50">
-                                            <strong class="text-admin-textPrimary">Notes:</strong> {{ $record->notes }}
+                                    @if($report->description)
+                                        <p class="text-sm text-admin-textSecondary leading-relaxed mt-2.5">{{ $report->description }}</p>
+                                    @endif
+                                    @if($report->notes)
+                                        <div class="mt-3.5 bg-admin-bg/85 border border-admin-border/50 rounded-xl p-3.5 text-sm text-admin-textSecondary">
+                                            <strong class="text-admin-textPrimary font-bold flex items-center gap-1.5 mb-1">
+                                                <i data-lucide="sticky-note" class="w-4 h-4 text-brand-orange"></i>
+                                                Treatment & Notes
+                                            </strong> 
+                                            {{ $report->notes }}
                                         </div>
                                     @endif
-                                    @if($record->next_visit_date)
-                                        <div class="mt-4 flex items-center gap-2 text-brand-orange text-sm font-semibold">
-                                            <i data-lucide="calendar-clock" class="w-4 h-4"></i> Next Visit: {{ $record->next_visit_date->format('M d, Y') }}
+                                    @if($report->next_visit_date)
+                                        <div class="mt-4 flex items-center gap-2 text-brand-orange text-sm font-bold">
+                                            <i data-lucide="calendar-clock" class="w-4 h-4"></i> Next Visit: {{ $report->next_visit_date->format('M d, Y') }}
                                         </div>
                                     @endif
                                 </div>
-                            @endforeach
+                            @empty
+                                <div class="py-8 text-center">
+                                    <i data-lucide="clipboard-list" class="w-12 h-12 text-admin-textSecondary/30 mx-auto mb-3"></i>
+                                    <p class="text-admin-textSecondary text-sm font-semibold">No medical reports logged yet.</p>
+                                </div>
+                            @endforelse
                         </div>
-                    @else
-                        <div class="bg-admin-surface rounded-xl border border-admin-border shadow-sm overflow-hidden">
-                            <div class="p-8 text-center">
-                                <i data-lucide="activity" class="w-12 h-12 text-admin-textSecondary/30 mx-auto mb-3"></i>
-                                <h4 class="text-admin-textPrimary font-bold">No Medical Records</h4>
-                                <p class="text-admin-textSecondary text-sm mt-1">No health records have been added for this pet.</p>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 </div>
 
                 <!-- 3. Adoptions Tab -->
@@ -508,7 +610,7 @@
             </div>
         </div>
 
-        <!-- Edit Profile Modal -->
+         <!-- Edit Profile Modal -->
         <div x-show="openEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
              style="display: none;" @keydown.escape.window="openEditModal = false">
 
@@ -521,167 +623,203 @@
                  x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
                  class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
-                 @click.away="openEditModal = false">
+                 @click.away="openEditModal = false"
+                 x-data="editPetForm({
+                    petId: {{ $pet->id }},
+                    name: @js($pet->name),
+                    species: @js($pet->species),
+                    breed: @js($pet->breed),
+                    gender: @js($pet->gender),
+                    age_months: @js($pet->age_months),
+                    size: @js($pet->size),
+                    color: @js($pet->color),
+                    status: @js($pet->status),
+                    description: @js($pet->description),
+                    is_vaccinated: @js((bool)$pet->is_vaccinated),
+                    is_neutered: @js((bool)$pet->is_neutered),
+                    primaryImageUrl: {{ $pet->primaryImage ? 'true' : 'false' }},
+                    existingPrimaryUrl: @js($pet->primaryImage ? Storage::url($pet->primaryImage->image_path) : ''),
+                    existingImages: @js($pet->images->where('is_primary', false)->values()->map(fn($i) => ['id' => $i->id, 'url' => Storage::url($i->image_path)])),
+                    csrfToken: @js(csrf_token()),
+                    action: @js(route('organization.pets.update', $pet)),
+                 })">
 
-                <form method="POST" action="{{ route('organization.pets.update', $pet) }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
-                        <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
-                            <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-admin-primary blur-3xl"></div>
-                            <div class="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-admin-navActive blur-3xl"></div>
-                        </div>
-                        <div class="absolute top-4 right-4 z-10">
-                            <button type="button" @click="openEditModal = false"
-                                    class="p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200 shadow-sm">
-                                <i data-lucide="x" class="w-4.5 h-4.5"></i>
-                            </button>
-                        </div>
-                        <div class="flex flex-col items-center text-center relative z-[5]">
-                            <div class="w-20 h-20 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xl border-4 border-admin-surface ring-2 ring-admin-primary/20 bg-admin-primary/20 text-admin-primary">
-                                <i data-lucide="pencil" class="w-8 h-8 stroke-[2.5]"></i>
-                            </div>
-                            <h2 class="text-xl font-bold text-admin-textPrimary mt-4">Edit {{ $pet->name }}</h2>
-                            <p class="text-sm text-admin-textSecondary/70 mt-0.5">Update the pet's profile information.</p>
-                        </div>
+                <!-- Header -->
+                <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
+                    <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
+                        <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-admin-primary blur-3xl"></div>
+                        <div class="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-admin-navActive blur-3xl"></div>
                     </div>
-
-                    <div class="p-8 space-y-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Name</label>
-                                <input type="text" name="name" value="{{ old('name', $pet->name) }}"
-                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Breed</label>
-                                <input type="text" name="breed" value="{{ old('breed', $pet->breed) }}"
-                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Species</label>
-                                <select name="species"
-                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
-                                    <option value="dog" {{ $pet->species == 'dog' ? 'selected' : '' }}>Dog</option>
-                                    <option value="cat" {{ $pet->species == 'cat' ? 'selected' : '' }}>Cat</option>
-                                    <option value="bird" {{ $pet->species == 'bird' ? 'selected' : '' }}>Bird</option>
-                                    <option value="rabbit" {{ $pet->species == 'rabbit' ? 'selected' : '' }}>Rabbit</option>
-                                    <option value="other" {{ $pet->species == 'other' ? 'selected' : '' }}>Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Gender</label>
-                                <select name="gender"
-                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
-                                    <option value="male" {{ $pet->gender == 'male' ? 'selected' : '' }}>Male</option>
-                                    <option value="female" {{ $pet->gender == 'female' ? 'selected' : '' }}>Female</option>
-                                    <option value="unknown" {{ $pet->gender == 'unknown' ? 'selected' : '' }}>Unknown</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Age (months)</label>
-                                <input type="number" name="age_months" value="{{ old('age_months', $pet->age_months) }}" min="0"
-                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Size</label>
-                                <select name="size"
-                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
-                                    <option value="small" {{ $pet->size == 'small' ? 'selected' : '' }}>Small</option>
-                                    <option value="medium" {{ $pet->size == 'medium' ? 'selected' : '' }}>Medium</option>
-                                    <option value="large" {{ $pet->size == 'large' ? 'selected' : '' }}>Large</option>
-                                    <option value="xl" {{ $pet->size == 'xl' ? 'selected' : '' }}>Extra Large</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Color</label>
-                                <input type="text" name="color" value="{{ old('color', $pet->color) }}"
-                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Status</label>
-                                <select name="status"
-                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
-                                    <option value="available" {{ $pet->status == 'available' ? 'selected' : '' }}>Available</option>
-                                    <option value="adopted" {{ $pet->status == 'adopted' ? 'selected' : '' }}>Adopted</option>
-                                    <option value="unavailable" {{ $pet->status == 'unavailable' ? 'selected' : '' }}>In Care</option>
-                                    <option value="inactive" {{ $pet->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Description</label>
-                            <textarea name="description" rows="3"
-                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">{{ old('description', $pet->description) }}</textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Health Status</label>
-                            <textarea name="health_status" rows="2"
-                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">{{ old('health_status', $pet->health_status) }}</textarea>
-                        </div>
-
-                        <div class="flex items-center gap-6">
-                            <label class="flex items-center gap-2.5 cursor-pointer">
-                                <input type="checkbox" name="is_vaccinated" value="1" {{ $pet->is_vaccinated ? 'checked' : '' }}
-                                       class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
-                                <span class="text-sm font-semibold text-admin-textPrimary">Vaccinated</span>
-                            </label>
-                            <label class="flex items-center gap-2.5 cursor-pointer">
-                                <input type="checkbox" name="is_neutered" value="1" {{ $pet->is_neutered ? 'checked' : '' }}
-                                       class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
-                                <span class="text-sm font-semibold text-admin-textPrimary">Neutered / Spayed</span>
-                            </label>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-2">Profile Photo</label>
-                            <div class="flex items-center gap-4">
-                                @if($pet->primaryImage)
-                                    <div class="relative w-20 h-20 rounded-xl overflow-hidden border border-admin-border/40 flex-shrink-0">
-                                        <img src="{{ Storage::url($pet->primaryImage->image_path) }}" alt="" class="w-full h-full object-cover">
-                                    </div>
-                                @else
-                                    <div class="w-20 h-20 rounded-xl bg-admin-bg border-2 border-dashed border-admin-border/50 flex items-center justify-center text-admin-textSecondary/40 flex-shrink-0">
-                                        <i data-lucide="camera" class="w-6 h-6"></i>
-                                    </div>
-                                @endif
-                                <div>
-                                    <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
-                                        <i data-lucide="upload" class="w-4 h-4"></i>
-                                        <span>Change Image</span>
-                                        <input type="file" name="primary_image" accept="image/*" class="hidden">
-                                    </label>
-                                    <p class="text-[11px] text-admin-textSecondary/50 mt-1.5">JPG, PNG or GIF. 1:1 ratio recommended.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Additional Photos</label>
-                                <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-admin-surface border border-admin-border text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
-                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                                    <span>Add Photos</span>
-                                    <input type="file" name="additional_images[]" accept="image/*" multiple class="hidden">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-8 py-5 border-t border-admin-border bg-admin-bg/20 flex items-center justify-between rounded-b-2xl">
+                    <div class="absolute top-4 right-4 z-10">
                         <button type="button" @click="openEditModal = false"
-                                class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
-                            <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
-                        </button>
-                        <button type="submit"
-                                class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm">
-                            <i data-lucide="check" class="w-4 h-4 inline mr-1.5"></i> Save Changes
+                                class="p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200 shadow-sm">
+                            <i data-lucide="x" class="w-4.5 h-4.5"></i>
                         </button>
                     </div>
-                </form>
+                    <div class="flex flex-col items-center text-center relative z-[5]">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xl border-4 border-admin-surface ring-2 ring-admin-primary/20 bg-admin-primary/20 text-admin-primary">
+                            <i data-lucide="pencil" class="w-8 h-8 stroke-[2.5]"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-admin-textPrimary mt-4">Edit {{ $pet->name }}</h2>
+                        <p class="text-sm text-admin-textSecondary/70 mt-0.5">Update the pet's profile information.</p>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="p-8 space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Name</label>
+                            <input type="text" x-model="name"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Breed</label>
+                            <input type="text" x-model="breed"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Species</label>
+                            <select x-model="species"
+                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                                <option value="bird">Bird</option>
+                                <option value="rabbit">Rabbit</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Gender</label>
+                            <select x-model="gender"
+                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Age (months)</label>
+                            <input type="number" x-model="age_months" min="0"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Size</label>
+                            <select x-model="size"
+                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                                <option value="xl">Extra Large</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Color</label>
+                            <input type="text" x-model="color"
+                                   class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Status</label>
+                            <select x-model="status"
+                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                <option value="available">Available</option>
+                                <option value="adopted">Adopted</option>
+                                <option value="unavailable">In Care</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Description</label>
+                        <textarea x-model="description" rows="3"
+                                  class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                    </div>
+
+                    <!-- Profile Image Upload -->
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-2">Profile Photo</label>
+                        <div class="flex items-center gap-4">
+                            <template x-if="primary_image">
+                                <div class="relative w-20 h-20 rounded-xl overflow-hidden border border-admin-border/40 flex-shrink-0">
+                                    <img :src="primary_image" alt="" class="w-full h-full object-cover">
+                                    <button @click="primary_image = null; primary_image_file = null"
+                                            class="absolute top-1 right-1 w-5 h-5 rounded-full bg-admin-btnRed/80 text-white flex items-center justify-center hover:bg-admin-btnRed transition-colors">
+                                        <i data-lucide="x" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </template>
+                            <template x-if="!primary_image">
+                                <div class="w-20 h-20 rounded-xl bg-admin-bg border-2 border-dashed border-admin-border/50 flex items-center justify-center text-admin-textSecondary/40 flex-shrink-0">
+                                    <i data-lucide="camera" class="w-6 h-6"></i>
+                                </div>
+                            </template>
+                            <div>
+                                <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <span>Choose Image</span>
+                                    <input type="file" accept="image/*" class="hidden" @change="handlePrimaryImage">
+                                </label>
+                                <p class="text-[11px] text-admin-textSecondary/50 mt-1.5">JPG, PNG or GIF. 1:1 ratio recommended.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Photos -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60">Additional Photos</label>
+                            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-admin-surface border border-admin-border text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Add Photos</span>
+                                <input type="file" accept="image/*" multiple class="hidden" @change="handleImages">
+                            </label>
+                        </div>
+                        <div x-show="images.length === 0"
+                             class="bg-admin-bg/30 border-2 border-dashed border-admin-border/30 rounded-xl px-5 py-6 text-center">
+                            <i data-lucide="image" class="w-8 h-8 text-admin-textSecondary/20 mx-auto mb-2"></i>
+                            <p class="text-xs text-admin-textSecondary/40 font-semibold">No additional photos added yet.</p>
+                        </div>
+                        <div x-show="images.length > 0"
+                             class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mt-3">
+                            <template x-for="(img, idx) in images" :key="idx">
+                                <div class="relative group aspect-square rounded-xl overflow-hidden border border-admin-border/40 bg-admin-bg/30">
+                                    <img :src="img.url || img" alt="" class="w-full h-full object-cover">
+                                    <button @click="removeImage(idx)"
+                                            class="absolute top-1 right-1 w-5 h-5 rounded-full bg-admin-btnRed/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-admin-btnRed transition-all">
+                                        <i data-lucide="x" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-6">
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" x-model="is_vaccinated"
+                                   class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
+                            <span class="text-sm font-semibold text-admin-textPrimary">Vaccinated</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" x-model="is_neutered"
+                                   class="w-4 h-4 rounded border-admin-border bg-admin-bg text-admin-primary focus:ring-admin-primary/30">
+                            <span class="text-sm font-semibold text-admin-textPrimary">Neutered / Spayed</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-8 py-5 border-t border-admin-border bg-admin-bg/20 flex items-center justify-between rounded-b-2xl">
+                    <button type="button" @click="openEditModal = false"
+                            class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                        <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
+                    </button>
+                    <button @click="submitEditForm" :disabled="saving"
+                            class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i data-lucide="check" class="w-4 h-4 inline mr-1.5"></i>
+                        <span x-text="saving ? 'Saving...' : 'Save Changes'"></span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -701,9 +839,10 @@
                  @click.away="addHealthModalOpen = false"
                  x-data="healthRecordForm({{ $pet->id }})">
 
-                <form @submit.prevent="submitRecord">
+                <form method="POST" action="{{ route('organization.health.medical-records.store') }}" @submit="addHealthModalOpen = false">
                     @csrf
                     <input type="hidden" name="pet_id" value="{{ $pet->id }}">
+                    <input type="hidden" name="redirect_to" value="{{ url()->current() }}#health-records">
 
                     <div class="relative bg-gradient-to-br from-admin-primary/20 via-admin-primary/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
                         <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
@@ -728,8 +867,8 @@
                     <div class="p-8 space-y-5">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Title <span class="text-red-500">*</span></label>
-                                <input type="text" name="title" x-model="title" required
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Title</label>
+                                <input type="text" name="title" x-model="title"
                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                             </div>
                             <div>
@@ -754,6 +893,17 @@
                                 <input type="date" name="next_visit_date" x-model="nextVisitDate"
                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                             </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Veterinarian</label>
+                                <select name="vet_name" x-model="vetName"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="">Select Veterinarian (Optional)</option>
+                                    <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
+                                    <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
+                                    <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
+                                    <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div>
@@ -774,10 +924,108 @@
                                 class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
                             <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
                         </button>
-                        <button type="submit" :disabled="saving"
-                                class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button type="submit"
+                                class="px-5 py-2.5 rounded-xl bg-admin-primary text-white hover:bg-admin-primaryPress font-bold text-sm transition-all duration-200 shadow-sm">
                             <i data-lucide="plus" class="w-4 h-4 inline mr-1.5"></i>
-                            <span x-text="saving ? 'Saving...' : 'Add Record'"></span>
+                            Add Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Vaccination Modal -->
+        <div x-show="addVaccineModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             style="display: none;" @keydown.escape.window="addVaccineModalOpen = false">
+
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" @click="addVaccineModalOpen = false"></div>
+
+            <div x-show="addVaccineModalOpen" x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
+                 class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-admin-surface border border-admin-border rounded-2xl shadow-2xl"
+                 @click.away="addVaccineModalOpen = false"
+                 x-data="vaccinationForm({{ $pet->id }})">
+
+                <form method="POST" action="{{ route('organization.health.vaccinations.store') }}" @submit="addVaccineModalOpen = false">
+                    @csrf
+                    <input type="hidden" name="pet_id" value="{{ $pet->id }}">
+                    <input type="hidden" name="redirect_to" value="{{ url()->current() }}#health-records">
+
+                    <div class="relative bg-gradient-to-br from-brand-orange/20 via-brand-orange/5 to-admin-bg rounded-t-2xl pt-10 pb-8 px-6">
+                        <div class="absolute inset-0 opacity-10 rounded-t-2xl pointer-events-none">
+                            <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-brand-orange blur-3xl"></div>
+                            <div class="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-admin-navActive blur-3xl"></div>
+                        </div>
+                        <div class="absolute top-4 right-4 z-10">
+                            <button type="button" @click="addVaccineModalOpen = false"
+                                    class="p-2 bg-admin-surface/80 backdrop-blur-sm border border-admin-border rounded-xl text-admin-textSecondary hover:text-admin-textPrimary hover:bg-admin-surface transition-all duration-200 shadow-sm">
+                                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center text-center relative z-[5]">
+                            <div class="w-20 h-20 rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xl border-4 border-admin-surface ring-2 ring-brand-orange/20 bg-brand-orange/20 text-brand-orange">
+                                <i data-lucide="shield-check" class="w-8 h-8 stroke-[2.5]"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-admin-textPrimary mt-4">Add Vaccination</h2>
+                            <p class="text-sm text-admin-textSecondary/70 mt-0.5">Record a vaccination for {{ $pet->name }}.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Vaccine Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="vaccine_name" x-model="vaccineName" required placeholder="e.g. Rabies, DHPP"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Batch Number</label>
+                                <input type="text" name="batch_number" x-model="batchNumber" placeholder="e.g. B12345"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Date Administered <span class="text-red-500">*</span></label>
+                                <input type="date" name="date_administered" x-model="dateAdministered" required
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Next Due Date</label>
+                                <input type="date" name="next_due_date" x-model="nextDueDate"
+                                       class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Veterinarian</label>
+                                <select name="vet_name" x-model="vetName"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="">Select Veterinarian (Optional)</option>
+                                    <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
+                                    <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
+                                    <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
+                                    <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Notes</label>
+                            <textarea name="notes" x-model="notes" rows="3" placeholder="Any additional notes about the vaccination..."
+                                      class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="px-8 py-5 border-t border-admin-border bg-admin-bg/20 flex items-center justify-between rounded-b-2xl">
+                        <button type="button" @click="addVaccineModalOpen = false"
+                                class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-sm transition-all duration-200">
+                            <i data-lucide="x" class="w-4 h-4 inline mr-1.5"></i> Cancel
+                        </button>
+                        <button type="submit"
+                                class="px-5 py-2.5 rounded-xl bg-brand-orange text-white hover:opacity-95 font-bold text-sm transition-all duration-200 shadow-sm">
+                            <i data-lucide="plus" class="w-4 h-4 inline mr-1.5"></i>
+                            Add Vaccination
                         </button>
                     </div>
                 </form>
@@ -831,6 +1079,101 @@
 
 <script>
     document.addEventListener('alpine:init', () => {
+        Alpine.data('editPetForm', (data) => ({
+            petId: data.petId,
+            name: data.name || '',
+            species: data.species || 'dog',
+            breed: data.breed || '',
+            gender: data.gender || 'male',
+            age_months: data.age_months ?? '',
+            size: data.size || 'medium',
+            color: data.color || '',
+            status: data.status || 'available',
+            description: data.description || '',
+            is_vaccinated: data.is_vaccinated ?? false,
+            is_neutered: data.is_neutered ?? false,
+            primary_image: data.primaryImageUrl ? data.existingPrimaryUrl : null,
+            primary_image_file: null,
+            images: data.existingImages || [],
+            image_files: [],
+            remove_image_ids: [],
+            saving: false,
+
+            readFileAsDataURL(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            },
+
+            async handlePrimaryImage(e) {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                this.primary_image_file = file;
+                this.primary_image = await this.readFileAsDataURL(file);
+                e.target.value = '';
+            },
+
+            async handleImages(e) {
+                const files = Array.from(e.target.files || []);
+                for (const file of files) {
+                    this.image_files.push(file);
+                    const url = await this.readFileAsDataURL(file);
+                    this.images.push({ id: null, url });
+                }
+                e.target.value = '';
+            },
+
+            removeImage(idx) {
+                if (this.images[idx]?.id) {
+                    this.remove_image_ids.push(this.images[idx].id);
+                }
+                this.images.splice(idx, 1);
+                this.image_files.splice(idx, 1);
+            },
+
+            async submitEditForm() {
+                this.saving = true;
+                try {
+                    const fd = new FormData();
+                    const fields = ['name', 'species', 'breed', 'gender', 'size', 'color',
+                        'description', 'status', 'age_months'
+                    ];
+                    fields.forEach(f => {
+                        if (this[f] !== undefined && this[f] !== '') fd.append(f, this[f]);
+                    });
+                    fd.append('is_vaccinated', this.is_vaccinated ? '1' : '0');
+                    fd.append('is_neutered', this.is_neutered ? '1' : '0');
+                    fd.append('_method', 'PUT');
+                    if (this.primary_image_file) fd.append('primary_image', this.primary_image_file);
+                    this.image_files.forEach(f => fd.append('images[]', f));
+                    if (this.remove_image_ids.length) {
+                        this.remove_image_ids.forEach(id => fd.append('remove_image_ids[]', id));
+                    }
+                    const res = await fetch(data.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': data.csrfToken,
+                        },
+                        body: fd,
+                    });
+                    if (!res.ok) {
+                        const err = await res.json();
+                        alert(err.message || 'Failed to update pet.');
+                        return;
+                    }
+                    window.location.reload();
+                } catch (e) {
+                    console.error('Save failed', e);
+                    alert('An error occurred while updating the pet.');
+                } finally {
+                    this.saving = false;
+                }
+            },
+        }));
+
         Alpine.data('healthRecordForm', (petId) => ({
             petId: petId,
             title: '',
@@ -839,43 +1182,19 @@
             nextVisitDate: '',
             description: '',
             notes: '',
-            saving: false,
+            vetName: '',
+        }));
 
-            async submitRecord() {
-                if (!this.title.trim()) return;
-                this.saving = true;
-                try {
-                    const res = await fetch('{{ route("organization.health.medical-records.store") }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            pet_id: this.petId,
-                            title: this.title,
-                            type: this.type,
-                            record_date: this.recordDate,
-                            next_visit_date: this.nextVisitDate || null,
-                            description: this.description || null,
-                            notes: this.notes || null,
-                        }),
-                    });
-                    if (!res.ok) {
-                        const err = await res.json();
-                        alert(err.message || 'Failed to save record.');
-                        return;
-                    }
-                    window.location.reload();
-                } catch (e) {
-                    console.error('Save failed', e);
-                    alert('An error occurred while saving the record.');
-                } finally {
-                    this.saving = false;
-                }
-            },
+        Alpine.data('vaccinationForm', (petId) => ({
+            petId: petId,
+            vaccineName: '',
+            batchNumber: '',
+            dateAdministered: new Date().toISOString().split('T')[0],
+            nextDueDate: '',
+            notes: '',
+            vetName: '',
         }));
     });
+
 </script>
 </x-layouts.admin>

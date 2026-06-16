@@ -638,14 +638,6 @@
                             class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
                     </div>
 
-                    <div>
-                        <label
-                            class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Health
-                            Status</label>
-                        <textarea x-model="editForm.health_status" rows="2"
-                            class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
-                    </div>
-
                     <div class="flex items-center gap-6">
                         <label class="flex items-center gap-2.5 cursor-pointer">
                             <input type="checkbox" x-model="editForm.is_vaccinated"
@@ -890,14 +882,6 @@
                             class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
                     </div>
 
-                    <div>
-                        <label
-                            class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Health
-                            Status</label>
-                        <textarea x-model="addForm.health_status" rows="2"
-                            class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all"></textarea>
-                    </div>
-
                     <!-- Profile Image Upload -->
                     <div>
                         <label
@@ -1064,7 +1048,6 @@
                     color: '',
                     status: 'available',
                     description: '',
-                    health_status: '',
                     is_vaccinated: false,
                     is_neutered: false,
                     primary_image: null,
@@ -1131,7 +1114,7 @@
                     if (!this.editForm.name?.trim()) return;
                     const fd = new FormData();
                     const fields = ['name', 'species', 'breed', 'gender', 'size', 'color',
-                        'description', 'health_status', 'status', 'age_months'
+                        'description', 'status', 'age_months'
                     ];
                     fields.forEach(f => {
                         if (this.editForm[f] !== undefined && this.editForm[f] !== '') fd
@@ -1233,7 +1216,6 @@
                         color: '',
                         status: 'available',
                         description: '',
-                        health_status: '',
                         is_vaccinated: false,
                         is_neutered: false,
                         primary_image: null,
@@ -1255,7 +1237,7 @@
                     if (!this.addForm.name.trim()) return;
                     const fd = new FormData();
                     const fields = ['name', 'species', 'breed', 'gender', 'size', 'color',
-                        'description', 'health_status', 'status', 'age_months'
+                        'description', 'status', 'age_months'
                     ];
                     fields.forEach(f => {
                         if (this.addForm[f] !== undefined && this.addForm[f] !== '') fd
