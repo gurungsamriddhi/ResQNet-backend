@@ -112,29 +112,21 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
     Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
     
-    Route::get('/health', [HealthController::class, 'index'])->name('health.index');
-    Route::post('/health/medical-records', [HealthController::class, 'storeMedicalRecord'])->name('health.medical-records.store');
-    Route::put('/health/medical-records/{record}', [HealthController::class, 'updateMedicalRecord'])->name('health.medical-records.update');
-    Route::delete('/health/medical-records/{record}', [HealthController::class, 'destroyMedicalRecord'])->name('health.medical-records.destroy');
-    Route::put('/health/pets/{pet}/summary', [HealthController::class, 'updatePetHealthSummary'])->name('health.pets.summary.update');
-    Route::delete('/health/pets/{pet}/history', [HealthController::class, 'clearPetMedicalHistory'])->name('health.pets.history.clear');
-    Route::post('/health/vaccinations', [HealthController::class, 'storeVaccination'])->name('health.vaccinations.store');
-    Route::put('/health/vaccinations/{vaccination}', [HealthController::class, 'updateVaccination'])->name('health.vaccinations.update');
-    Route::delete('/health/vaccinations/{vaccination}', [HealthController::class, 'destroyVaccination'])->name('health.vaccinations.destroy');
-    Route::post('/health/medications', [HealthController::class, 'storeMedication'])->name('health.medications.store');
-    Route::delete('/health/medications/{medication}', [HealthController::class, 'destroyMedication'])->name('health.medications.destroy');
-    
-    Route::apiResource('vets', OrgVetController::class);
-
     Route::get('/health', [OrgHealthController::class, 'index'])->name('health.index');
     Route::post('/health/medical-records', [OrgHealthController::class, 'storeMedicalRecord'])->name('health.medical-records.store');
     Route::put('/health/medical-records/{record}', [OrgHealthController::class, 'updateMedicalRecord'])->name('health.medical-records.update');
     Route::delete('/health/medical-records/{record}', [OrgHealthController::class, 'destroyMedicalRecord'])->name('health.medical-records.destroy');
+    Route::put('/health/pets/{pet}/summary', [OrgHealthController::class, 'updatePetHealthSummary'])->name('health.pets.summary.update');
+    Route::delete('/health/pets/{pet}/history', [OrgHealthController::class, 'clearPetMedicalHistory'])->name('health.pets.history.clear');
     Route::post('/health/vaccinations', [OrgHealthController::class, 'storeVaccination'])->name('health.vaccinations.store');
+    Route::put('/health/vaccinations/{vaccination}', [OrgHealthController::class, 'updateVaccination'])->name('health.vaccinations.update');
     Route::delete('/health/vaccinations/{vaccination}', [OrgHealthController::class, 'destroyVaccination'])->name('health.vaccinations.destroy');
     Route::post('/health/medications', [OrgHealthController::class, 'storeMedication'])->name('health.medications.store');
     Route::delete('/health/medications/{medication}', [OrgHealthController::class, 'destroyMedication'])->name('health.medications.destroy');
+    
+    Route::apiResource('vets', OrgVetController::class);
 
+  
     Route::resource('vets', OrgVetController::class);
 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');

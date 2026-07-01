@@ -239,16 +239,15 @@
                             </div>
                         </div>
 
-                        {{-- Assigned Veterinarian (hardcoded) --}}
+                        {{-- Assigned Veterinarian --}}
                         <div>
                             <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Assigned Veterinarian</label>
                             <select x-model="selectedRecord.vet_name"
                                     class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm p-2.5 rounded-xl focus:outline-none">
                                 <option value="">Select Veterinarian (Optional)</option>
-                                <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
-                                <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
-                                <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
-                                <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                                @foreach($vets as $vet)
+                                    <option value="{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}">{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}{{ $vet->is_global ? ' ★' : '' }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -554,10 +553,9 @@
                         <select x-model="med_vet_name"
                                 class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                             <option value="">Select Veterinarian (Optional)</option>
-                            <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
-                            <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
-                            <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
-                            <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                            @foreach($vets as $vet)
+                                <option value="{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}">{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}{{ $vet->is_global ? ' ★' : '' }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div>
@@ -657,10 +655,9 @@
                         <select x-model="vac_vet_name"
                                 class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all">
                             <option value="">Select Veterinarian (Optional)</option>
-                            <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
-                            <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
-                            <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
-                            <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                            @foreach($vets as $vet)
+                                <option value="{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}">{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}{{ $vet->is_global ? ' ★' : '' }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div>

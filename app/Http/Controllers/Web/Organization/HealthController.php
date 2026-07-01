@@ -30,7 +30,7 @@ class HealthController extends Controller
         $medicalRecordsQuery = MedicalRecord::with('pet.primaryImage');
         $vaccinationsQuery = Vaccination::with('pet.primaryImage');
         $petsQuery = Pet::query()->with('primaryImage');
-        $vetsQuery = Vet::where('is_active', true);
+        $vetsQuery = Vet::where('status', 'active');
 
         if ($orgId) {
             $medicalRecordsQuery->whereHas('pet', fn ($q) => $q->where('organization_id', $orgId));
@@ -83,7 +83,7 @@ class HealthController extends Controller
 
         $healthRecords = $medicalRecords->concat($vaccinations)->sortByDesc('created_at');
         $vets = $vetsQuery->orderBy('name')->get();
-        $pets = $petsQuery->orderBy('name')->get(['id', 'name', 'breed', 'species', 'gender', 'date_of_birth', 'color']);
+        $pets = $petsQuery->orderBy('name')->get(['id', 'name', 'breed', 'species', 'gender', 'age_months', 'color']);
         $pets->each(fn ($pet) => $pet->pet_image = $pet->primaryImage?->image_url);
 
         return view('organization.health.index', compact('healthRecords', 'vets', 'pets'));
@@ -286,7 +286,7 @@ class HealthController extends Controller
             $vet = Vet::firstOrCreate(
                 ['name' => $request->vet_name],
                 [
-                    'is_active' => true,
+                    'status' => 'active',
                     'organization_id' => auth()->user()?->organization?->id,
                 ]
             );

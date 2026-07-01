@@ -898,10 +898,9 @@
                                 <select name="vet_name" x-model="vetName"
                                         class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
                                     <option value="">Select Veterinarian (Optional)</option>
-                                    <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
-                                    <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
-                                    <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
-                                    <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                                    @foreach($vets as $vet)
+                                        <option value="{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}">{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}{{ $vet->is_global ? ' ★' : '' }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -1002,10 +1001,9 @@
                                 <select name="vet_name" x-model="vetName"
                                         class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
                                     <option value="">Select Veterinarian (Optional)</option>
-                                    <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
-                                    <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
-                                    <option value="Dr. Melina Rai (Vaccine Specialist)">Dr. Melina Rai (Vaccine Specialist)</option>
-                                    <option value="Dr. KP Sharma (General Care Practitioner)">Dr. KP Sharma (General Care Practitioner)</option>
+                                    @foreach($vets as $vet)
+                                        <option value="{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}">{{ $vet->name }}{{ $vet->specialization ? ' (' . $vet->specialization . ')' : '' }}{{ $vet->is_global ? ' ★' : '' }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
