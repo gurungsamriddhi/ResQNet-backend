@@ -8,7 +8,6 @@
     $adoptionsUrl = route('organization.adoptions.index');
     $volunteersUrl = route('organization.volunteers.index');
     $vetsUrl = route('organization.vets.index');
-    $financeUrl = route('organization.finance.index');
     $settingsUrl = route('organization.settings.index');
     $profileUrl = route('organization.profile.edit');
     $isDashboardActive = request()->routeIs('organization.dashboard');
@@ -19,9 +18,10 @@
     $isAdoptionsActive = request()->routeIs('organization.adoptions.*');
     $isVolunteersActive = request()->routeIs('organization.volunteers.*');
     $isVetsActive = request()->routeIs('organization.vets.*');
-    $isFinanceActive = request()->routeIs('organization.finance.*');
     $isSettingsActive = request()->routeIs('organization.settings.*');
     $isProfileActive = request()->routeIs('organization.profile.*');
+    $organization = auth()->user()?->organization;
+    $orgLogoUrl = $organization && $organization->logo ? Storage::url($organization->logo) : null;
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
@@ -32,7 +32,7 @@
                 <i data-lucide="paw-print" class="w-5 h-5"></i>
             </div>
             <div>
-                <span class="font-bold text-sm tracking-wider uppercase text-slate-100">ResQNet</span>
+                <span class="font-bold text-xs tracking-wider uppercase text-slate-100">{{ $organization?->name ?? 'ResQNet' }}</span>
                 <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase">Org Hub</span>
             </div>
         </div>
@@ -140,17 +140,6 @@
                             </div>
                         </a>
                     </li>
-
-                    <!-- Finance -->
-                    <li>
-                        <a href="{{ $financeUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Finance</span>
-                            </div>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
@@ -186,8 +175,12 @@
         <!-- Sidebar Footer/User Profile -->
         <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2" x-data="{ logoutModalOpen: false }">
             <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
-                    {{ substr(auth()->user()?->name ?? 'U', 0, 1) }}
+                <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0 overflow-hidden">
+                    @if (auth()->user()?->avatar)
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                    @else
+                        <span class="text-sm font-bold text-brand-orange">{{ substr(auth()->user()?->name ?? 'U', 0, 1) }}</span>
+                    @endif
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()?->name ?? 'User' }}</span>
@@ -273,7 +266,7 @@
                         <i data-lucide="paw-print" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <span class="font-bold text-sm tracking-wider uppercase text-slate-100">ResQNet</span>
+                        <span class="font-bold text-xs tracking-wider uppercase text-slate-100">{{ $organization?->name ?? 'ResQNet' }}</span>
                         <span class="block text-[9px] text-brand-orange font-bold tracking-widest uppercase text-left">Org Hub</span>
                     </div>
                 </div>
@@ -367,15 +360,6 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ $financeUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Finance</span>
-                                    </div>
-                                </a>
-                            </li>
                         </ul>
                     </div>
 
@@ -408,8 +392,12 @@
                 <!-- Mobile User Footer -->
                 <div class="p-4 bg-slate-950/30 border-t border-slate-800/60 flex items-center justify-between gap-2 mt-auto" x-data="{ mobileLogoutModalOpen: false }">
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0">
-                            {{ substr(auth()->user()?->name ?? 'U', 0, 1) }}
+                        <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0 overflow-hidden">
+                            @if (auth()->user()?->avatar)
+                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                            @else
+                                <span class="text-sm font-bold text-brand-orange">{{ substr(auth()->user()?->name ?? 'U', 0, 1) }}</span>
+                            @endif
                         </div>
                         <div class="flex flex-col min-w-0">
                             <span class="text-xs font-semibold truncate text-slate-200">{{ auth()->user()?->name ?? 'User' }}</span>

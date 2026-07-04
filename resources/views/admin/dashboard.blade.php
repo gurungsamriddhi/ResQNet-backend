@@ -2,10 +2,10 @@
     <!-- Welcome Header Section -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-admin-textPrimary font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
+            <h1 class="text-slate-900 dark:text-slate-100 font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                 Welcome back, Asmita 🐾
             </h1>
-            <p class="text-admin-textSecondary text-sm mt-1">
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
                 Here's a real-time summary of ResQNet's shelter activities, emergency rescues, and active adoptions today.
             </p>
         </div>
@@ -27,15 +27,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
         
         <!-- Card 1: Total Animals -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
                         Total Animals
                     </span>
                     <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
                         142
                     </h3>
                 </div>
@@ -45,53 +45,53 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+12%</span>
                     </span>
-                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400">vs last week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-primary/10 text-admin-primary group-hover:bg-admin-primary group-hover:text-admin-textOnPrimary transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-emerald-600/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 dark:bg-emerald-500 group-hover:text-white transition-all duration-300">
                 <i data-lucide="paw-print" class="w-5 h-5"></i>
             </div>
         </div>
 
         <!-- Card 2: Active Rescues -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
                         Active Rescues
                     </span>
                     <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
                         5
                     </h3>
                 </div>
                 <!-- Pill / Decline -->
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-errorBg text-admin-errorText shadow-sm">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 shadow-sm">
                         <i data-lucide="trending-down" class="w-3 h-3"></i>
                         <span>-10%</span>
                     </span>
-                    <span class="text-[10px] text-admin-textSecondary">critical status</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400">critical status</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnRed/10 text-admin-btnRed group-hover:bg-admin-btnRed group-hover:text-white transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-red-600/10 dark:bg-red-500/10 text-red-600 dark:text-red-400 group-hover:bg-red-600 dark:bg-red-500 group-hover:text-white transition-all duration-300">
                 <i data-lucide="shield-alert" class="w-5 h-5"></i>
             </div>
         </div>
 
         <!-- Card 3: Pets In Care -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
                         Pets In Care
                     </span>
                     <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
                         28
                     </h3>
                 </div>
@@ -101,7 +101,7 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+8%</span>
                     </span>
-                    <span class="text-[10px] text-admin-textSecondary">vs last week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400">vs last week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
@@ -111,15 +111,15 @@
         </div>
 
         <!-- Card 4: Completed Adoptions -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
                         Completed Adoptions
                     </span>
                     <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
                         156
                     </h3>
                 </div>
@@ -129,24 +129,24 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+24%</span>
                     </span>
-                    <span class="text-[10px] text-admin-textSecondary">this month</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400">this month</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-admin-btnGreen/10 text-admin-btnGreen group-hover:bg-admin-btnGreen group-hover:text-white transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-green-500/10 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
             </div>
         </div>
         <!-- Card 5: Total Donations -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
                         Total Donations
                     </span>
                     <!-- Main Value -->
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">
                         NPR 124,500
                     </h3>
                 </div>
@@ -156,11 +156,11 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+18%</span>
                     </span>
-                    <span class="text-[10px] text-admin-textSecondary">this week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400">this week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#FCC234]/10 text-[#9E7A1C] group-hover:bg-[#FCC234] group-hover:text-admin-textPrimary transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#FCC234]/10 text-[#9E7A1C] group-hover:bg-[#FCC234] group-hover:text-slate-900 dark:text-slate-100 transition-all duration-300">
                 <i data-lucide="hand-coins" class="w-5 h-5"></i>
             </div>
         </div>
@@ -176,10 +176,10 @@
                 <!-- Header Area -->
                 <div class="flex items-center justify-between pb-4 border-b border-brand-orange/10">
                     <div>
-                        <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight">
+                        <h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg tracking-tight">
                             Donations this week
                         </h3>
-                        <p class="text-admin-textSecondary text-xs mt-1">
+                        <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">
                             Every rupees fuels another rescue.
                         </p>
                     </div>
@@ -189,14 +189,14 @@
                             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                             <span>+24%</span>
                         </span>
-                        <span class="text-xs text-admin-textSecondary hidden sm:inline">vs last week</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">vs last week</span>
                     </div>
                 </div>
 
                 <!-- Clean Graph Area Container with Left Y-Axis and Right SVG Grid -->
                 <div class="flex gap-4 mt-6">
                     <!-- Left Y-Axis Labels Column -->
-                    <div class="flex flex-col justify-between text-[10px] font-semibold text-admin-textSecondary/60 h-48 py-1 select-none text-right w-16">
+                    <div class="flex flex-col justify-between text-[10px] font-semibold text-slate-500/60 dark:text-slate-400/60 h-48 py-1 select-none text-right w-16">
                         <span>NPR 50,000</span>
                         <span>NPR 37,500</span>
                         <span>NPR 25,000</span>
@@ -243,7 +243,7 @@
                         </div>
 
                         <!-- Days of the week at the bottom, perfectly aligned, no fixed height constraints -->
-                        <div class="flex justify-between text-xs font-semibold text-admin-textSecondary/80 pt-3 border-t border-brand-orange/10 mt-3 select-none">
+                        <div class="flex justify-between text-xs font-semibold text-slate-500/80 dark:text-slate-400/80 pt-3 border-t border-brand-orange/10 mt-3 select-none">
                             <span class="w-10 text-left">Mon</span>
                             <span class="w-10 text-center">Tue</span>
                             <span class="w-10 text-center">Wed</span>
@@ -258,15 +258,15 @@
         </div>
 
         <!-- Right-Side Donation Goal/Campaign Card (1/3 width on large screens) -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
                 <!-- Header -->
-                <div class="border-b border-admin-border/60 pb-4 mb-5">
-                    <h3 class="text-admin-textPrimary font-bold text-lg tracking-tight flex items-center gap-2">
-                        <i data-lucide="target" class="w-5 h-5 text-admin-primary"></i>
+                <div class="border-b border-slate-200 dark:border-slate-700/60 pb-4 mb-5">
+                    <h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg tracking-tight flex items-center gap-2">
+                        <i data-lucide="target" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
                         <span>Campaign Goal</span>
                     </h3>
-                    <p class="text-admin-textSecondary text-xs mt-1">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">
                         Monthly milestone for shelter expansion.
                     </p>
                 </div>
@@ -274,48 +274,48 @@
                 <!-- Progress Section -->
                 <div class="space-y-5">
                     <div class="flex items-baseline justify-between">
-                        <span class="text-xs font-semibold text-admin-textSecondary uppercase tracking-wider">Progress</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Progress</span>
                         <div class="text-right">
-                            <span class="text-xl font-extrabold text-admin-textPrimary">NPR 124,500</span>
-                            <span class="text-xs text-admin-textSecondary">/ NPR 150,000</span>
+                            <span class="text-xl font-extrabold text-slate-900 dark:text-slate-100">NPR 124,500</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400">/ NPR 150,000</span>
                         </div>
                     </div>
 
                     <!-- Custom Progress Bar -->
-                    <div class="w-full bg-admin-bg rounded-full h-3 overflow-hidden border border-admin-border/50">
-                        <div class="bg-gradient-to-r from-admin-primary to-admin-navActive h-full rounded-full transition-all duration-500 shadow-inner" style="width: 83%"></div>
+                    <div class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-full h-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
+                        <div class="bg-gradient-to-r from-emerald-600 dark:from-emerald-500 to-blue-500 h-full rounded-full transition-all duration-500 shadow-inner" style="width: 83%"></div>
                     </div>
 
                     <!-- Impact Breakdown List -->
                     <div class="space-y-3 pt-2">
                         <div class="flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
-                                <span class="w-2.5 h-2.5 rounded-full bg-admin-primary"></span>
+                            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-500"></span>
                                 <span>Medical & Surgery</span>
                             </div>
-                            <span class="font-bold text-admin-textPrimary">60%</span>
+                            <span class="font-bold text-slate-900 dark:text-slate-100">60%</span>
                         </div>
                         <div class="flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
-                                <span class="w-2.5 h-2.5 rounded-full bg-admin-navActive"></span>
+                            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                                 <span>Pet Food & Shelter</span>
                             </div>
-                            <span class="font-bold text-admin-textPrimary">25%</span>
+                            <span class="font-bold text-slate-900 dark:text-slate-100">25%</span>
                         </div>
                         <div class="flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-2 text-admin-textPrimary font-medium">
-                                <span class="w-2.5 h-2.5 rounded-full bg-admin-btnGreen"></span>
+                            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
                                 <span>Field Rescue Fuel</span>
                             </div>
-                            <span class="font-bold text-admin-textPrimary">15%</span>
+                            <span class="font-bold text-slate-900 dark:text-slate-100">15%</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Quote -->
-            <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/40 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
-                <i data-lucide="heart" class="w-4 h-4 text-admin-btnRed flex-shrink-0 mt-0.5 fill-admin-btnRed/25"></i>
+            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/40 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+                <i data-lucide="heart" class="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5 fill-red-600/25 dark:fill-red-400/25"></i>
                 <p>
                     Every contribution directly funds shelter veterinary services and active field rescue operations.
                 </p>
@@ -391,18 +391,18 @@
          @show-toast.window="showToast($event.detail.message)">
 
         <!-- Left Column: High-priority rescues -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 lg:col-span-2 shadow-sm">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:col-span-2 shadow-sm">
             <div>
-                <div class="flex items-center justify-between pb-4 mb-6 border-b border-admin-border/60">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-700/60">
                     <div>
-                        <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
+                        <h3 class="text-slate-900 dark:text-slate-100 font-extrabold text-lg tracking-tight">
                             High-priority rescues
                         </h3>
-                        <p class="text-admin-textSecondary text-xs mt-0.5">
+                        <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
                             Help these animals now.
                         </p>
                     </div>
-                    <a href="#" class="flex items-center gap-1 text-xs font-bold text-admin-primary hover:text-admin-primaryPress transition-colors">
+                    <a href="#" class="flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-600 dark:text-emerald-400Press transition-colors">
                         <span>View all</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
@@ -413,7 +413,7 @@
                     <div x-data="rescueCard(@js($rescue))"
                          :style="currentStatus === 'CANCELLED' ? 'order: 9999;' : ''"
                          :class="{ 'bg-gray-50/80': currentStatus === 'CANCELLED' }"
-                         class="bg-admin-surface border border-admin-border rounded-2xl transition-all duration-300 hover:shadow-md hover:border-admin-primary/20 overflow-hidden">
+                         class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl transition-all duration-300 hover:shadow-md hover:border-emerald-600/20 dark:border-emerald-500/20 overflow-hidden">
 
                         <div :class="{ 'opacity-60': currentStatus === 'RESOLVED', 'opacity-65': currentStatus === 'CANCELLED' }">
                             <div class="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -422,33 +422,33 @@
                                         <template x-if="currentStatus === 'CRITICAL'">
                                             <div class="relative">
                                                 <span class="absolute inset-0 rounded-full bg-red-500 opacity-25 animate-ping"></span>
-                                                <div class="relative w-12 h-12 rounded-full bg-red-100 text-red-600 border border-red-200 flex items-center justify-center shadow-sm animate-pulse">
-                                                    <i data-lucide="bell-ring" class="w-5 h-5 text-red-600 fill-red-200"></i>
+                                                <div class="relative w-12 h-12 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 flex items-center justify-center shadow-sm animate-pulse">
+                                                    <i data-lucide="bell-ring" class="w-5 h-5 text-red-600 dark:text-red-400 fill-red-200 dark:fill-red-500/30"></i>
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'URGENT'">
-                                            <div class="w-12 h-12 rounded-full bg-orange-50 text-brand-orange border border-orange-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="alert-triangle" class="w-5 h-5 text-brand-orange"></i>
+                                            <div class="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-500/20 text-brand-orange dark:text-orange-400 border border-orange-200 dark:border-orange-500/30 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="alert-triangle" class="w-5 h-5 text-brand-orange dark:text-orange-400"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'MODERATE'">
-                                            <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
+                                            <div class="w-12 h-12 rounded-full bg-yellow-50 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="bell" class="w-5 h-5 text-yellow-500 dark:text-yellow-400"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'ASSIGNED'">
-                                            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="truck" class="w-5 h-5 text-blue-500"></i>
+                                            <div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="truck" class="w-5 h-5 text-blue-500 dark:text-blue-400"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'RESOLVED'">
-                                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+                                            <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 dark:text-emerald-400"></i>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'CANCELLED'">
-                                            <div class="w-12 h-12 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center shadow-sm">
+                                            <div class="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-800/30 text-slate-400 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
                                                 <i data-lucide="slash" class="w-5 h-5 text-slate-400"></i>
                                             </div>
                                         </template>
@@ -456,30 +456,30 @@
 
                                     <div class="min-w-0 flex-1">
                                         <div class="flex items-center gap-2 flex-wrap">
-                                            <h4 class="text-admin-textPrimary font-bold text-sm sm:text-base tracking-tight truncate">
+                                            <h4 class="text-slate-900 dark:text-slate-100 font-bold text-sm sm:text-base tracking-tight truncate">
                                                 {{ $rescue['title'] }}
                                             </h4>
                                             <span :class="badgeClasses" x-text="currentStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase">{{ $rescue['status'] }}</span>
                                         </div>
-                                        <p class="text-xs text-admin-textSecondary mt-1.5 leading-relaxed line-clamp-2">{{ $rescue['description'] }}</p>
-                                        <div class="flex items-center gap-3.5 mt-2 text-xs text-admin-textSecondary flex-wrap">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">{{ $rescue['description'] }}</p>
+                                        <div class="flex items-center gap-3.5 mt-2 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
                                             <span class="flex items-center gap-1">
-                                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
+                                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-400/50"></i>
                                                 <span>{{ $rescue['location'] }}</span>
                                             </span>
                                             <span class="flex items-center gap-1">
-                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-admin-textSecondary/50"></i>
+                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-400/50"></i>
                                                 <span>{{ $rescue['time'] }}</span>
                                             </span>
-                                            <span class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase">{{ $rescue['code'] }}</span>
+                                            <span class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase">{{ $rescue['code'] }}</span>
                                         </div>
                                         <template x-if="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED'">
                                             <div class="mt-2 flex items-center gap-2">
-                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 border border-blue-100 text-[10px] font-bold text-blue-700">
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-500/20 border border-blue-100 dark:border-blue-500/30 text-[10px] font-bold text-blue-700 dark:text-blue-400">
                                                     <i data-lucide="users" class="w-3 h-3"></i>
                                                     <span x-text="assignedTeam || 'Alpha Team'"></span>
                                                 </span>
-                                                <span class="text-[10px] text-admin-textSecondary">dispatched</span>
+                                                <span class="text-[10px] text-slate-500 dark:text-slate-400">dispatched</span>
                                             </div>
                                         </template>
                                     </div>
@@ -505,25 +505,25 @@
 
                                     <template x-if="currentStatus === 'ASSIGNED'">
                                         <div class="flex flex-wrap items-center gap-2">
-                                            <button @click="markComplete()" class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
+                                            <button @click="markComplete()" class="bg-[#5BA44C] dark:bg-[#4A8A3E] hover:bg-[#4A8A3E] dark:hover:bg-[#3D7A33] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5">
                                                 <i data-lucide="check-circle" class="w-4 h-4"></i>
                                                 Mark Complete
                                             </button>
-                                            <button @click="cancelCase()" class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
+                                            <button @click="cancelCase()" class="border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
                                                 Cancel
                                             </button>
                                         </div>
                                     </template>
 
                                     <template x-if="currentStatus === 'CANCELLED'">
-                                        <span class="border border-slate-200 text-slate-400 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-default">
+                                        <span class="border border-slate-200 dark:border-slate-700 text-slate-400 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-default">
                                             <i data-lucide="slash" class="w-3.5 h-3.5"></i>
                                             Passed / Cancelled
                                         </span>
                                     </template>
 
                                     <template x-if="currentStatus === 'RESOLVED'">
-                                        <span class="bg-[#5BA44C] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-1.5 cursor-default">
+                                        <span class="bg-[#5BA44C] dark:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-1.5 cursor-default">
                                             <i data-lucide="check-circle" class="w-4 h-4"></i>
                                             Resolved
                                         </span>
@@ -538,21 +538,21 @@
                         </div>
 
                         <!-- Expandable Detail Panel -->
-                        <div x-show="expanded" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="border-t border-admin-border/60 bg-gray-50/50">
+                        <div x-show="expanded" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="border-t border-slate-200 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/30">
                             <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
-                                <div class="bg-white border border-admin-border rounded-xl p-4 space-y-4">
-                                    <h4 class="text-[11px] font-bold text-admin-textSecondary uppercase tracking-wider flex items-center gap-1.5">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                                         <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                         Case Details
                                     </h4>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Description</p>
-                                        <p class="text-sm text-admin-textPrimary mt-0.5 leading-relaxed">{{ $rescue['description'] }}</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Description</p>
+                                        <p class="text-sm text-slate-900 dark:text-slate-100 mt-0.5 leading-relaxed">{{ $rescue['description'] }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Location</p>
-                                        <p class="text-sm font-medium text-admin-textPrimary mt-0.5 inline-flex items-center gap-1">
-                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-admin-textSecondary/60"></i>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Location</p>
+                                        <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5 inline-flex items-center gap-1">
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/60 dark:text-slate-400/60"></i>
                                             {{ $rescue['location'] }}
                                         </p>
                                         <a href="#" class="block mt-1 text-[10px] font-bold text-brand-orange hover:underline">
@@ -560,8 +560,8 @@
                                         </a>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Image Evidence</p>
-                                        <div class="mt-1.5 w-full h-28 rounded-lg bg-slate-100 border border-dashed border-slate-200 flex items-center justify-center text-slate-400">
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Image Evidence</p>
+                                        <div class="mt-1.5 w-full h-28 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400">
                                             <div class="text-center">
                                                 <i data-lucide="image" class="w-6 h-6 mx-auto mb-1"></i>
                                                 <span class="text-[10px]">No image attached</span>
@@ -570,27 +570,27 @@
                                     </div>
                                     <div class="grid grid-cols-2 gap-3">
                                         <div>
-                                            <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Case Code</p>
-                                            <p class="text-sm font-mono font-bold text-admin-textPrimary mt-0.5">{{ $rescue['code'] }}</p>
+                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Case Code</p>
+                                            <p class="text-sm font-mono font-bold text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['code'] }}</p>
                                         </div>
                                         <div>
-                                            <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Reported</p>
-                                            <p class="text-sm font-medium text-admin-textPrimary mt-0.5">{{ $rescue['time'] }}</p>
+                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Reported</p>
+                                            <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['time'] }}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-white border border-admin-border rounded-xl p-4 space-y-4">
-                                    <h4 class="text-[11px] font-bold text-admin-textSecondary uppercase tracking-wider flex items-center gap-1.5">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                                         <i data-lucide="user" class="w-3.5 h-3.5"></i>
                                         Reporter Information
                                     </h4>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Full Name</p>
-                                        <p class="text-sm font-bold text-admin-textPrimary mt-0.5">{{ $rescue['reporter_name'] }}</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Full Name</p>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['reporter_name'] }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-admin-textSecondary/70 uppercase tracking-wide">Contact</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Contact</p>
                                         <a href="tel:{{ $rescue['reporter_phone'] }}" class="text-sm font-semibold text-brand-orange hover:text-brand-orange/80 transition-colors inline-flex items-center gap-1 mt-0.5">
                                             <i data-lucide="phone" class="w-3.5 h-3.5"></i>
                                             {{ $rescue['reporter_phone'] }}
@@ -599,33 +599,33 @@
                                             <i data-lucide="message-circle" class="w-3 h-3 inline"></i> Send SMS update
                                         </a>
                                     </div>
-                                    <hr class="border-admin-border/60">
+                                    <hr class="border-slate-200 dark:border-slate-700/60">
                                     <div>
-                                        <h4 class="text-[11px] font-bold text-admin-textSecondary uppercase tracking-wider flex items-center gap-1.5">
+                                        <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                                             <i data-lucide="truck" class="w-3.5 h-3.5"></i>
                                             Assigned Team
                                         </h4>
                                         <template x-if="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED'">
                                             <div class="mt-3 space-y-2">
-                                                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-blue-50 border border-blue-100">
+                                                <div class="flex items-center gap-3 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-500/20 border border-blue-100 dark:border-blue-500/30">
                                                     <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
                                                         <span x-text="(assignedTeam || 'Alpha Team').split(' ').map(w => w[0]).join('').substring(0, 2)"></span>
                                                     </div>
                                                     <div class="min-w-0">
-                                                        <p class="text-xs font-bold text-admin-textPrimary" x-text="assignedTeam || 'Alpha Team'"></p>
-                                                        <p class="text-[10px] text-admin-textSecondary">4 members · En route</p>
+                                                        <p class="text-xs font-bold text-slate-900 dark:text-slate-100" x-text="assignedTeam || 'Alpha Team'"></p>
+                                                        <p class="text-[10px] text-slate-500 dark:text-slate-400">4 members · En route</p>
                                                     </div>
                                                 </div>
                                                 <div class="flex -space-x-2">
                                                     <template x-for="i in 4" :key="i">
-                                                        <div class="w-7 h-7 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-500" x-text="['RP','SK','AD','MT'][i-1]"></div>
+                                                        <div class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-800/70 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400" x-text="['RP','SK','AD','MT'][i-1]"></div>
                                                     </template>
-                                                    <span class="text-[9px] text-admin-textSecondary ml-1 self-center">+ en route</span>
+                                                    <span class="text-[9px] text-slate-500 dark:text-slate-400 ml-1 self-center">+ en route</span>
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus !== 'ASSIGNED' && currentStatus !== 'RESOLVED'">
-                                            <div class="mt-3 p-3 rounded-lg bg-slate-50 border border-dashed border-slate-200 text-center">
+                                            <div class="mt-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/30 border border-dashed border-slate-200 dark:border-slate-700 text-center">
                                                 <i data-lucide="users" class="w-5 h-5 mx-auto text-slate-300 mb-1"></i>
                                                 <p class="text-[10px] text-slate-400">No team assigned yet</p>
                                                 <p class="text-[9px] text-slate-300 mt-0.5">Use "Assign Team" button above</p>
@@ -634,8 +634,8 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-white border border-admin-border rounded-xl p-4">
-                                    <h4 class="text-[11px] font-bold text-admin-textSecondary uppercase tracking-wider flex items-center gap-1.5 mb-4">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5 mb-4">
                                         <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                                         Status Timeline
                                     </h4>
@@ -646,8 +646,8 @@
                                                 <div class="w-0.5 bg-secondary-200 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p class="text-xs font-bold text-admin-textPrimary">Report Submitted</p>
-                                                <p class="text-[10px] text-admin-textSecondary mt-0.5">Case registered & queued for review</p>
+                                                <p class="text-xs font-bold text-slate-900 dark:text-slate-100">Report Submitted</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Case registered & queued for review</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative pb-7">
@@ -656,8 +656,8 @@
                                                 <div :class="currentStatus === 'RESOLVED' || currentStatus === 'CANCELLED' ? 'bg-secondary-200' : 'bg-gray-100'" class="w-0.5 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'text-admin-textPrimary' : 'text-admin-textSecondary/70'" class="text-xs font-bold">Help Dispatched</p>
-                                                <p class="text-[10px] text-admin-textSecondary mt-0.5" x-text="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'Assistance on the way to location' : 'Pending dispatch'"></p>
+                                                <p :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Help Dispatched</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'Assistance on the way to location' : 'Pending dispatch'"></p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative pb-7">
@@ -666,8 +666,8 @@
                                                 <div :class="currentStatus === 'RESOLVED' ? 'bg-secondary-200' : 'bg-gray-100'" class="w-0.5 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'text-admin-textPrimary' : 'text-admin-textSecondary/70'" class="text-xs font-bold">Rescue Team Assigned</p>
-                                                <p class="text-[10px] text-admin-textSecondary mt-0.5" x-text="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'Team dispatched to location' : 'Awaiting team assignment'"></p>
+                                                <p :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Rescue Team Assigned</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'Team dispatched to location' : 'Awaiting team assignment'"></p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative">
@@ -675,19 +675,19 @@
                                                 <div :class="currentStatus === 'RESOLVED' ? 'bg-[#5BA44C] ring-[#5BA44C]' : 'bg-gray-200 ring-gray-200'" class="w-3 h-3 rounded-full border-2 border-white ring-2 z-10 flex-shrink-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus === 'RESOLVED' ? 'text-admin-textPrimary' : 'text-admin-textSecondary/70'" class="text-xs font-bold">Rescue Completed</p>
-                                                <p class="text-[10px] text-admin-textSecondary mt-0.5" x-text="currentStatus === 'RESOLVED' ? 'Case resolved & closed' : 'Not yet completed'"></p>
+                                                <p :class="currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Rescue Completed</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus === 'RESOLVED' ? 'Case resolved & closed' : 'Not yet completed'"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <template x-if="currentStatus === 'RESOLVED'">
-                                        <div class="mt-4 pt-3 border-t border-admin-border/50 flex items-center gap-2 text-[10px] text-emerald-600 bg-emerald-50 rounded-lg px-3 py-2">
+                                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50 flex items-center gap-2 text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg px-3 py-2">
                                             <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                                             <span class="font-semibold">Case resolved at <span x-text="new Date().toLocaleTimeString()"></span></span>
                                         </div>
                                     </template>
                                     <template x-if="currentStatus === 'CANCELLED'">
-                                        <div class="mt-4 pt-3 border-t border-admin-border/50 flex items-center gap-2 text-[10px] text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
+                                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/30 rounded-lg px-3 py-2">
                                             <i data-lucide="slash" class="w-3.5 h-3.5"></i>
                                             <span class="font-semibold">Case passed / cancelled</span>
                                         </div>
@@ -704,7 +704,7 @@
         <!-- Assign Team Modal -->
         <div x-show="assignModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div @click="assignModalOpen = false" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" @click.outside="assignModalOpen = false">
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" @click.outside="assignModalOpen = false">
                 <div class="bg-brand-navy px-6 py-5 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
@@ -723,15 +723,15 @@
                     <div class="space-y-3">
                         <template x-for="(team, idx) in rescueTeams" :key="idx">
                             <label :for="'dash-team-' + idx" class="flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all"
-                                   :class="selectedTeam === team.name ? 'border-brand-orange bg-brand-orange/5' : 'border-admin-border hover:border-admin-border/80 bg-white'">
+                                   :class="selectedTeam === team.name ? 'border-brand-orange bg-brand-orange/5 dark:bg-brand-orange/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-700/50'">
                                 <input type="radio" :id="'dash-team-' + idx" :value="team.name" x-model="selectedTeam" class="w-4 h-4 text-brand-orange accent-brand-orange flex-shrink-0">
                                 <div class="flex items-center gap-3 min-w-0">
                                     <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" :style="'background-color: ' + team.color">
                                         <span x-text="team.initials"></span>
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-bold text-admin-textPrimary" x-text="team.name"></p>
-                                        <p class="text-[10px] text-admin-textSecondary" x-text="team.members + ' members · ' + team.status"></p>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-slate-100" x-text="team.name"></p>
+                                        <p class="text-[10px] text-slate-500 dark:text-slate-400" x-text="team.members + ' members · ' + team.status"></p>
                                     </div>
                                 </div>
                             </label>
@@ -741,7 +741,7 @@
                         <button @click="confirmAssign()" :disabled="!selectedTeam" class="flex-1 py-2.5 rounded-xl bg-brand-orange text-white text-xs font-bold hover:bg-[#E25338] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
                             Assign Team
                         </button>
-                        <button @click="assignModalOpen = false" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold transition-colors">
+                        <button @click="assignModalOpen = false" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold transition-colors">
                             Cancel
                         </button>
                     </div>
@@ -750,48 +750,48 @@
         </div>
 
         <!-- Toast -->
-        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-6 right-6 z-[70] max-w-sm bg-white border border-admin-border rounded-xl shadow-2xl p-4 flex items-start gap-3">
+        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-6 right-6 z-[70] max-w-sm bg-white border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl p-4 flex items-start gap-3">
             <div class="w-8 h-8 rounded-full bg-[#5BA44C]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i data-lucide="check-circle" class="w-4 h-4 text-[#5BA44C]"></i>
             </div>
             <div class="min-w-0">
-                <p class="text-sm font-bold text-admin-textPrimary">Action Completed</p>
-                <p class="text-xs text-admin-textSecondary mt-0.5 leading-relaxed" x-text="toastMessage"></p>
+                <p class="text-sm font-bold text-slate-900 dark:text-slate-100">Action Completed</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed" x-text="toastMessage"></p>
             </div>
             <button @click="toastVisible = false" class="w-5 h-5 rounded-full hover:bg-gray-100 flex items-center justify-center flex-shrink-0 transition-colors">
-                <i data-lucide="x" class="w-3.5 h-3.5 text-admin-textSecondary"></i>
+                <i data-lucide="x" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"></i>
             </button>
         </div>
 
         <!-- Right Column: Recent Activity Feed matching the mockup perfectly -->
-        <div class="bg-admin-surface border border-admin-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
                 <!-- Header -->
-                <div class="border-b border-admin-border/60 pb-4 mb-6">
-                    <h3 class="text-admin-textPrimary font-extrabold text-lg tracking-tight">
+                <div class="border-b border-slate-200 dark:border-slate-700/60 pb-4 mb-6">
+                    <h3 class="text-slate-900 dark:text-slate-100 font-extrabold text-lg tracking-tight">
                         Recent activity
                     </h3>
-                    <p class="text-admin-textSecondary text-xs mt-0.5">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
                         Live feed across the network.
                     </p>
                 </div>
 
                 <!-- Timeline List of Feeds -->
-                <div class="relative pl-6 border-l-2 border-admin-border/60 space-y-6">
+                <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-700/60 space-y-6">
                     @foreach($recentActivities as $activity)
                         <div class="relative">
                             <!-- Bullet timeline dot connecting them -->
-                            <span class="absolute -left-[31px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-admin-surface border-2 border-admin-primary shadow-sm">
-                                <span class="h-2 w-2 rounded-full bg-admin-primary"></span>
+                            <span class="absolute -left-[31px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white dark:bg-slate-800/70 border-2 border-emerald-600 dark:border-emerald-500 shadow-sm">
+                                <span class="h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-500"></span>
                             </span>
                             
                             <!-- Feed Content -->
                             <div>
-                                <p class="text-xs text-admin-textPrimary leading-relaxed">
-                                    <span class="font-extrabold text-admin-textPrimary">{{ $activity['title'] }}</span> 
-                                    <span class="text-admin-textSecondary">{{ $activity['action'] }}</span>
+                                <p class="text-xs text-slate-900 dark:text-slate-100 leading-relaxed">
+                                    <span class="font-extrabold text-slate-900 dark:text-slate-100">{{ $activity['title'] }}</span> 
+                                    <span class="text-slate-500 dark:text-slate-400">{{ $activity['action'] }}</span>
                                 </p>
-                                <span class="block text-[10px] text-admin-textSecondary/60 mt-1 font-semibold">
+                                <span class="block text-[10px] text-slate-500/60 dark:text-slate-400/60 mt-1 font-semibold">
                                     {{ $activity['time'] }}
                                 </span>
                             </div>
@@ -801,8 +801,8 @@
             </div>
 
             <!-- Sleek info helper in footer of right card -->
-            <div class="mt-6 p-4 rounded-xl bg-admin-bg border border-admin-border/50 text-[11px] text-admin-textSecondary flex items-start gap-2.5">
-                <i data-lucide="info" class="w-4 h-4 text-admin-primary flex-shrink-0 mt-0.5"></i>
+            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+                <i data-lucide="info" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5"></i>
                 <p>
                     Activities are streamed live from ResQNet, Animal Welfare Nepal and field rescuers.
                 </p>
@@ -863,7 +863,7 @@
                 assignedTeam: null,
                 get badgeClasses() {
                     const s = this.currentStatus;
-                    if (s === 'CRITICAL') return 'bg-admin-btnRed text-white';
+                    if (s === 'CRITICAL') return 'bg-red-600 dark:bg-red-500 text-white';
                     if (s === 'URGENT') return 'bg-brand-orange/20 text-brand-orange border border-brand-orange/30';
                     if (s === 'MODERATE') return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
                     if (s === 'ASSIGNED') return 'bg-[#2563EB] text-white';

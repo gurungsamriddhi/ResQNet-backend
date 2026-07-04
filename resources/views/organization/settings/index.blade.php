@@ -1,10 +1,10 @@
 <x-layouts.admin>
-    <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6 max-w-4xl mx-auto"
+    <div class="bg-slate-50 dark:bg-slate-900 px-4 sm:px-6 md:px-8 py-8 space-y-6 max-w-4xl mx-auto min-h-screen"
          x-data="settingsManager()"
-         x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
+         x-init="$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); })">
 
         <!-- Top Header Banner Section -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-admin-border pb-5">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
                     Settings
@@ -22,14 +22,120 @@
             </div>
         </div>
 
+        @if (session('success'))
+            <div class="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-400 text-xs font-semibold px-4 py-3.5 rounded-xl flex items-center gap-2.5 shadow-sm"
+                 x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0"></i>
+                <span>{{ session('success') }}</span>
+                <button type="button" @click="show = false" class="ml-auto text-emerald-400 dark:text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('organization.settings.update') }}" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+
+            <!-- Organization Profile Card -->
+            <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                        <i data-lucide="building" class="w-4.5 h-4.5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">Organization Profile</h2>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500">Update your organization name, logo, and contact details</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <div class="flex flex-col items-center text-center lg:w-48 shrink-0">
+                            <div class="relative w-24 h-24 mb-3">
+                                <div class="w-full h-full rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                                    @if ($organization?->logo)
+                                        <img src="{{ Storage::url($organization->logo) }}" alt="Logo" class="w-full h-full object-cover">
+                                    @else
+                                        <i data-lucide="building" class="w-8 h-8 text-slate-400 dark:text-slate-500"></i>
+                                    @endif
+                                </div>
+                                <label class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center cursor-pointer hover:bg-brand-orange/90 shadow-md transition-colors">
+                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                    <input type="file" name="logo" accept="image/jpeg,image/png,image/jpg,image/webp" class="hidden">
+                                </label>
+                            </div>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500">JPEG, PNG, WebP. Max 2MB.</p>
+                        </div>
+                        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Organization Name</label>
+                                <input type="text" name="name" value="{{ old('name', $organization?->name) }}"
+                                       class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('name') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                @error('name')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Description</label>
+                                <textarea name="description" rows="2" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('description') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">{{ old('description', $organization?->description) }}</textarea>
+                                @error('description')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                        <i data-lucide="mail" class="w-4 h-4"></i>
+                                    </div>
+                                    <input type="email" name="email" value="{{ old('email', $organization?->email) }}"
+                                           class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('email') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                </div>
+                                @error('email')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Phone</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                        <i data-lucide="phone" class="w-4 h-4"></i>
+                                    </div>
+                                    <input type="text" name="phone" value="{{ old('phone', $organization?->phone) }}"
+                                           class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('phone') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                </div>
+                                @error('phone')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Address</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <input type="text" name="address" value="{{ old('address', $organization?->address) }}"
+                                           class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('address') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                </div>
+                                @error('address')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
+                        <button type="submit"
+                                class="bg-brand-orange text-white hover:bg-brand-orange/90 text-xs font-bold px-6 py-2.5 rounded-xl shadow-md transition-all duration-200 active:scale-[0.98]">
+                            <i data-lucide="save" class="w-4 h-4 inline-block mr-1.5"></i>
+                            Save Organization
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="pt-4">
+            <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Other Settings</h3>
+        </div>
+
         <!-- Settings Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <!-- Card Section 1: Security -->
-            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
+            <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
                 <div>
                     <!-- Header -->
-                    <div class="flex items-center gap-3 pb-4 border-b border-admin-border/60 mb-5">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-700/60 mb-5">
                         <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-rose-500 flex items-center justify-center shadow-inner">
                             <i data-lucide="lock" class="w-5 h-5"></i>
                         </div>
@@ -53,7 +159,7 @@
                             </label>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Password -->
                         <div class="flex items-center justify-between gap-4">
@@ -67,7 +173,7 @@
                             </button>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Login Activity -->
                         <div class="flex items-center justify-between gap-4">
@@ -85,10 +191,10 @@
             </div>
 
             <!-- Card Section 2: Notifications -->
-            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
+            <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
                 <div>
                     <!-- Header -->
-                    <div class="flex items-center gap-3 pb-4 border-b border-admin-border/60 mb-5">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-700/60 mb-5">
                         <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/20 text-brand-orange flex items-center justify-center shadow-inner">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                         </div>
@@ -112,7 +218,7 @@
                             </label>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- SMS Notifications -->
                         <div class="flex items-start justify-between gap-4">
@@ -126,7 +232,7 @@
                             </label>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Emergency Alerts -->
                         <div class="flex items-start justify-between gap-4">
@@ -144,10 +250,10 @@
             </div>
 
             <!-- Card Section 3: Data & Privacy -->
-            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
+            <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
                 <div>
                     <!-- Header -->
-                    <div class="flex items-center gap-3 pb-4 border-b border-admin-border/60 mb-5">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-700/60 mb-5">
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500 flex items-center justify-center shadow-inner">
                             <i data-lucide="eye" class="w-5 h-5"></i>
                         </div>
@@ -171,7 +277,7 @@
                             </label>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Activity Logging -->
                         <div class="flex items-start justify-between gap-4">
@@ -185,7 +291,7 @@
                             </label>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Export Data -->
                         <div class="flex items-center justify-between gap-4">
@@ -204,10 +310,10 @@
             </div>
 
             <!-- Card Section 4: Rescue Configuration Options -->
-            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
+            <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col justify-between">
                 <div>
                     <!-- Header -->
-                    <div class="flex items-center gap-3 pb-4 border-b border-admin-border/60 mb-5">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-700/60 mb-5">
                         <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 text-blue-500 flex items-center justify-center shadow-inner">
                             <i data-lucide="sliders" class="w-5 h-5"></i>
                         </div>
@@ -227,14 +333,14 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <input type="number" x-model="rescueOps.occupiedSlots"
-                                       class="w-16 px-2.5 py-1.5 bg-admin-bg border border-admin-border rounded-xl text-xs text-center font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                       class="w-16 px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-center font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                                 <span class="text-xs font-bold text-slate-400">/</span>
                                 <input type="number" x-model="rescueOps.maxCapacity"
-                                       class="w-16 px-2.5 py-1.5 bg-admin-bg border border-admin-border rounded-xl text-xs text-center font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                       class="w-16 px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-center font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                             </div>
                         </div>
 
-                        <hr class="border-admin-border/40">
+                        <hr class="border-slate-200 dark:border-slate-700/40">
 
                         <!-- Mobile Alert Radius Range -->
                         <div class="space-y-3">
@@ -253,7 +359,7 @@
         </div>
 
         <!-- Bottom Page Control Bar Footer -->
-        <div class="flex items-center justify-end gap-3 pt-5 border-t border-admin-border mt-8">
+        <div class="flex items-center justify-end gap-3 pt-5 border-t border-slate-200 dark:border-slate-700 mt-8">
             <button @click="cancelChanges()"
                     class="bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
                 Cancel
