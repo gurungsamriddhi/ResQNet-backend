@@ -31,6 +31,7 @@ return new class extends Migration
         DB::table('vets')->where('is_active', false)->update(['status' => 'inactive']);
 
         Schema::table('vets', function (Blueprint $table) {
+            $table->dropIndex(['is_active']);
             $table->dropColumn('is_active');
             $table->index('is_global');
             $table->index('status');

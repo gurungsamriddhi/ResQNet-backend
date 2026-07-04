@@ -117,20 +117,24 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <!-- Password -->
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password <span class="text-red-500">*</span></label>
-                                <input id="password" type="password" name="password" required
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm"
-                                    placeholder="Min 8 characters">
-                            </div>
+                            <x-auth.password-field
+                                id="password"
+                                name="password"
+                                label="Password"
+                                placeholder="Min 8 characters"
+                                size="sm"
+                                :show-required="true"
+                            />
 
                             <!-- Confirm Password -->
-                            <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1.5">Confirm Password <span class="text-red-500">*</span></label>
-                                <input id="password_confirmation" type="password" name="password_confirmation" required
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm"
-                                    placeholder="Re-enter password">
-                            </div>
+                            <x-auth.password-field
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                label="Confirm Password"
+                                placeholder="Re-enter password"
+                                size="sm"
+                                :show-required="true"
+                            />
                         </div>
                     </div>
 
