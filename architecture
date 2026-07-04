@@ -1,0 +1,201 @@
+ResQNet Backend — Architecture Report
+======================================
+
+Technology Stack
+----------------
+
+  Layer          | Technology
+  ---------------|------------------------------------------
+  Language       | PHP 8.2+
+  Framework      | Laravel 11.x
+  Database       | MySQL 8.0 (primary) / SQLite (testing)
+  Web Auth       | Laravel session-based
+  API Auth       | Laravel Sanctum (token-based)
+  RBAC           | Spatie laravel-permission v6
+  Media          | Spatie laravel-medialibrary v11
+  QR Code        | simplesoftwareio/simple-qrcode
+  Frontend       | Blade + Tailwind CSS 3 + Alpine.js + Vite 6
+
+
+High-Level Architecture (MVC + Dual Interface)
+-----------------------------------------------
+
+The backend serves two interfaces from a single codebase:
+
+  Mobile App (React Native)  --- JSON --->  API Routes (api/v1/*)
+                                              |
+  Web Admin Panel (Browser)  --- HTML --->  Web Routes (/admin/*, /organization/*)
+                                              |
+                                         +----+----+
+                                         | Laravel  |
+                                         |  Core    |
+                                         +----+----+
+                                              |
+               +------------------------------+------------------------------+
+               |                              |                              |
+         Controllers                       Models (13)                 Views (60+)
+     (Api/, Web/Admin/,               (Eloquent ORM)               (Blade templates)
+      Web/Organization/,              + Relationships
+      Auth/)                          + SoftDeletes
+      + Traits                        + Spatie traits
+
+
+Three-Persona Design
+--------------------
+
+  Persona             | Role            | Interface  | Auth Method
+  --------------------|-----------------|------------|------------------------
+  Public User         | public_user     | Mobile App | Sanctum token (auth:sanctum)
+  Organization Admin  | organization    | Web Panel  | Session (auth) + role check
+  System Admin        | super_admin     | Web Panel  | Session (auth) + role check
+
+Middleware chain: auth -> is_active (custom, blocks inactive accounts) -> Spatie role:xxx
+
+
+Directory Structure
+-------------------
+
+  ResQNet-backend/
+  +-- app/
+  |   +-- Http/
+  |   |   +-- Controllers/
+  |   |   |   +-- Api/                  7 mobile API controllers
+  |   |   |   +-- Auth/                 12 web auth controllers
+  |   |   |   +-- Web/Admin/            9 system admin controllers
+  |   |   |   +-- Web/Organization/     12 org admin controllers
+  |   |   |   +-- Concerns/             Shared transformation traits
+  |   |   +-- Middleware/               CheckIsActive
+  |   |   +-- Requests/                 9 form request validators
+  |   |   +-- Resources/                6 API resource transformers
+  |   +-- Models/                       13 Eloquent models
+  |   +-- Mail/                         3 mailables (approve/reject/suspend)
+  |   +-- Notifications/                SendOtpNotification
+  |   +-- Policies/                     VetPolicy
+  |   +-- View/Components/              Reusable Blade components
+  +-- config/                           14 config files
+  +-- database/
+  |   +-- migrations/                   25 migration files
+  |   +-- seeders/                      10 seeders
+  |   +-- schema.sql                    Reference schema
+  +-- resources/views/                  Blade templates by persona
+  +-- routes/
+  |   +-- web.php                       Admin + org + public routes
+  |   +-- api.php                       Mobile API (v1)
+  |   +-- auth.php                      Auth routes
+  |   +-- console.php                   Artisan commands
+  +-- tests/
+  +-- composer.json
+  +-- package.json
+
+
+Database Schema (12 Core Tables)
+--------------------------------
+
+  users --> user_profiles
+    |
+    +--> organizations --> pets --> pet_images
+    |       |               |--> medical_records
+    |       |               |--> vaccinations
+    |       |               |--> medications
+    |       |               +--> adoption_requests
+    |       |
+    |       +--> vets (org-wide)
+    |       +--> rescue_reports
+    |       +--> donations
+    |
+    +--> adoption_requests (as applicant)
+    +--> rescue_reports (as reporter)
+    +--> donations (as donor)
+    +--> saved_pets (favorites pivot)
+
+Plus Spatie tables: roles, permissions, model_has_roles, model_has_permissions,
+role_has_permissions, and media (Spatie MediaLibrary).
+
+
+Key Design Decisions
+--------------------
+
+  1. Dual-Interface
+     Single Laravel backend serves both JSON REST API (mobile)
+     and Blade-rendered HTML (web admin panels)
+
+  2. API Versioning
+     All mobile routes prefixed with api/v1/
+
+  3. Multi-Step Org Registration
+     Atomic transaction: create User + Organization (status: pending)
+     + upload registration documents via MediaLibrary -> admin approves/rejects
+
+  4. OTP Verification
+     6-digit email OTP cached for 10 min (60s cooldown), replaces
+     traditional email verification links for mobile users
+
+  5. Auto QR Codes
+     Each pet gets a unique RQN-XXXXX QR ID auto-generated on model
+     creating event
+
+  6. Soft Deletes
+     All major entities use SoftDeletes for audit trail; financial
+     records use SET NULL to preserve history
+
+  7. Nepal-Specific
+     Fields for Nepal NGO registration numbers, Khalti/eSewa payment
+     gateways, local address tracking
+
+  8. Spatie RBAC
+     Three roles (public_user, organization, super_admin) with room
+     for granular permissions
+
+  9. CORS
+     Open CORS config (api/* + sanctum, all origins/methods) for
+     mobile app access
+
+
+Implementation Status
+---------------------
+
+  Module            | Mobile API  | Web (Org)  | Web (Admin)
+  ------------------|-------------|------------|-------------
+  Auth              | Done        | Done       | Done
+  OTP Verification  | Done        | --         | --
+  Dashboard         | To Do       | Done       | Done
+  Pet CRUD          | To Do       | Done       | Done
+  Adoptions         | To Do       | To Do      | --
+  Rescue Reports    | To Do       | To Do      | --
+  Donations         | To Do       | To Do      | --
+  Health Records    | --          | To Do      | --
+  Staff Management  | --          | Done       | --
+  Org Management    | --          | --         | To Do
+  QR System         | To Do       | Partial    | --
+
+
+Route Summary
+-------------
+
+  Web Routes:
+    Admin dashboard       /admin/*
+    Org dashboard         /organization/*
+    Public QR lookup      /pets/{qrId}
+
+  API Routes (/api/v1/*):
+    Auth          register, login, logout, OTP, password reset
+    Pets          index, show, QR lookup
+    Adoptions     CRUD
+    Rescues       report, update
+    Donations     CRUD
+    Saved Pets    toggle, list
+
+  Auth Routes:
+    Separate login flows for admin, organization, and regular users
+
+
+Key Files
+---------
+
+  File                                              Lines  Purpose
+  ------------------------------------------------  -----  ----------------------------------------
+  resqnet_workflow.md                               584    Full system documentation
+  database/schema.sql                               488    Reference SQL schema
+  app/Models/User.php                               ~150   Core user model with Sanctum, Spatie, OTP
+  app/Models/Pet.php                                ~120   Pet model with auto QR code generation
+  routes/api.php                                    ~120   Mobile API endpoint definitions

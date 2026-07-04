@@ -8,6 +8,7 @@ use App\Http\Resources\AdoptionRequestResource;
 use App\Models\AdoptionRequest;
 use App\Models\Pet;
 use Illuminate\Http\Request;
+use App\Notifications\AdoptionStatusUpdatedNotification;
 
 class AdoptionRequestController extends Controller
 {
@@ -23,31 +24,68 @@ class AdoptionRequestController extends Controller
 
     public function store(StoreAdoptionRequest $request)
     {
+        $user = $request->user();
         $pet = Pet::findOrFail($request->pet_id);
 
+        // Rule 1: Pet Availability Check
         if ($pet->status !== 'available') {
-            return response()->json(['message' => 'This pet is not available for adoption.'], 422);
+            return response()->json(['message' => 'This pet is no longer available.'], 422);
         }
 
-        $existing = AdoptionRequest::where('pet_id', $pet->id)
-            ->where('user_id', $request->user()->id)
-            ->where('status', 'pending')
+        // Rule 2: Strict Duplicate Check (1 request per user per pet)
+        $hasApplied = AdoptionRequest::where('pet_id', $pet->id)
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'under_review'])
             ->exists();
 
-        if ($existing) {
-            return response()->json(['message' => 'You already have a pending application for this pet.'], 422);
+        if ($hasApplied) {
+            return response()->json(['message' => 'You already have an active application running for this specific pet.'], 422);
         }
 
+        // Rule 3: Platform Limit Check (Max 3 parallel applications)
+        $activeRequestsCount = AdoptionRequest::where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'under_review'])
+            ->count();
+
+        if ($activeRequestsCount >= 3) {
+            return response()->json([
+                'message' => 'Your previous requests are currently under review. Please wait a few days for their outcome before applying for more pets.'
+            ], 422);
+        }
+
+        // Rule 4: Handle Profile Automation (Save once, pull automatically next time)
+        $profileData = $request->only([
+            'housing_type',
+            'employment_status',
+            'family_members_count',
+            'has_other_pets',
+            'experience_with_pets',
+            'has_yard',
+            'is_allergic'
+        ]);
+
+        // If data is provided, update or create their permanent profile details
+        if (!empty(array_filter($profileData))) {
+            $user->profile()->updateOrCreate(['user_id' => $user->id], $profileData);
+        }
+
+        // Rule 5: Build Request — profile data lives in user_profiles, not duplicated here
         $adoption = AdoptionRequest::create([
-            ...$request->validated(),
-            'user_id' => $request->user()->id,
+            'pet_id' => $pet->id,
+            'user_id' => $user->id,
+            'message' => $request->message,
             'status' => 'pending',
         ]);
+
+        // Rule 6: Async Notifications & Lifecycle updates
+        // Dispatching notification (triggers push notifications and emails gracefully)
+        // Inside AdoptionController.php store() method:
+        $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
 
         $adoption->load(['pet.primaryImage', 'pet.organization']);
 
         return (new AdoptionRequestResource($adoption))
-            ->additional(['message' => 'Adoption request submitted successfully.'])
+            ->additional(['message' => 'Adoption request submitted successfully!'])
             ->response()
             ->setStatusCode(201);
     }

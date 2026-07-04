@@ -112,6 +112,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
     Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
 
+
     Route::get('/health', [OrgHealthController::class, 'index'])->name('health.index');
     Route::post('/health/medical-records', [OrgHealthController::class, 'storeMedicalRecord'])->name('health.medical-records.store');
     Route::put('/health/medical-records/{record}', [OrgHealthController::class, 'updateMedicalRecord'])->name('health.medical-records.update');
@@ -138,6 +139,6 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
 
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
-    });
+});
 
 require __DIR__ . '/auth.php';

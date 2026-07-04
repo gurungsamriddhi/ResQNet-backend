@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class RegisterOrganizationController extends Controller
 {
@@ -30,19 +31,36 @@ class RegisterOrganizationController extends Controller
         //     'password_confirmation' => $request->password_confirmation,
         //     'all_fields' => $request->all()
         // ]);
+
+        // Fix: Convert empty strings for phone numbers to actual NULLs 
+        // so they don't break MySQL unique constraints.
+        if ($request->has('user_phone') && empty($request->user_phone)) {
+            $request->merge(['user_phone' => null]);
+        }
+
         $request->validate([
             // User validations
             'user_name' => 'required|string|max:255',
             'user_email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'user_phone' => 'nullable|string|max:20',
+            'user_phone' => 'nullable|string|max:20|unique:users,phone',
 
             // Organization validations
             'org_name' => 'required|string|max:255',
-            'org_email' => 'required|string|email|max:255',
+            'org_email' => 'required|string|email|max:255|unique:organizations,email',
             'registration_number' => 'required|string|max:255',
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-        ]);
+        ],
+            [
+                // --- Custom Error Messages ---
+                'user_email.unique' => 'This email address is already registered to a user account.',
+                'user_phone.unique' => 'This phone number is already in use by another user.',
+                'org_email.unique'  => 'An organization with this email address is already registered.',
+                'password.confirmed' => 'The password confirmation does not match.',
+                'document.max'       => 'The registration document cannot be larger than 5MB.',
+                'document.mimes'     => 'The document must be a PDF, JPG, JPEG, or PNG file.',
+            ]
+        );
 
         DB::beginTransaction();
 
@@ -56,30 +74,67 @@ class RegisterOrganizationController extends Controller
                 'is_active' => false,
             ]);
 
-            $user->assignRole('organization');
+            // Fix: Generate a truly unique slug by checking the DB (handled natively by Laravel helper if needed, or loop)
+            $slug = Str::slug($request->org_name);
+            if (Organization::where('slug', $slug)->exists()) {
+                $slug = $slug . '-' . Str::lower(Str::random(6));
+            }
+
 
             // 2. Create the Organization (pending)
             $org = Organization::create([
                 'user_id' => $user->id,
                 'name' => $request->org_name,
-                'slug' => Str::slug($request->org_name) . '-' . uniqid(),
+                'slug' => $slug,
                 'email' => $request->org_email,
                 'registration_number' => $request->registration_number,
                 'status' => 'pending',
                 'is_verified' => false,
             ]);
 
-            // 3. Handle document upload via Spatie MediaLibrary
-            if ($request->hasFile('document')) {
-                $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
+            
+
+            // 3. Assign Role safely after records are drafted
+            if (method_exists($user, 'assignRole')) {
+                $user->assignRole('organization');
             }
 
             DB::commit();
 
+            // Fix: Handle media AFTER DB commit. If the upload fails, 
+            // the user is created, but we don't risk leaving junk files if DB rolls back.
+            if ($request->hasFile('document')) {
+                try {
+                    $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
+                } catch (\Exception $mediaException) {
+                    // Log this error but don't delete the user's account registration over a file glitch
+                    Log::error('Media upload failed for Org ID ' . $org->id . ': ' . $mediaException->getMessage());
+                    return redirect()->route('registration.pending')->with('warning', 'Registration saved, but document upload failed. Please re-upload in dashboard.');
+                }
+            }
+
             return redirect()->route('registration.pending');
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            // Catch MySQL Error Code 1062 (Duplicate Entry) just in case
+            if ($e->errorInfo[1] == 1062) {
+                return back()
+                    ->withErrors(['error' => 'An organization with this name, email, or slug already exists. Please try different details.'])
+                    ->withInput();
+            }
+
+            // Fallback for any other database errors (e.g., connection lost)
+            return back()
+                ->withErrors(['error' => 'We encountered a database issue while setting up your account. Please try again shortly.'])
+                ->withInput();
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Registration failed: ' . $e->getMessage()])->withInput();
+
+            // Fallback for general application errors
+            return back()
+                ->withErrors(['error' => 'Something went wrong on our end. Please try again later.'])
+                ->withInput();
         }
     }
 }

@@ -17,8 +17,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // MySQL requires ALTER TABLE to modify an existing ENUM
-        DB::statement("ALTER TABLE pets MODIFY COLUMN status ENUM('available', 'adopted', 'unavailable', 'inactive', 'suspended') DEFAULT 'available'");
+        // MySQL requires ALTER TABLE to modify an existing ENUM; SQLite doesn't support MODIFY COLUMN
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE pets MODIFY COLUMN status ENUM('available', 'adopted', 'unavailable', 'inactive', 'suspended') DEFAULT 'available'");
+        }
 
         Schema::table('pets', function (Blueprint $table) {
             $table->text('suspension_reason')->nullable()->after('status');
@@ -40,6 +42,8 @@ return new class extends Migration
             $table->dropColumn(['suspension_reason', 'created_by']);
         });
 
-        DB::statement("ALTER TABLE pets MODIFY COLUMN status ENUM('available', 'adopted', 'unavailable', 'inactive') DEFAULT 'available'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE pets MODIFY COLUMN status ENUM('available', 'adopted', 'unavailable', 'inactive') DEFAULT 'available'");
+        }
     }
 };

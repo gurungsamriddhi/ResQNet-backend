@@ -8,6 +8,7 @@
     $adoptionsUrl = route('organization.adoptions.index');
     $volunteersUrl = route('organization.volunteers.index');
     $vetsUrl = route('organization.vets.index');
+    $financeUrl = route('organization.finance.index');
     $settingsUrl = route('organization.settings.index');
     $profileUrl = route('organization.profile.edit');
     $isDashboardActive = request()->routeIs('organization.dashboard');
@@ -18,6 +19,7 @@
     $isAdoptionsActive = request()->routeIs('organization.adoptions.*');
     $isVolunteersActive = request()->routeIs('organization.volunteers.*');
     $isVetsActive = request()->routeIs('organization.vets.*');
+    $isFinanceActive = request()->routeIs('organization.finance.*');
     $isSettingsActive = request()->routeIs('organization.settings.*');
     $isProfileActive = request()->routeIs('organization.profile.*');
     $organization = auth()->user()?->organization;
@@ -137,6 +139,17 @@
                             <div class="flex items-center gap-3">
                                 <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Veterinarians</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Finance -->
+                    <li>
+                        <a href="{{ $financeUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Finance</span>
                             </div>
                         </a>
                     </li>
@@ -357,6 +370,15 @@
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Veterinarians</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ $financeUrl }}" 
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isFinanceActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="wallet" class="w-4 h-4 {{ $isFinanceActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                        <span>Finance</span>
                                     </div>
                                 </a>
                             </li>

@@ -75,19 +75,21 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-5">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input id="password" type="password" name="password" required
-                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                        placeholder="••••••••">
-                </div>
+                <x-auth.password-field
+                    id="password"
+                    name="password"
+                    label="Password"
+                />
 
-                <!-- Remember Me -->
+                <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between mb-6">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500">
                         <span class="text-sm text-gray-500">Remember me</span>
                     </label>
+                    <a href="{{ route('organization.password.request') }}" class="text-sm text-primary-600 hover:text-primary-700 transition font-medium hover:underline">
+                        Forgot password?
+                    </a>
                 </div>
 
                 <!-- Submit -->

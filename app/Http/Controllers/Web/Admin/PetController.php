@@ -44,7 +44,7 @@ class PetController extends Controller
         // Analytics data for the analytics tab
         $analytics = $this->buildAnalytics($pet);
 
-        $vets = \App\Models\Vet::where('is_active', true)->orderBy('name')->get();
+        $vets = \App\Models\Vet::where('status', 'active')->orderBy('name')->get();
 
         return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics', 'vets'));
     }

@@ -3,71 +3,144 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_reset_password_link_screen_can_be_rendered(): void
+    protected function setUp(): void
     {
-        $response = $this->get('/forgot-password');
+        parent::setUp();
+
+        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+        Role::firstOrCreate(['name' => 'super_admin']);
+        Role::firstOrCreate(['name' => 'organization']);
+    }
+
+    // ── Admin OTP Password Reset ──
+
+    public function test_admin_forgot_password_screen_can_be_rendered()
+    {
+        $response = $this->get(route('admin.password.request'));
 
         $response->assertStatus(200);
     }
 
-    public function test_reset_password_link_can_be_requested(): void
+    public function test_admin_can_request_otp()
     {
-        Notification::fake();
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('super_admin');
 
-        $user = User::factory()->create();
+        $response = $this->post(route('admin.password.email'), [
+            'email' => $user->email,
+        ]);
 
-        $this->post('/forgot-password', ['email' => $user->email]);
-
-        Notification::assertSentTo($user, ResetPassword::class);
+        $response->assertRedirect(route('admin.password.verify'));
+        $this->assertEquals(session('admin_reset_email'), $user->email);
     }
 
-    public function test_reset_password_screen_can_be_rendered(): void
+    public function test_admin_verify_otp_screen_can_be_rendered()
     {
-        Notification::fake();
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('super_admin');
 
-        $user = User::factory()->create();
-
-        $this->post('/forgot-password', ['email' => $user->email]);
-
-        Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-            $response = $this->get('/reset-password/'.$notification->token);
-
-            $response->assertStatus(200);
-
-            return true;
-        });
+        $this->withSession(['admin_reset_email' => $user->email])
+            ->get(route('admin.password.verify'))
+            ->assertStatus(200);
     }
 
-    public function test_password_can_be_reset_with_valid_token(): void
+    public function test_admin_verify_otp_redirects_if_no_email_in_session()
     {
-        Notification::fake();
+        $this->get(route('admin.password.verify'))
+            ->assertRedirect(route('admin.password.request'));
+    }
 
-        $user = User::factory()->create();
+    public function test_admin_can_reset_password_with_valid_otp()
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('super_admin');
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        Cache::put('otp_reset_password_' . $user->email, '123456', now()->addMinutes(10));
 
-        Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-            $response = $this->post('/reset-password', [
-                'token' => $notification->token,
-                'email' => $user->email,
-                'password' => 'password',
-                'password_confirmation' => 'password',
-            ]);
+        $this->withSession(['admin_reset_email' => $user->email])
+            ->post(route('admin.password.verify.submit'), ['otp' => '123456'])
+            ->assertRedirect(route('admin.password.reset'));
 
-            $response
-                ->assertSessionHasNoErrors()
-                ->assertRedirect(route('login'));
+        $this->assertEquals(session('admin_reset_email_verified'), $user->email);
 
-            return true;
-        });
+        $response = $this->withSession([
+            'admin_reset_email' => $user->email,
+            'admin_reset_email_verified' => $user->email,
+        ])->post(route('admin.password.store'), [
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
+
+        $response->assertRedirect(route('admin.login'));
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('new-password', $user->fresh()->password));
+    }
+
+    public function test_admin_cannot_reset_password_with_invalid_otp()
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('super_admin');
+
+        Cache::put('otp_reset_password_' . $user->email, '123456', now()->addMinutes(10));
+
+        $this->withSession(['admin_reset_email' => $user->email])
+            ->post(route('admin.password.verify.submit'), ['otp' => '000000'])
+            ->assertSessionHasErrors(['otp']);
+    }
+
+    // ── Organization OTP Password Reset ──
+
+    public function test_organization_forgot_password_screen_can_be_rendered()
+    {
+        $response = $this->get(route('organization.password.request'));
+
+        $response->assertStatus(200);
+    }
+
+    public function test_organization_can_request_otp()
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('organization');
+
+        $response = $this->post(route('organization.password.email'), [
+            'email' => $user->email,
+        ]);
+
+        $response->assertRedirect(route('organization.password.verify'));
+        $this->assertEquals(session('org_reset_email'), $user->email);
+    }
+
+    public function test_organization_can_reset_password_with_valid_otp()
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('organization');
+
+        Cache::put('otp_reset_password_' . $user->email, '654321', now()->addMinutes(10));
+
+        $this->withSession(['org_reset_email' => $user->email])
+            ->post(route('organization.password.verify.submit'), ['otp' => '654321'])
+            ->assertRedirect(route('organization.password.reset'));
+
+        $this->assertEquals(session('org_reset_email_verified'), $user->email);
+
+        $response = $this->withSession([
+            'org_reset_email' => $user->email,
+            'org_reset_email_verified' => $user->email,
+        ])->post(route('organization.password.store'), [
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
+
+        $response->assertRedirect(route('organization.login'));
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('new-password', $user->fresh()->password));
     }
 }

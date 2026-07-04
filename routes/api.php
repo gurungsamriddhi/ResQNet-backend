@@ -4,10 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PetController;
-use App\Http\Controllers\Api\AdoptionRequestController;
+use App\Http\Controllers\Api\AdoptionController;
 use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\DonationController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserDashboardController;
 use App\Http\Controllers\Api\SavedPetController;
 
 /*
@@ -53,8 +53,8 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
 
             // User Profile
             Route::prefix('user')->name('api.user.')->group(function () {
-                Route::get('/', [UserController::class, 'show'])->name('show');
-                Route::patch('/', [UserController::class, 'update'])->name('update');
+                Route::get('/', [UserDashboardController::class, 'show'])->name('show');
+                Route::patch('/', [UserDashboardController::class, 'update'])->name('update');
             });
 
             // Saved Pets (Favorites)
@@ -65,11 +65,9 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
 
             // Adoptions
             Route::prefix('adoptions')->name('api.adoptions.')->group(function () {
-                Route::get('/', [AdoptionRequestController::class, 'index'])->name('index');
-                Route::post('/', [AdoptionRequestController::class, 'store'])->name('store');
-                Route::get('/{adoption}', [AdoptionRequestController::class, 'show'])->name('show');
-                // You may want to add these later:
-                // Route::post('/{adoption}/cancel', [AdoptionController::class, 'cancel'])->name('cancel');
+                Route::get('/', [AdoptionController::class, 'index'])->name('index');
+                Route::post('/', [AdoptionController::class, 'store'])->name('store');
+                Route::get('/{adoption}', [AdoptionController::class, 'show'])->name('show');
             });
 
             // Rescue Reports

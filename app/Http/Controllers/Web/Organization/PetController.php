@@ -86,7 +86,7 @@ class PetController extends Controller
         $vets = \App\Models\Vet::where(function ($q) use ($orgId) {
             $q->where('organization_id', $orgId)
               ->orWhereNull('organization_id');
-        })->where('is_active', true)->orderBy('name')->get();
+        })->where('status', 'active')->orderBy('name')->get();
 
         return view('shared.pets.show', compact('pet', 'canEdit', 'isSuperAdmin', 'analytics', 'vets'));
     }

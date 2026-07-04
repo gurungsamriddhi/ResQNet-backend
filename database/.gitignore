@@ -1,1 +1,1 @@
-*.sqlite*
+# *.sqlite* — removed, using MySQL only

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\TransformsPets;
 use App\Http\Resources\AdoptionRequestResource;
 use App\Models\AdoptionRequest;
+use App\Notifications\AdoptionStatusUpdatedNotification;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,7 @@ class AdoptionController extends Controller
         DB::transaction(function () use ($adoption, $request) {
             $adoption->update([
                 'status' => 'approved',
-                'admin_notes' => $request->input('admin_notes'),
+                'organization_response' => $request->input('organization_response'),
                 'reviewed_at' => now(),
             ]);
 
@@ -85,11 +86,11 @@ class AdoptionController extends Controller
             return response()->json(['message' => 'This application has already been reviewed.'], 422);
         }
 
-        $request->validate(['admin_notes' => 'nullable|string']);
+        $request->validate(['organization_response' => 'nullable|string']);
 
         $adoption->update([
             'status' => 'rejected',
-            'admin_notes' => $request->input('admin_notes'),
+            'organization_response' => $request->input('organization_response'),
             'reviewed_at' => now(),
         ]);
 
@@ -141,6 +142,41 @@ class AdoptionController extends Controller
         ];
     }
 
+    public function updateStatus(Request $request, AdoptionRequest $adoption)
+    {
+        $request->validate([
+            'status' => 'required|in:under_review,approved,rejected,completed',
+            'organization_response' => 'nullable|string|max:1000'
+        ]);
+
+        // Build status changes array
+        $updateData = [
+            'status' => $request->status,
+            'organization_response' => $request->organization_response,
+            'reviewed_by' => $request->user()->id,
+            'reviewed_at' => now(),
+        ];
+
+        // Specific structural timestamps handled on completion
+        if ($request->status === 'completed') {
+            $updateData['adopted_at'] = now();
+
+            // Flip the Pet status flag automatically when adoption completes
+            $adoption->pet()->update(['status' => 'adopted']);
+        }
+
+        $adoption->update($updateData);
+        $adoption->load('pet');
+
+        // Fire the dynamic unified notification system
+        $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
+
+        return response()->json([
+            'message' => "Application moved to status: " . str_replace('_', ' ', $request->status),
+            'adoption' => $adoption
+        ]);
+    }
+
     private function transformApplication(AdoptionRequest $req): array
     {
         return [
@@ -154,7 +190,11 @@ class AdoptionController extends Controller
             'pet_id' => $req->pet->id,
             'date' => $req->created_at?->format('Y-m-d'),
             'status' => ucfirst($req->status),
-            'has_other_pets' => $req->has_other_pets,
+            'has_other_pets' => $req->user?->profile?->has_other_pets,
+            'housing_type' => $req->user?->profile?->housing_type,
+            'employment_status' => $req->user?->profile?->employment_status,
+            'family_members_count' => $req->user?->profile?->family_members_count,
+            'experience_with_pets' => $req->user?->profile?->experience_with_pets,
         ];
     }
 }
