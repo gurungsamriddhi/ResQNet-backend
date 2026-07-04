@@ -176,20 +176,14 @@
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
 
-                    @if(isset($header) && $header->isNotEmpty())
-                        <div class="w-full flex items-center">
-                            {{ $header }}
+                    <!-- Persistent Sleek Search Input -->
+                    <div class="relative max-w-md w-full hidden sm:block">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500/60 dark:text-slate-300/60">
+                            <i data-lucide="search" class="w-4 h-4"></i>
                         </div>
-                    @else
-                        <!-- Persistent Sleek Search Input -->
-                        <div class="relative max-w-md w-full hidden sm:block">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500/60 dark:text-slate-300/60">
-                                <i data-lucide="search" class="w-4 h-4"></i>
-                            </div>
-                             <input type="text" placeholder="Search pets, rescue requests, adoption status..." 
-                                    class="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800/60 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all duration-200">
-                        </div>
-                    @endif
+                         <input type="text" placeholder="Search pets, rescue requests, adoption status..." 
+                                class="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800/60 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all duration-200">
+                    </div>
                 </div>
 
                 <!-- Right: Actions & User Profile -->
@@ -281,6 +275,11 @@
 
             <!-- Main Content Grid Area -->
             <main class="flex-1 p-4 sm:p-6 md:p-8">
+                @if(isset($header) && $header->isNotEmpty())
+                    <div class="mb-6">
+                        {{ $header }}
+                    </div>
+                @endif
                 @if(isset($slot) && $slot->isNotEmpty())
                     {{ $slot }}
                 @else

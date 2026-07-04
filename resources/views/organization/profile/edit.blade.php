@@ -138,8 +138,31 @@
                         </div>
                     </div>
 
-                    <!-- Password Change Card -->
-                    <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl shadow-sm overflow-hidden">
+                    <!-- Submit Footer -->
+                    <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl shadow-sm p-4 flex items-center justify-between">
+                        <div class="text-[10px] text-slate-400 dark:text-slate-300">
+                            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+                            All changes are saved automatically when you click Save
+                        </div>
+                        <button type="submit"
+                                class="bg-brand-orange text-white hover:bg-brand-orange/90 text-xs font-bold px-6 py-2.5 rounded-xl shadow-md transition-all duration-200 active:scale-[0.98]">
+                            <i data-lucide="save" class="w-4 h-4 inline-block mr-1.5"></i>
+                            Save Changes
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <form method="POST" action="{{ route('organization.profile.update') }}">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="name" value="{{ old('name', auth()->user()->name) }}">
+            <input type="hidden" name="email" value="{{ old('email', auth()->user()->email) }}">
+
+            <!-- Password Change Card -->
+            <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl shadow-sm overflow-hidden">
                         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <div class="w-9 h-9 rounded-lg bg-rose-50 dark:bg-rose-500/20 text-rose-500 dark:text-rose-400 flex items-center justify-center">
@@ -160,55 +183,58 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
                                         <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5">Current Password</label>
-                                        <div class="relative">
+                                        <div class="relative" x-data="{ show: false }">
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-300">
                                                 <i data-lucide="key" class="w-4 h-4"></i>
                                             </div>
-                                            <input type="password" name="current_password"
-                                                   class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('current_password') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                            <input :type="show ? 'text' : 'password'" name="current_password"
+                                                   class="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('current_password') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                                <i data-lucide="eye" class="w-4 h-4" x-show="!show"></i>
+                                                <i data-lucide="eye-off" class="w-4 h-4" x-show="show"></i>
+                                            </button>
                                         </div>
                                         @error('current_password')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
                                     </div>
                                     <div>
                                         <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5">New Password</label>
-                                        <div class="relative">
+                                        <div class="relative" x-data="{ show: false }">
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-300">
                                                 <i data-lucide="key" class="w-4 h-4"></i>
                                             </div>
-                                            <input type="password" name="new_password"
-                                                   class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('new_password') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                            <input :type="show ? 'text' : 'password'" name="password"
+                                                   class="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all @error('password') border-red-300 bg-red-50 dark:bg-red-500/10 @enderror">
+                                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                                <i data-lucide="eye" class="w-4 h-4" x-show="!show"></i>
+                                                <i data-lucide="eye-off" class="w-4 h-4" x-show="show"></i>
+                                            </button>
                                         </div>
-                                        @error('new_password')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+                                        @error('password')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
                                     </div>
                                     <div>
                                         <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5">Confirm New Password</label>
-                                        <div class="relative">
+                                        <div class="relative" x-data="{ show: false }">
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-300">
                                                 <i data-lucide="key" class="w-4 h-4"></i>
                                             </div>
-                                            <input type="password" name="new_password_confirmation"
-                                                   class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                            <input :type="show ? 'text' : 'password'" name="password_confirmation"
+                                                   class="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 dark:text-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                                <i data-lucide="eye" class="w-4 h-4" x-show="!show"></i>
+                                                <i data-lucide="eye-off" class="w-4 h-4" x-show="show"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800/60 flex justify-end">
+                                <button type="submit"
+                                        class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl shadow-md transition-all duration-200 active:scale-[0.98]">
+                                    <i data-lucide="lock" class="w-4 h-4 inline-block mr-1.5"></i>
+                                    Update Password
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Submit Footer -->
-                    <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl shadow-sm p-4 flex items-center justify-between">
-                        <div class="text-[10px] text-slate-400 dark:text-slate-300">
-                            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
-                            All changes are saved automatically when you click Save
-                        </div>
-                        <button type="submit"
-                                class="bg-brand-orange text-white hover:bg-brand-orange/90 text-xs font-bold px-6 py-2.5 rounded-xl shadow-md transition-all duration-200 active:scale-[0.98]">
-                            <i data-lucide="save" class="w-4 h-4 inline-block mr-1.5"></i>
-                            Save Changes
-                        </button>
-                    </div>
-
-                </div>
             </div>
         </form>
     </div>
