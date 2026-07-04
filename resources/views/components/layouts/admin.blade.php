@@ -121,7 +121,7 @@
         }
     </style>
 </head>
-<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-105 antialiased transition-colors duration-150" 
+<body class="h-full bg-slate-50 dark:bg-[#111c2a] text-slate-900 dark:text-slate-100 antialiased transition-colors duration-150" 
       x-data="{ mobileSidebarOpen: false, darkMode: localStorage.getItem('darkMode') === 'true' }" 
       x-init="
         $watch('darkMode', val => {
@@ -167,12 +167,12 @@
             
             <!-- Sleek Top Header Navbar with Dynamic Scroll Transition padding/blur -->
             <header class="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 transition-all duration-300"
-                    :class="scrolled ? 'bg-white/80 dark:bg-slate-800/70 backdrop-blur-md shadow-md border-b border-slate-200 dark:border-slate-700/80' : 'bg-white dark:bg-slate-800/70 border-b border-slate-200 dark:border-slate-700 shadow-sm'">
+                    :class="scrolled ? 'bg-white/80 dark:bg-[#1a2333] backdrop-blur-md shadow-md border-b border-slate-200 dark:border-slate-800/80' : 'bg-white dark:bg-[#1a2333] border-b border-slate-200 dark:border-slate-700/40 shadow-sm'">
                 
                 <!-- Left: Mobile Sidebar Toggle & Search Bar -->
                 <div class="flex items-center gap-4 flex-1">
                     <!-- Mobile Hamburger Menu Button -->
-                    <button @click="mobileSidebarOpen = true" class="p-2 -ml-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 lg:hidden focus:outline-none transition-colors" aria-label="Open sidebar">
+                    <button @click="mobileSidebarOpen = true" class="p-2 -ml-2 rounded-lg text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 lg:hidden focus:outline-none transition-colors" aria-label="Open sidebar">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
 
@@ -183,11 +183,11 @@
                     @else
                         <!-- Persistent Sleek Search Input -->
                         <div class="relative max-w-md w-full hidden sm:block">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500/60 dark:text-slate-400/60">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500/60 dark:text-slate-300/60">
                                 <i data-lucide="search" class="w-4 h-4"></i>
                             </div>
                              <input type="text" placeholder="Search pets, rescue requests, adoption status..." 
-                                    class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all duration-200">
+                                    class="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-800/60 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all duration-200">
                         </div>
                     @endif
                 </div>
@@ -195,12 +195,12 @@
                 <!-- Right: Actions & User Profile -->
                 <div class="flex items-center gap-4 sm:gap-6">
                     <!-- Search Icon for Mobile (since main bar is hidden) -->
-                    <button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors sm:hidden" aria-label="Search">
+                    <button class="p-2 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors sm:hidden" aria-label="Search">
                         <i data-lucide="search" class="w-5 h-5"></i>
                     </button>
 
                     <!-- Dark/Light Theme Toggle -->
-                    <button @click="darkMode = !darkMode" class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-all duration-300 relative group" aria-label="Toggle dark mode">
+                    <button @click="darkMode = !darkMode" class="p-2 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-all duration-300 relative group" aria-label="Toggle dark mode">
                         <i data-lucide="sun" x-show="!darkMode" class="w-5 h-5 transition-transform duration-300 group-hover:rotate-45"></i>
                         <i data-lucide="moon" x-show="darkMode" class="w-5 h-5 transition-transform duration-300 group-hover:-rotate-12" style="display: none;"></i>
                         <span class="absolute top-full right-0 mt-2 hidden group-hover:block bg-slate-900 dark:bg-slate-100 text-white text-xs rounded py-1 px-2 whitespace-nowrap shadow-md">
@@ -209,7 +209,7 @@
                     </button>
 
                     <!-- Notification Bell with bg-admin-btnRed Badge -->
-                    <button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors relative group" aria-label="Notifications">
+                    <button class="p-2 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors relative group" aria-label="Notifications">
                         <i data-lucide="bell" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110"></i>
                         <!-- Red Badge Dot matching bg-admin-btnRed -->
                         <span class="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
@@ -228,14 +228,14 @@
                     <div class="flex items-center gap-3">
                         <div class="hidden md:flex flex-col text-right">
                             <span class="text-xs font-semibold text-slate-900 dark:text-slate-100">{{ auth()->user()?->name ?? 'Dev User' }}</span>
-                            <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            <span class="text-[10px] text-slate-500 dark:text-slate-300 uppercase tracking-wider">
                                 {{ auth()->user()?->hasRole('super_admin') ? 'Super Admin' : (auth()->user()?->hasRole('organization') ? 'Org Admin' : 'Guest') }}
                             </span>
                         </div>
                         @php $org = auth()->user()?->organization; @endphp
                         <div class="relative flex-shrink-0 group cursor-pointer" x-data="{ userMenuOpen: false }" @click.away="userMenuOpen = false">
                             <div @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 dark:from-emerald-500 to-blue-500 p-[2px] shadow-sm transition-all duration-300 group-hover:scale-105">
-                                <div class="w-full h-full rounded-[10px] bg-white dark:bg-slate-800/70 flex items-center justify-center overflow-hidden relative">
+                                <div class="w-full h-full rounded-[10px] bg-white dark:bg-[#1a2333] flex items-center justify-center overflow-hidden relative">
                                     @if($org && $org->logo)
                                         <img src="{{ Storage::url($org->logo) }}" alt="Org Logo" class="w-full h-full object-cover">
                                     @else
@@ -263,7 +263,7 @@
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50"
+                                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-xl shadow-lg py-1 z-50"
                                  style="display: none;">
                                 <form method="POST" action="{{ auth()->user()?->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
                                     @csrf
@@ -289,7 +289,7 @@
             </main>
 
             <!-- Sleek Footer -->
-            <footer class="bg-white dark:bg-slate-800/70 border-t border-slate-200 dark:border-slate-700 px-6 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+            <footer class="bg-white dark:bg-[#1a2333] border-t border-slate-200 dark:border-slate-700/40 px-6 py-4 text-center text-xs text-slate-500 dark:text-slate-300">
                 &copy; 2026 ResQNet Admin Hub. Built for rapid wildlife and pet care coordination.
             </footer>
 

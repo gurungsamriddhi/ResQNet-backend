@@ -232,7 +232,7 @@
                                     </span>
                                 </template>
                                 <template x-if="!selectedRecord.next_date">
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-200">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-[#111c2a] text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-700/40">
                                         Completed
                                     </span>
                                 </template>
@@ -243,7 +243,7 @@
                         <div>
                             <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary mb-1.5">Assigned Veterinarian</label>
                             <select x-model="selectedRecord.vet_name"
-                                    class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm p-2.5 rounded-xl focus:outline-none">
+                                    class="w-full bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 text-slate-800 dark:text-slate-200 text-sm p-2.5 rounded-xl focus:outline-none">
                                 <option value="">Select Veterinarian (Optional)</option>
                                 <option value="Dr. Rajesh Hamal (Senior Vet)">Dr. Rajesh Hamal (Senior Vet)</option>
                                 <option value="Dr. Sanduk Ruit (Animal Surgeon)">Dr. Sanduk Ruit (Animal Surgeon)</option>
@@ -312,15 +312,15 @@
                             <span x-text="getPetById(viewPetId)?.species || ''"></span>
                         </p>
                         <div class="flex flex-wrap gap-2 mt-3">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-[#111c2a] border border-admin-border text-admin-textSecondary text-xs shadow-sm">
                                 <i data-lucide="venus-and-mars" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
                                 <span x-text="getPetById(viewPetId)?.gender || 'Unknown'"></span>
                             </span>
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-[#111c2a] border border-admin-border text-admin-textSecondary text-xs shadow-sm">
                                 <i data-lucide="palette" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
                                 <span x-text="getPetById(viewPetId)?.color || 'Unknown'"></span>
                             </span>
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-admin-border text-admin-textSecondary text-xs shadow-sm">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-[#111c2a] border border-admin-border text-admin-textSecondary text-xs shadow-sm">
                                 <i data-lucide="cake" class="w-3.5 h-3.5 text-admin-textSecondary/70"></i>
                                 <span x-text="getPetById(viewPetId)?.date_of_birth ? getPetAge(getPetById(viewPetId).date_of_birth) : 'Unknown'"></span>
                             </span>
@@ -345,7 +345,7 @@
                         </h3>
                         <div class="space-y-3">
                             <template x-for="rec in medicalRecords" :key="'med-' + rec.id">
-                                <div class="bg-white dark:bg-slate-800/50 border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
+                                <div class="bg-white dark:bg-[#0b0f19] border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
                                     <div class="flex items-start justify-between gap-3">
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-2">
@@ -404,7 +404,7 @@
                         </h3>
                         <div class="space-y-3">
                             <template x-for="rec in vaccinationRecords" :key="'vac-' + rec.id">
-                                <div class="bg-white dark:bg-slate-800/50 border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
+                                <div class="bg-white dark:bg-[#0b0f19] border border-admin-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative group">
                                     <div class="flex items-start justify-between gap-3">
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-2">
@@ -465,7 +465,7 @@
                 {{-- Empty State --}}
                 <template x-if="petRecords.length === 0">
                     <div class="flex flex-col items-center justify-center py-16 px-6 bg-admin-bg/30 rounded-2xl border border-dashed border-admin-border">
-                        <div class="w-14 h-14 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-4 shadow-sm border border-admin-border">
+                        <div class="w-14 h-14 rounded-full bg-white dark:bg-[#111c2a] flex items-center justify-center mb-4 shadow-sm border border-admin-border">
                             <i data-lucide="clipboard-list" class="w-7 h-7 text-admin-textSecondary/40"></i>
                         </div>
                         <p class="text-base font-bold text-admin-textPrimary mb-1">No health records yet</p>

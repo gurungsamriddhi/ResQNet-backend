@@ -7,7 +7,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-admin-border pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Analytics & Performance Reports</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Long-term trends, response efficiency, and regional rescue metrics for our organization.</p>
+                <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">Long-term trends, response efficiency, and regional rescue metrics for our organization.</p>
             </div>
         </div>
 
@@ -97,15 +97,15 @@
                     <div class="flex flex-wrap gap-4 text-xs justify-center">
                         <div class="flex items-center gap-1.5">
                             <span class="w-2.5 h-2.5 rounded-full" style="background-color: #5BA44C;"></span>
-                            <span class="text-slate-600 dark:text-slate-400">Successfully Resolved <strong class="text-slate-800 dark:text-slate-200">62%</strong></span>
+                            <span class="text-slate-600 dark:text-slate-300">Successfully Resolved <strong class="text-slate-800 dark:text-slate-200">62%</strong></span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                            <span class="text-slate-600 dark:text-slate-400">Cancelled/Returned <strong class="text-slate-800 dark:text-slate-200">20%</strong></span>
+                            <span class="text-slate-600 dark:text-slate-300">Cancelled/Returned <strong class="text-slate-800 dark:text-slate-200">20%</strong></span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-                            <span class="text-slate-600 dark:text-slate-400">False Alarms <strong class="text-slate-800 dark:text-slate-200">18%</strong></span>
+                            <span class="text-slate-600 dark:text-slate-300">False Alarms <strong class="text-slate-800 dark:text-slate-200">18%</strong></span>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                             <span class="font-semibold text-slate-700 dark:text-slate-300">Mobile Views</span>
                             <span class="font-bold text-slate-800 dark:text-slate-100">1,200</span>
                         </div>
-                        <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-full h-3 bg-slate-100 dark:bg-[#111c2a] rounded-full overflow-hidden">
                             <div class="h-full rounded-full" style="width: 100%; background-color: #5BA44C;"></div>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                             <span class="font-semibold text-slate-700 dark:text-slate-300">Applications</span>
                             <span class="font-bold text-slate-800 dark:text-slate-100">156</span>
                         </div>
-                        <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-full h-3 bg-slate-100 dark:bg-[#111c2a] rounded-full overflow-hidden">
                             <div class="h-full rounded-full bg-amber-400" style="width: 13%;"></div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                             <span class="font-semibold text-slate-700 dark:text-slate-300">Final Placements</span>
                             <span class="font-bold text-slate-800 dark:text-slate-100">42</span>
                         </div>
-                        <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-full h-3 bg-slate-100 dark:bg-[#111c2a] rounded-full overflow-hidden">
                             <div class="h-full rounded-full bg-indigo-400" style="width: 3.5%;"></div>
                         </div>
                     </div>
@@ -178,10 +178,10 @@
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-0">
                 <!-- Map Grid Panel -->
-                <div class="lg:col-span-3 p-5 bg-slate-50/50 dark:bg-slate-900/20">
+                <div class="lg:col-span-3 p-5 bg-slate-50/50 dark:bg-[#111c2a]/20">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <!-- Sector: Lakeside -->
-                        <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
+                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-10" style="background-color: #dc2626;"></div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Lakeside</span>
                             <span class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mt-1 block">24</span>
@@ -192,7 +192,7 @@
                             </div>
                         </div>
                         <!-- Sector: Chipledhunga -->
-                        <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
+                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-10" style="background-color: #ea580c;"></div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Chipledhunga</span>
                             <span class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mt-1 block">18</span>
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         <!-- Sector: Chorepatan -->
-                        <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
+                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-10" style="background-color: #f59e0b;"></div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Chorepatan</span>
                             <span class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mt-1 block">11</span>
@@ -214,7 +214,7 @@
                             </div>
                         </div>
                         <!-- Sector: Nayabazar -->
-                        <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
+                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-4 shadow-sm relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-10" style="background-color: #f59e0b;"></div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Nayabazar</span>
                             <span class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mt-1 block">7</span>

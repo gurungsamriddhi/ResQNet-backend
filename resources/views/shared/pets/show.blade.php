@@ -189,9 +189,9 @@
                 </div>
 
                 <!-- QR Code -->
-                <aside class="lg:col-span-3 bg-white text-slate-900 rounded-xl border border-admin-border shadow-sm p-5 flex flex-col items-center justify-between">
+                <aside class="lg:col-span-3 bg-white dark:bg-[#1a2333] text-slate-900 dark:text-slate-100 rounded-xl border border-admin-border shadow-sm p-5 flex flex-col items-center justify-between">
                     <div class="text-center">
-                        <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Scan Pet ID</div>
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-300">Scan Pet ID</div>
                         <div class="text-lg font-extrabold mt-1">{{ $pet->qr_code_id }}</div>
                     </div>
 
@@ -200,7 +200,7 @@
                     </div>
 
                     <div class="w-full space-y-3">
-                        <p class="text-xs text-slate-500 text-center leading-relaxed break-words">
+                        <p class="text-xs text-slate-500 dark:text-slate-300 text-center leading-relaxed break-words">
                             Opens this pet record through the public QR endpoint.
                         </p>
                         <button type="button"

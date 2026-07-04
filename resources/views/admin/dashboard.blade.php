@@ -5,7 +5,7 @@
             <h1 class="text-slate-900 dark:text-slate-100 font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                 Welcome back, Asmita 🐾
             </h1>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            <p class="text-slate-500 dark:text-slate-300 text-sm mt-1">
                 Here's a real-time summary of ResQNet's shelter activities, emergency rescues, and active adoptions today.
             </p>
         </div>
@@ -27,11 +27,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
         
         <!-- Card 1: Total Animals -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase block">
                         Total Animals
                     </span>
                     <!-- Main Value -->
@@ -45,7 +45,7 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+12%</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400">vs last week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-300">vs last week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
@@ -55,11 +55,11 @@
         </div>
 
         <!-- Card 2: Active Rescues -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase block">
                         Active Rescues
                     </span>
                     <!-- Main Value -->
@@ -73,7 +73,7 @@
                         <i data-lucide="trending-down" class="w-3 h-3"></i>
                         <span>-10%</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400">critical status</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-300">critical status</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
@@ -83,11 +83,11 @@
         </div>
 
         <!-- Card 3: Pets In Care -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase block">
                         Pets In Care
                     </span>
                     <!-- Main Value -->
@@ -101,21 +101,21 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+8%</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400">vs last week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-300">vs last week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 text-[#D97706] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B]/10 dark:bg-[#F59E0B]/20 text-[#D97706] dark:text-[#F59E0B] group-hover:bg-[#F59E0B] group-hover:text-white transition-all duration-300">
                 <i data-lucide="heart-handshake" class="w-5 h-5"></i>
             </div>
         </div>
 
         <!-- Card 4: Completed Adoptions -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase block">
                         Completed Adoptions
                     </span>
                     <!-- Main Value -->
@@ -129,20 +129,20 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+24%</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400">this month</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-300">this month</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-green-500/10 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
             </div>
         </div>
         <!-- Card 5: Total Donations -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <!-- Title -->
-                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase block">
+                    <span class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase block">
                         Total Donations
                     </span>
                     <!-- Main Value -->
@@ -156,11 +156,11 @@
                         <i data-lucide="trending-up" class="w-3 h-3"></i>
                         <span>+18%</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400">this week</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-300">this week</span>
                 </div>
             </div>
             <!-- Circular Icon Placeholder Top Right -->
-            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#FCC234]/10 text-[#9E7A1C] group-hover:bg-[#FCC234] group-hover:text-slate-900 dark:text-slate-100 transition-all duration-300">
+            <div class="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-[#FCC234]/10 dark:bg-[#FCC234]/20 text-[#9E7A1C] dark:text-[#FCC234] group-hover:bg-[#FCC234] group-hover:text-slate-900 dark:text-slate-100 transition-all duration-300">
                 <i data-lucide="hand-coins" class="w-5 h-5"></i>
             </div>
         </div>
@@ -179,7 +179,7 @@
                         <h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg tracking-tight">
                             Donations this week
                         </h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">
+                        <p class="text-slate-500 dark:text-slate-300 text-xs mt-1">
                             Every rupees fuels another rescue.
                         </p>
                     </div>
@@ -189,14 +189,14 @@
                             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                             <span>+24%</span>
                         </span>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">vs last week</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-300 hidden sm:inline">vs last week</span>
                     </div>
                 </div>
 
                 <!-- Clean Graph Area Container with Left Y-Axis and Right SVG Grid -->
                 <div class="flex gap-4 mt-6">
                     <!-- Left Y-Axis Labels Column -->
-                    <div class="flex flex-col justify-between text-[10px] font-semibold text-slate-500/60 dark:text-slate-400/60 h-48 py-1 select-none text-right w-16">
+                    <div class="flex flex-col justify-between text-[10px] font-semibold text-slate-500/60 dark:text-slate-300/60 h-48 py-1 select-none text-right w-16">
                         <span>NPR 50,000</span>
                         <span>NPR 37,500</span>
                         <span>NPR 25,000</span>
@@ -243,7 +243,7 @@
                         </div>
 
                         <!-- Days of the week at the bottom, perfectly aligned, no fixed height constraints -->
-                        <div class="flex justify-between text-xs font-semibold text-slate-500/80 dark:text-slate-400/80 pt-3 border-t border-brand-orange/10 mt-3 select-none">
+                        <div class="flex justify-between text-xs font-semibold text-slate-500/80 dark:text-slate-300/80 pt-3 border-t border-brand-orange/10 mt-3 select-none">
                             <span class="w-10 text-left">Mon</span>
                             <span class="w-10 text-center">Tue</span>
                             <span class="w-10 text-center">Wed</span>
@@ -258,15 +258,15 @@
         </div>
 
         <!-- Right-Side Donation Goal/Campaign Card (1/3 width on large screens) -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
                 <!-- Header -->
-                <div class="border-b border-slate-200 dark:border-slate-700/60 pb-4 mb-5">
+                <div class="border-b border-slate-200 dark:border-slate-800/60 pb-4 mb-5">
                     <h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg tracking-tight flex items-center gap-2">
                         <i data-lucide="target" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
                         <span>Campaign Goal</span>
                     </h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">
+                    <p class="text-slate-500 dark:text-slate-300 text-xs mt-1">
                         Monthly milestone for shelter expansion.
                     </p>
                 </div>
@@ -274,15 +274,15 @@
                 <!-- Progress Section -->
                 <div class="space-y-5">
                     <div class="flex items-baseline justify-between">
-                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Progress</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Progress</span>
                         <div class="text-right">
                             <span class="text-xl font-extrabold text-slate-900 dark:text-slate-100">NPR 124,500</span>
-                            <span class="text-xs text-slate-500 dark:text-slate-400">/ NPR 150,000</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-300">/ NPR 150,000</span>
                         </div>
                     </div>
 
                     <!-- Custom Progress Bar -->
-                    <div class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-full h-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
+                    <div class="w-full bg-slate-50 dark:bg-[#0b0f19] rounded-full h-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
                         <div class="bg-gradient-to-r from-emerald-600 dark:from-emerald-500 to-blue-500 h-full rounded-full transition-all duration-500 shadow-inner" style="width: 83%"></div>
                     </div>
 
@@ -314,7 +314,7 @@
             </div>
 
             <!-- Footer Quote -->
-            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/40 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/40 text-[11px] text-slate-500 dark:text-slate-300 flex items-start gap-2.5">
                 <i data-lucide="heart" class="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5 fill-red-600/25 dark:fill-red-400/25"></i>
                 <p>
                     Every contribution directly funds shelter veterinary services and active field rescue operations.
@@ -391,14 +391,14 @@
          @show-toast.window="showToast($event.detail.message)">
 
         <!-- Left Column: High-priority rescues -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:col-span-2 shadow-sm">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-6 lg:col-span-2 shadow-sm">
             <div>
-                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-700/60">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-800/60">
                     <div>
                         <h3 class="text-slate-900 dark:text-slate-100 font-extrabold text-lg tracking-tight">
                             High-priority rescues
                         </h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                        <p class="text-slate-500 dark:text-slate-300 text-xs mt-0.5">
                             Help these animals now.
                         </p>
                     </div>
@@ -412,8 +412,8 @@
                     @foreach($highPriorityRescues as $rescue)
                     <div x-data="rescueCard(@js($rescue))"
                          :style="currentStatus === 'CANCELLED' ? 'order: 9999;' : ''"
-                         :class="{ 'bg-gray-50/80': currentStatus === 'CANCELLED' }"
-                         class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl transition-all duration-300 hover:shadow-md hover:border-emerald-600/20 dark:border-emerald-500/20 overflow-hidden">
+                         :class="{ 'bg-gray-50/80 dark:bg-[#111c2a]/40': currentStatus === 'CANCELLED' }"
+                         class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl transition-all duration-300 hover:shadow-md hover:border-emerald-600/20 dark:border-emerald-500/20 overflow-hidden">
 
                         <div :class="{ 'opacity-60': currentStatus === 'RESOLVED', 'opacity-65': currentStatus === 'CANCELLED' }">
                             <div class="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -448,8 +448,8 @@
                                             </div>
                                         </template>
                                         <template x-if="currentStatus === 'CANCELLED'">
-                                            <div class="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-800/30 text-slate-400 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
-                                                <i data-lucide="slash" class="w-5 h-5 text-slate-400"></i>
+                                            <div class="w-12 h-12 rounded-full bg-slate-50 dark:bg-[#111c2a]/30 text-slate-400 dark:text-slate-300 border border-slate-200 dark:border-slate-700/40 flex items-center justify-center shadow-sm">
+                                                <i data-lucide="slash" class="w-5 h-5 text-slate-400 dark:text-slate-300"></i>
                                             </div>
                                         </template>
                                     </div>
@@ -461,17 +461,17 @@
                                             </h4>
                                             <span :class="badgeClasses" x-text="currentStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase">{{ $rescue['status'] }}</span>
                                         </div>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">{{ $rescue['description'] }}</p>
-                                        <div class="flex items-center gap-3.5 mt-2 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+                                        <p class="text-xs text-slate-500 dark:text-slate-300 mt-1.5 leading-relaxed line-clamp-2">{{ $rescue['description'] }}</p>
+                                        <div class="flex items-center gap-3.5 mt-2 text-xs text-slate-500 dark:text-slate-300 flex-wrap">
                                             <span class="flex items-center gap-1">
-                                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-400/50"></i>
+                                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-300/50"></i>
                                                 <span>{{ $rescue['location'] }}</span>
                                             </span>
                                             <span class="flex items-center gap-1">
-                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-400/50"></i>
+                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500/50 dark:text-slate-300/50"></i>
                                                 <span>{{ $rescue['time'] }}</span>
                                             </span>
-                                            <span class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase">{{ $rescue['code'] }}</span>
+                                            <span class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase">{{ $rescue['code'] }}</span>
                                         </div>
                                         <template x-if="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED'">
                                             <div class="mt-2 flex items-center gap-2">
@@ -479,7 +479,7 @@
                                                     <i data-lucide="users" class="w-3 h-3"></i>
                                                     <span x-text="assignedTeam || 'Alpha Team'"></span>
                                                 </span>
-                                                <span class="text-[10px] text-slate-500 dark:text-slate-400">dispatched</span>
+                                                <span class="text-[10px] text-slate-500 dark:text-slate-300">dispatched</span>
                                             </div>
                                         </template>
                                     </div>
@@ -509,14 +509,14 @@
                                                 <i data-lucide="check-circle" class="w-4 h-4"></i>
                                                 Mark Complete
                                             </button>
-                                            <button @click="cancelCase()" class="border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
+                                            <button @click="cancelCase()" class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-95">
                                                 Cancel
                                             </button>
                                         </div>
                                     </template>
 
                                     <template x-if="currentStatus === 'CANCELLED'">
-                                        <span class="border border-slate-200 dark:border-slate-700 text-slate-400 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-default">
+                                        <span class="border border-slate-200 dark:border-slate-700/40 text-slate-400 dark:text-slate-300 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-default">
                                             <i data-lucide="slash" class="w-3.5 h-3.5"></i>
                                             Passed / Cancelled
                                         </span>
@@ -529,7 +529,7 @@
                                         </span>
                                     </template>
 
-                                    <button @click="expanded = !expanded" class="text-xs text-slate-400 hover:text-brand-orange transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+                                    <button @click="expanded = !expanded" class="text-xs text-slate-400 dark:text-slate-300 hover:text-brand-orange transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap flex-shrink-0">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                         <span x-text="expanded ? 'Hide Info' : 'View Info'"></span>
                                     </button>
@@ -538,21 +538,21 @@
                         </div>
 
                         <!-- Expandable Detail Panel -->
-                        <div x-show="expanded" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="border-t border-slate-200 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/30">
+                        <div x-show="expanded" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="border-t border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-[#111c2a]/30">
                             <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
-                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-4">
-                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700/40 rounded-xl p-4 space-y-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                                         <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                         Case Details
                                     </h4>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Description</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Description</p>
                                         <p class="text-sm text-slate-900 dark:text-slate-100 mt-0.5 leading-relaxed">{{ $rescue['description'] }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Location</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Location</p>
                                         <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5 inline-flex items-center gap-1">
-                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/60 dark:text-slate-400/60"></i>
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500/60 dark:text-slate-300/60"></i>
                                             {{ $rescue['location'] }}
                                         </p>
                                         <a href="#" class="block mt-1 text-[10px] font-bold text-brand-orange hover:underline">
@@ -560,8 +560,8 @@
                                         </a>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Image Evidence</p>
-                                        <div class="mt-1.5 w-full h-28 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400">
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Image Evidence</p>
+                                        <div class="mt-1.5 w-full h-28 rounded-lg bg-slate-100 dark:bg-[#0b0f19] border border-dashed border-slate-200 dark:border-slate-700/40 flex items-center justify-center text-slate-400 dark:text-slate-300">
                                             <div class="text-center">
                                                 <i data-lucide="image" class="w-6 h-6 mx-auto mb-1"></i>
                                                 <span class="text-[10px]">No image attached</span>
@@ -570,27 +570,27 @@
                                     </div>
                                     <div class="grid grid-cols-2 gap-3">
                                         <div>
-                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Case Code</p>
+                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Case Code</p>
                                             <p class="text-sm font-mono font-bold text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['code'] }}</p>
                                         </div>
                                         <div>
-                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Reported</p>
+                                            <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Reported</p>
                                             <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['time'] }}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-4">
-                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700/40 rounded-xl p-4 space-y-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                                         <i data-lucide="user" class="w-3.5 h-3.5"></i>
                                         Reporter Information
                                     </h4>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Full Name</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Full Name</p>
                                         <p class="text-sm font-bold text-slate-900 dark:text-slate-100 mt-0.5">{{ $rescue['reporter_name'] }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-400/70 uppercase tracking-wide">Contact</p>
+                                        <p class="text-[10px] font-semibold text-slate-500/70 dark:text-slate-300/70 uppercase tracking-wide">Contact</p>
                                         <a href="tel:{{ $rescue['reporter_phone'] }}" class="text-sm font-semibold text-brand-orange hover:text-brand-orange/80 transition-colors inline-flex items-center gap-1 mt-0.5">
                                             <i data-lucide="phone" class="w-3.5 h-3.5"></i>
                                             {{ $rescue['reporter_phone'] }}
@@ -599,9 +599,9 @@
                                             <i data-lucide="message-circle" class="w-3 h-3 inline"></i> Send SMS update
                                         </a>
                                     </div>
-                                    <hr class="border-slate-200 dark:border-slate-700/60">
+                                    <hr class="border-slate-200 dark:border-slate-800/60">
                                     <div>
-                                        <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                        <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                                             <i data-lucide="truck" class="w-3.5 h-3.5"></i>
                                             Assigned Team
                                         </h4>
@@ -613,70 +613,70 @@
                                                     </div>
                                                     <div class="min-w-0">
                                                         <p class="text-xs font-bold text-slate-900 dark:text-slate-100" x-text="assignedTeam || 'Alpha Team'"></p>
-                                                        <p class="text-[10px] text-slate-500 dark:text-slate-400">4 members · En route</p>
+                                                        <p class="text-[10px] text-slate-500 dark:text-slate-300">4 members · En route</p>
                                                     </div>
                                                 </div>
                                                 <div class="flex -space-x-2">
                                                     <template x-for="i in 4" :key="i">
-                                                        <div class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-800/70 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400" x-text="['RP','SK','AD','MT'][i-1]"></div>
+                                                        <div class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-800/70 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-300" x-text="['RP','SK','AD','MT'][i-1]"></div>
                                                     </template>
-                                                    <span class="text-[9px] text-slate-500 dark:text-slate-400 ml-1 self-center">+ en route</span>
+                                                    <span class="text-[9px] text-slate-500 dark:text-slate-300 ml-1 self-center">+ en route</span>
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="currentStatus !== 'ASSIGNED' && currentStatus !== 'RESOLVED'">
-                                            <div class="mt-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/30 border border-dashed border-slate-200 dark:border-slate-700 text-center">
+                                            <div class="mt-3 p-3 rounded-lg bg-slate-50 dark:bg-[#111c2a]/30 border border-dashed border-slate-200 dark:border-slate-700/40 text-center">
                                                 <i data-lucide="users" class="w-5 h-5 mx-auto text-slate-300 mb-1"></i>
-                                                <p class="text-[10px] text-slate-400">No team assigned yet</p>
+                                                <p class="text-[10px] text-slate-400 dark:text-slate-300">No team assigned yet</p>
                                                 <p class="text-[9px] text-slate-300 mt-0.5">Use "Assign Team" button above</p>
                                             </div>
                                         </template>
                                     </div>
                                 </div>
 
-                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-xl p-4">
-                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5 mb-4">
+                                <div class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700/40 rounded-xl p-4">
+                                    <h4 class="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5 mb-4">
                                         <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                                         Status Timeline
                                     </h4>
                                     <div class="space-y-0">
                                         <div class="flex items-start gap-3 relative pb-7">
                                             <div class="flex flex-col items-center">
-                                                <div class="w-3 h-3 rounded-full bg-secondary-500 border-2 border-white ring-2 ring-secondary-500 z-10 flex-shrink-0"></div>
-                                                <div class="w-0.5 bg-secondary-200 absolute top-3 bottom-0"></div>
+                                                <div class="w-3 h-3 rounded-full bg-secondary-500 dark:bg-secondary-400 border-2 border-white dark:border-slate-800 ring-2 ring-secondary-500 dark:ring-secondary-400 z-10 flex-shrink-0"></div>
+                                                <div class="w-0.5 bg-secondary-200 dark:bg-secondary-800 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
                                                 <p class="text-xs font-bold text-slate-900 dark:text-slate-100">Report Submitted</p>
-                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Case registered & queued for review</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">Case registered & queued for review</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative pb-7">
                                             <div class="flex flex-col items-center">
-                                                <div :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'bg-blue-500 ring-blue-500' : 'bg-gray-200 ring-gray-200'" class="w-3 h-3 rounded-full border-2 border-white ring-2 z-10 flex-shrink-0"></div>
-                                                <div :class="currentStatus === 'RESOLVED' || currentStatus === 'CANCELLED' ? 'bg-secondary-200' : 'bg-gray-100'" class="w-0.5 absolute top-3 bottom-0"></div>
+                                                <div :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'bg-blue-500 ring-blue-500' : 'bg-gray-200 dark:bg-slate-600 ring-gray-200 dark:ring-slate-600'" class="w-3 h-3 rounded-full border-2 border-white dark:border-slate-800 ring-2 z-10 flex-shrink-0"></div>
+                                                <div :class="currentStatus === 'RESOLVED' || currentStatus === 'CANCELLED' ? 'bg-secondary-200 dark:bg-secondary-800' : 'bg-gray-100 dark:bg-slate-700'" class="w-0.5 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Help Dispatched</p>
-                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'Assistance on the way to location' : 'Pending dispatch'"></p>
+                                                <p :class="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-300/70'" class="text-xs font-bold">Help Dispatched</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5" x-text="currentStatus !== 'CRITICAL' && currentStatus !== 'URGENT' && currentStatus !== 'MODERATE' ? 'Assistance on the way to location' : 'Pending dispatch'"></p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative pb-7">
                                             <div class="flex flex-col items-center">
-                                                <div :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'bg-blue-500 ring-blue-500' : 'bg-gray-200 ring-gray-200'" class="w-3 h-3 rounded-full border-2 border-white ring-2 z-10 flex-shrink-0"></div>
-                                                <div :class="currentStatus === 'RESOLVED' ? 'bg-secondary-200' : 'bg-gray-100'" class="w-0.5 absolute top-3 bottom-0"></div>
+                                                <div :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'bg-blue-500 ring-blue-500' : 'bg-gray-200 dark:bg-slate-600 ring-gray-200 dark:ring-slate-600'" class="w-3 h-3 rounded-full border-2 border-white dark:border-slate-800 ring-2 z-10 flex-shrink-0"></div>
+                                                <div :class="currentStatus === 'RESOLVED' ? 'bg-secondary-200 dark:bg-secondary-800' : 'bg-gray-100 dark:bg-slate-700'" class="w-0.5 absolute top-3 bottom-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Rescue Team Assigned</p>
-                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'Team dispatched to location' : 'Awaiting team assignment'"></p>
+                                                <p :class="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-300/70'" class="text-xs font-bold">Rescue Team Assigned</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5" x-text="currentStatus === 'ASSIGNED' || currentStatus === 'RESOLVED' ? 'Team dispatched to location' : 'Awaiting team assignment'"></p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3 relative">
                                             <div class="flex flex-col items-center">
-                                                <div :class="currentStatus === 'RESOLVED' ? 'bg-[#5BA44C] ring-[#5BA44C]' : 'bg-gray-200 ring-gray-200'" class="w-3 h-3 rounded-full border-2 border-white ring-2 z-10 flex-shrink-0"></div>
+                                                <div :class="currentStatus === 'RESOLVED' ? 'bg-[#5BA44C] ring-[#5BA44C]' : 'bg-gray-200 dark:bg-slate-600 ring-gray-200 dark:ring-slate-600'" class="w-3 h-3 rounded-full border-2 border-white dark:border-slate-800 ring-2 z-10 flex-shrink-0"></div>
                                             </div>
                                             <div class="pt-0.5">
-                                                <p :class="currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-400/70'" class="text-xs font-bold">Rescue Completed</p>
-                                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentStatus === 'RESOLVED' ? 'Case resolved & closed' : 'Not yet completed'"></p>
+                                                <p :class="currentStatus === 'RESOLVED' ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500/70 dark:text-slate-300/70'" class="text-xs font-bold">Rescue Completed</p>
+                                                <p class="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5" x-text="currentStatus === 'RESOLVED' ? 'Case resolved & closed' : 'Not yet completed'"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -687,7 +687,7 @@
                                         </div>
                                     </template>
                                     <template x-if="currentStatus === 'CANCELLED'">
-                                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/30 rounded-lg px-3 py-2">
+                                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-[#111c2a]/30 rounded-lg px-3 py-2">
                                             <i data-lucide="slash" class="w-3.5 h-3.5"></i>
                                             <span class="font-semibold">Case passed / cancelled</span>
                                         </div>
@@ -704,7 +704,7 @@
         <!-- Assign Team Modal -->
         <div x-show="assignModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div @click="assignModalOpen = false" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" @click.outside="assignModalOpen = false">
+            <div class="relative bg-white dark:bg-[#111c2a] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" @click.outside="assignModalOpen = false">
                 <div class="bg-brand-navy px-6 py-5 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
@@ -723,7 +723,7 @@
                     <div class="space-y-3">
                         <template x-for="(team, idx) in rescueTeams" :key="idx">
                             <label :for="'dash-team-' + idx" class="flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all"
-                                   :class="selectedTeam === team.name ? 'border-brand-orange bg-brand-orange/5 dark:bg-brand-orange/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-700/50'">
+                                   :class="selectedTeam === team.name ? 'border-brand-orange bg-brand-orange/5 dark:bg-brand-orange/10' : 'border-slate-200 dark:border-slate-700/40 hover:border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-700/50'">
                                 <input type="radio" :id="'dash-team-' + idx" :value="team.name" x-model="selectedTeam" class="w-4 h-4 text-brand-orange accent-brand-orange flex-shrink-0">
                                 <div class="flex items-center gap-3 min-w-0">
                                     <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" :style="'background-color: ' + team.color">
@@ -731,7 +731,7 @@
                                     </div>
                                     <div class="min-w-0">
                                         <p class="text-sm font-bold text-slate-900 dark:text-slate-100" x-text="team.name"></p>
-                                        <p class="text-[10px] text-slate-500 dark:text-slate-400" x-text="team.members + ' members · ' + team.status"></p>
+                                        <p class="text-[10px] text-slate-500 dark:text-slate-300" x-text="team.members + ' members · ' + team.status"></p>
                                     </div>
                                 </div>
                             </label>
@@ -741,7 +741,7 @@
                         <button @click="confirmAssign()" :disabled="!selectedTeam" class="flex-1 py-2.5 rounded-xl bg-brand-orange text-white text-xs font-bold hover:bg-[#E25338] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
                             Assign Team
                         </button>
-                        <button @click="assignModalOpen = false" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold transition-colors">
+                        <button @click="assignModalOpen = false" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-bold transition-colors">
                             Cancel
                         </button>
                     </div>
@@ -750,38 +750,38 @@
         </div>
 
         <!-- Toast -->
-        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-6 right-6 z-[70] max-w-sm bg-white border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl p-4 flex items-start gap-3">
+        <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-6 right-6 z-[70] max-w-sm bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 rounded-xl shadow-2xl p-4 flex items-start gap-3">
             <div class="w-8 h-8 rounded-full bg-[#5BA44C]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i data-lucide="check-circle" class="w-4 h-4 text-[#5BA44C]"></i>
             </div>
             <div class="min-w-0">
                 <p class="text-sm font-bold text-slate-900 dark:text-slate-100">Action Completed</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed" x-text="toastMessage"></p>
+                <p class="text-xs text-slate-500 dark:text-slate-300 mt-0.5 leading-relaxed" x-text="toastMessage"></p>
             </div>
-            <button @click="toastVisible = false" class="w-5 h-5 rounded-full hover:bg-gray-100 flex items-center justify-center flex-shrink-0 transition-colors">
-                <i data-lucide="x" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"></i>
+            <button @click="toastVisible = false" class="w-5 h-5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center justify-center flex-shrink-0 transition-colors">
+                <i data-lucide="x" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-300"></i>
             </button>
         </div>
 
         <!-- Right Column: Recent Activity Feed matching the mockup perfectly -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div class="bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
                 <!-- Header -->
-                <div class="border-b border-slate-200 dark:border-slate-700/60 pb-4 mb-6">
+                <div class="border-b border-slate-200 dark:border-slate-800/60 pb-4 mb-6">
                     <h3 class="text-slate-900 dark:text-slate-100 font-extrabold text-lg tracking-tight">
                         Recent activity
                     </h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                    <p class="text-slate-500 dark:text-slate-300 text-xs mt-0.5">
                         Live feed across the network.
                     </p>
                 </div>
 
                 <!-- Timeline List of Feeds -->
-                <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-700/60 space-y-6">
+                <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800/60 space-y-6">
                     @foreach($recentActivities as $activity)
                         <div class="relative">
                             <!-- Bullet timeline dot connecting them -->
-                            <span class="absolute -left-[31px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white dark:bg-slate-800/70 border-2 border-emerald-600 dark:border-emerald-500 shadow-sm">
+                            <span class="absolute -left-[31px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white dark:bg-[#1a2333] border-2 border-emerald-600 dark:border-emerald-500 shadow-sm">
                                 <span class="h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-500"></span>
                             </span>
                             
@@ -789,9 +789,9 @@
                             <div>
                                 <p class="text-xs text-slate-900 dark:text-slate-100 leading-relaxed">
                                     <span class="font-extrabold text-slate-900 dark:text-slate-100">{{ $activity['title'] }}</span> 
-                                    <span class="text-slate-500 dark:text-slate-400">{{ $activity['action'] }}</span>
+                                    <span class="text-slate-500 dark:text-slate-300">{{ $activity['action'] }}</span>
                                 </p>
-                                <span class="block text-[10px] text-slate-500/60 dark:text-slate-400/60 mt-1 font-semibold">
+                                <span class="block text-[10px] text-slate-500/60 dark:text-slate-300/60 mt-1 font-semibold">
                                     {{ $activity['time'] }}
                                 </span>
                             </div>
@@ -801,7 +801,7 @@
             </div>
 
             <!-- Sleek info helper in footer of right card -->
-            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+            <div class="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-slate-700/50 text-[11px] text-slate-500 dark:text-slate-300 flex items-start gap-2.5">
                 <i data-lucide="info" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5"></i>
                 <p>
                     Activities are streamed live from ResQNet, Animal Welfare Nepal and field rescuers.
@@ -868,8 +868,8 @@
                     if (s === 'MODERATE') return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
                     if (s === 'ASSIGNED') return 'bg-[#2563EB] text-white';
                     if (s === 'RESOLVED') return 'bg-[#5BA44C] text-white';
-                    if (s === 'CANCELLED') return 'bg-slate-100 text-slate-500';
-                    return 'bg-gray-100 text-gray-600';
+                    if (s === 'CANCELLED') return 'bg-slate-100 dark:bg-[#111c2a] text-slate-500 dark:text-slate-300';
+                    return 'bg-gray-100 dark:bg-[#111c2a] text-gray-600 dark:text-slate-300';
                 },
                 dispatchHelp() {
                     if (this.currentStatus === 'CRITICAL' || this.currentStatus === 'URGENT' || this.currentStatus === 'MODERATE') {

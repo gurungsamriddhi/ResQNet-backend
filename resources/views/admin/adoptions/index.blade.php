@@ -12,7 +12,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-admin-border pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Adoption Management</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Publish shelter pets to the mobile app and review adoption applications</p>
+                <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">Publish shelter pets to the mobile app and review adoption applications</p>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <span class="text-2xl font-bold text-slate-800 dark:text-slate-100" x-text="liveListings.length"></span>
-                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Listed Pets</span>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Total Listed Pets</span>
                 </div>
             </div>
             <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm p-4 flex items-center gap-4">
@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <span class="text-2xl font-bold text-slate-800 dark:text-slate-100" x-text="applications.length"></span>
-                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Pending Applications</span>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Pending Applications</span>
                 </div>
             </div>
             <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm p-4 flex items-center gap-4">
@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <span class="text-2xl font-bold text-slate-800 dark:text-slate-100" x-text="successfulRehomings"></span>
-                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Successful Rehomings</span>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">Successful Rehomings</span>
                 </div>
             </div>
         </div>
@@ -51,14 +51,14 @@
         <div class="flex items-center gap-6 border-b border-admin-border pb-0">
             <button @click="activeTab = 'listings'"
                     class="pb-3 text-xs font-bold uppercase tracking-widest transition-all duration-200 border-b-2 -mb-px"
-                    :class="activeTab === 'listings' ? 'text-brand-orange border-brand-orange' : 'text-slate-400 border-transparent hover:text-slate-600'">
+                    :class="activeTab === 'listings' ? 'text-brand-orange border-brand-orange' : 'text-slate-400 dark:text-slate-300 border-transparent hover:text-slate-600 dark:text-slate-300'">
                 <span>Live Mobile Listings</span>
             </button>
             <button @click="activeTab = 'applications'"
                     class="pb-3 text-xs font-bold uppercase tracking-widest transition-all duration-200 border-b-2 -mb-px flex items-center gap-2"
-                    :class="activeTab === 'applications' ? 'text-brand-orange border-brand-orange' : 'text-slate-400 border-transparent hover:text-slate-600'">
+                    :class="activeTab === 'applications' ? 'text-brand-orange border-brand-orange' : 'text-slate-400 dark:text-slate-300 border-transparent hover:text-slate-600 dark:text-slate-300'">
                 <span>Adoption Applications</span>
-                <span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full text-[9px] font-extrabold" x-text="applications.length"></span>
+                <span class="bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded-full text-[9px] font-extrabold" x-text="applications.length"></span>
             </button>
         </div>
 
@@ -77,7 +77,7 @@
                                     </div>
                                     <div>
                                         <span class="font-bold text-sm text-slate-800 dark:text-slate-100 block" x-text="pet.name"></span>
-                                        <span class="text-[11px] text-slate-500" x-text="pet.breed"></span>
+                                        <span class="text-[11px] text-slate-500 dark:text-slate-300" x-text="pet.breed"></span>
                                     </div>
                                 </div>
                                 <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-1 rounded-full border border-emerald-200/50">
@@ -89,7 +89,7 @@
                             <!-- Traits chips -->
                             <div class="flex flex-wrap gap-1.5">
                                 <template x-for="trait in pet.traits" :key="trait">
-                                    <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200/50">
+                                    <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2 py-0.5 rounded-full border border-slate-200/50">
                                         <span x-text="trait"></span>
                                     </span>
                                 </template>
@@ -104,7 +104,7 @@
                                     <span>View Details</span>
                                 </button>
                                 <button @click="delistPet(pet.name)"
-                                        class="border border-amber-200 text-amber-600 hover:bg-amber-50 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all duration-200">
+                                        class="border border-amber-200 dark:border-amber-700/50 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all duration-200">
                                     <i data-lucide="toggle-left" class="w-3.5 h-3.5"></i>
                                     <span>Delist from App</span>
                                 </button>
@@ -124,29 +124,29 @@
                             <div class="p-4 space-y-4">
                                 <!-- Left: Mobile Pet Card Summary -->
                                 <div>
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3 flex items-center gap-1.5">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3 flex items-center gap-1.5">
                                         <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
                                         Mobile Pet Card Summary
                                     </span>
                                     <div class="space-y-2.5 text-xs">
                                         <div class="flex justify-between items-center">
-                                            <span class="text-slate-500">Bio</span>
+                                            <span class="text-slate-500 dark:text-slate-300">Bio</span>
                                             <span class="font-semibold text-slate-700 dark:text-slate-300 text-right max-w-[200px]" x-text="pet.bio"></span>
                                         </div>
                                         <div class="flex justify-between items-center">
-                                            <span class="text-slate-500">Age</span>
+                                            <span class="text-slate-500 dark:text-slate-300">Age</span>
                                             <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="pet.age"></span>
                                         </div>
                                         <div class="flex justify-between items-center">
-                                            <span class="text-slate-500">Weight</span>
+                                            <span class="text-slate-500 dark:text-slate-300">Weight</span>
                                             <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="pet.weight"></span>
                                         </div>
                                         <div class="pt-2 border-t border-admin-border/50">
-                                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Health Checklist</span>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-2">Health Checklist</span>
                                             <div class="flex flex-wrap gap-1.5">
                                                 <template x-for="(check, cIdx) in pet.healthChecklist" :key="cIdx">
                                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
-                                                          :class="check.done ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/50' : 'bg-slate-100 text-slate-400 border border-slate-200/50'">
+                                                           :class="check.done ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-500/30' : 'bg-slate-100 dark:bg-[#111c2a] text-slate-400 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/40'">
                                                         <i data-lucide="check" class="w-3 h-3" x-show="check.done"></i>
                                                         <i data-lucide="x" class="w-3 h-3" x-show="!check.done"></i>
                                                         <span x-text="check.label"></span>
@@ -159,26 +159,26 @@
 
                                 <!-- Right: Mobile App Org Data Footer -->
                                 <div class="pt-3 border-t border-admin-border/50">
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3 flex items-center gap-1.5">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3 flex items-center gap-1.5">
                                         <i data-lucide="building" class="w-3.5 h-3.5"></i>
                                         Mobile App Org Data Footer
                                     </span>
-                                    <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-3.5 space-y-2 shadow-sm">
+                                    <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-3.5 space-y-2 shadow-sm">
                                         <div class="flex items-center gap-2.5">
                                             <div class="w-7 h-7 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0">
                                                 <i data-lucide="paw-print" class="w-3.5 h-3.5"></i>
                                             </div>
                                             <div>
                                                 <span class="text-xs font-bold text-slate-800 dark:text-slate-200">ResQNet Animal Shelter</span>
-                                                <span class="block text-[10px] text-slate-400">Verified Organization</span>
+                                                <span class="block text-[10px] text-slate-400 dark:text-slate-300">Verified Organization</span>
                                             </div>
                                         </div>
-                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"></i>
                                             <span>+977-1-4XXXXXX</span>
                                         </div>
-                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"></i>
                                             <span>Pokhara Metropolitan-9, Kaski</span>
                                         </div>
                                     </div>
@@ -193,8 +193,8 @@
             <div x-show="liveListings.length === 0"
                  class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm p-8 text-center mt-4">
                 <i data-lucide="package" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
-                <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">No live listings</p>
-                <p class="text-xs text-slate-400 mt-1">Publish pets to make them visible on the mobile app.</p>
+                <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No live listings</p>
+                <p class="text-xs text-slate-400 dark:text-slate-300 mt-1">Publish pets to make them visible on the mobile app.</p>
             </div>
         </div>
 
@@ -202,7 +202,7 @@
         <div x-show="activeTab === 'applications'">
             <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden">
                 <!-- Grid Header -->
-                <div class="hidden md:grid grid-cols-[1fr_140px_120px_120px_360px] gap-0 bg-slate-50 dark:bg-slate-900 border-b border-admin-border text-slate-800 dark:text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                <div class="hidden md:grid grid-cols-[1fr_140px_120px_120px_360px] gap-0 bg-slate-50 dark:bg-[#111c2a] border-b border-admin-border text-slate-800 dark:text-slate-200 font-semibold text-xs uppercase tracking-wider">
                     <div class="px-6 py-4">Applicant</div>
                     <div class="px-4 py-4">Target Pet</div>
                     <div class="px-4 py-4">Date</div>
@@ -221,23 +221,23 @@
                                     </div>
                                     <div class="min-w-0">
                                         <span class="font-bold text-slate-800 dark:text-slate-100 block text-xs truncate" x-text="app.name"></span>
-                                        <span class="text-[10px] text-slate-500 truncate block" x-text="app.email"></span>
+                                        <span class="text-[10px] text-slate-500 dark:text-slate-300 truncate block" x-text="app.email"></span>
                                     </div>
                                 </div>
                                 <!-- Target Pet -->
                                 <div class="md:text-center pl-12 md:pl-0 -mt-1 md:mt-0">
-                                    <span class="md:hidden text-[10px] font-bold uppercase text-slate-400 mr-2">Pet:</span>
+                                    <span class="md:hidden text-[10px] font-bold uppercase text-slate-400 dark:text-slate-300 mr-2">Pet:</span>
                                     <span class="font-semibold text-xs text-slate-700 dark:text-slate-300" x-text="app.pet"></span>
                                 </div>
                                 <!-- Date -->
                                 <div class="md:text-center pl-12 md:pl-0">
-                                    <span class="md:hidden text-[10px] font-bold uppercase text-slate-400 mr-2">Date:</span>
-                                    <span class="text-xs text-slate-500" x-text="app.date"></span>
+                                    <span class="md:hidden text-[10px] font-bold uppercase text-slate-400 dark:text-slate-300 mr-2">Date:</span>
+                                    <span class="text-xs text-slate-500 dark:text-slate-300" x-text="app.date"></span>
                                 </div>
                                 <!-- Status -->
                                 <div class="md:text-center pl-12 md:pl-0">
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wide uppercase border shadow-sm"
-                                          :class="app.status === 'Pending' ? 'bg-amber-50 text-amber-700 border-amber-200/50' : app.status === 'Approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50' : 'bg-rose-50 text-rose-700 border-rose-200/50'">
+                                           :class="app.status === 'Pending' ? 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-200/50 dark:border-amber-500/30' : app.status === 'Approved' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-200/50 dark:border-rose-500/30'">
                                         <span class="w-1.5 h-1.5 rounded-full"
                                               :class="app.status === 'Pending' ? 'bg-amber-500' : app.status === 'Approved' ? 'bg-emerald-500' : 'bg-rose-500'"></span>
                                         <span x-text="app.status"></span>
@@ -257,7 +257,7 @@
                                         <span class="hidden sm:inline">Approve</span>
                                     </button>
                                     <button @click="declineApplication(app.email)"
-                                            class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all duration-200">
+                                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all duration-200">
                                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                         <span class="hidden sm:inline">Decline</span>
                                     </button>
@@ -272,12 +272,12 @@
                                  x-transition:leave="transition ease-in duration-200"
                                  x-transition:leave-start="opacity-100"
                                  x-transition:leave-end="opacity-0"
-                                 class="border-t border-admin-border bg-slate-50/50 dark:bg-slate-900/20"
+                                 class="border-t border-admin-border bg-slate-50/50 dark:bg-[#111c2a]/20"
                                  style="display: none;">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-6 py-4">
                                     <!-- Left: Applicant Profile -->
                                     <div>
-                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3 flex items-center gap-1.5">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3 flex items-center gap-1.5">
                                             <i data-lucide="user" class="w-3.5 h-3.5"></i>
                                             Applicant Details
                                         </span>
@@ -287,7 +287,7 @@
                                                     <i data-lucide="mail" class="w-3.5 h-3.5"></i>
                                                 </div>
                                                 <div>
-                                                    <span class="text-[10px] text-slate-400 block">Email</span>
+                                                    <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Email</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="app.email"></span>
                                                 </div>
                                             </div>
@@ -296,7 +296,7 @@
                                                     <i data-lucide="phone" class="w-3.5 h-3.5"></i>
                                                 </div>
                                                 <div>
-                                                    <span class="text-[10px] text-slate-400 block">Phone</span>
+                                                    <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Phone</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="app.phone"></span>
                                                 </div>
                                             </div>
@@ -305,23 +305,23 @@
                                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
                                                 </div>
                                                 <div>
-                                                    <span class="text-[10px] text-slate-400 block">Address</span>
+                                                    <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Address</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="app.address"></span>
                                                 </div>
                                             </div>
                                             <div class="pt-2 border-t border-admin-border/50">
-                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">Adoption Reason</span>
-                                                <p class="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed" x-text="app.reason"></p>
+                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-1.5">Adoption Reason</span>
+                                                <p class="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed" x-text="app.reason"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- Right: Target Pet Details -->
                                     <div>
-                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3 flex items-center gap-1.5">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3 flex items-center gap-1.5">
                                             <i data-lucide="dog" class="w-3.5 h-3.5"></i>
                                             Target Pet Details
                                         </span>
-                                        <div class="bg-white dark:bg-slate-800/60 rounded-xl border border-admin-border/60 p-3.5 space-y-2.5 shadow-sm">
+                                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-3.5 space-y-2.5 shadow-sm">
                                             <div class="flex items-center gap-3 pb-2 border-b border-admin-border/40">
                                                 <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white uppercase shadow-sm"
                                                      :class="getPetColor(app.pet)">
@@ -329,26 +329,26 @@
                                                 </div>
                                                 <div>
                                                     <span class="text-sm font-bold text-slate-800 dark:text-slate-200" x-text="app.pet"></span>
-                                                    <span class="block text-[10px] text-slate-400" x-text="getPetBreed(app.pet)"></span>
+                                                    <span class="block text-[10px] text-slate-400 dark:text-slate-300" x-text="getPetBreed(app.pet)"></span>
                                                 </div>
                                             </div>
                                             <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500">Age</span>
+                                                <span class="text-slate-500 dark:text-slate-300">Age</span>
                                                 <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetAge(app.pet)"></span>
                                             </div>
                                             <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500">Weight</span>
+                                                <span class="text-slate-500 dark:text-slate-300">Weight</span>
                                                 <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetWeight(app.pet)"></span>
                                             </div>
                                             <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500">Breed</span>
+                                                <span class="text-slate-500 dark:text-slate-300">Breed</span>
                                                 <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetBreed(app.pet)"></span>
                                             </div>
                                             <div class="pt-2 border-t border-admin-border/40">
-                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">Traits</span>
+                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-1.5">Traits</span>
                                                 <div class="flex flex-wrap gap-1">
                                                     <template x-for="trait in getPetTraits(app.pet)" :key="trait">
-                                                        <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200/50">
+                                                        <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2 py-0.5 rounded-full border border-slate-200/50">
                                                             <span x-text="trait"></span>
                                                         </span>
                                                     </template>
@@ -367,8 +367,8 @@
             <div x-show="applications.length === 0"
                  class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm p-8 text-center mt-4">
                 <i data-lucide="inbox" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
-                <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">No pending applications</p>
-                <p class="text-xs text-slate-400 mt-1">Adoption requests from mobile users will appear here.</p>
+                <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No pending applications</p>
+                <p class="text-xs text-slate-400 dark:text-slate-300 mt-1">Adoption requests from mobile users will appear here.</p>
             </div>
         </div>
     </div>

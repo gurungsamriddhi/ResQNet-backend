@@ -3,6 +3,8 @@ import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
+
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -23,6 +25,12 @@ export default {
                 secondary: {
                     50: '#F0FDF4',
                     500: '#10B981',
+                },
+                slate: {
+                    350: '#b8c6d4',
+                    450: '#8a9aaa',
+                    650: '#5a6a7a',
+                    750: '#2d3d4d',
                 },
                 admin: {
                     // Primary Brand Colors

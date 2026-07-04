@@ -93,13 +93,13 @@
                         <!-- Right side: Last Checkup & Expansion Indicator -->
                         <div class="flex items-center gap-4 text-xs font-medium text-admin-textSecondary">
                             <div class="hidden sm:block">
-                                <span class="text-slate-400">Last Checkup:</span>
+                                <span class="text-slate-400 dark:text-slate-300">Last Checkup:</span>
                                 <span class="font-bold text-admin-textPrimary" x-text="pet.lastCheckup"></span>
                             </div>
                             
                             <!-- Chevron icon rotating on expand -->
                             <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"
-                               :class="{ 'rotate-180 text-brand-orange': expandedRecordId === pet.id, 'text-slate-400': expandedRecordId !== pet.id }"></i>
+                               :class="{ 'rotate-180 text-brand-orange': expandedRecordId === pet.id, 'text-slate-400 dark:text-slate-300': expandedRecordId !== pet.id }"></i>
                         </div>
 
                     </div>
@@ -113,7 +113,7 @@
                             
                             <!-- Left Column: VACCINATIONS -->
                             <div class="space-y-3">
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                                <div class="flex items-center gap-2 text-slate-400 dark:text-slate-300 font-bold text-[10px] uppercase tracking-wider">
                                     <i data-lucide="shield" class="w-4 h-4 text-emerald-500"></i>
                                     <span>VACCINATIONS</span>
                                 </div>
@@ -146,7 +146,7 @@
 
                             <!-- Right Column: APPOINTMENTS -->
                             <div class="space-y-3">
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                                <div class="flex items-center gap-2 text-slate-400 dark:text-slate-300 font-bold text-[10px] uppercase tracking-wider">
                                     <i data-lucide="calendar" class="w-4 h-4 text-brand-orange"></i>
                                     <span>APPOINTMENTS</span>
                                 </div>
@@ -154,9 +154,9 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <!-- Last Checkup Card -->
                                     <div class="p-4 bg-admin-surface border border-admin-border/60 rounded-xl shadow-xs">
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Last Checkup</span>
+                                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Last Checkup</span>
                                         <div class="mt-2 flex items-center gap-2.5">
-                                            <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500">
+                                            <div class="p-1.5 bg-slate-100 dark:bg-[#111c2a] rounded-lg text-slate-500 dark:text-slate-300">
                                                 <i data-lucide="calendar-days" class="w-4.5 h-4.5"></i>
                                             </div>
                                             <span class="text-sm font-bold text-admin-textPrimary" x-text="pet.lastCheckup"></span>
@@ -165,7 +165,7 @@
 
                                     <!-- Next Appointment Card -->
                                     <div class="p-4 bg-admin-surface border border-admin-border/60 rounded-xl shadow-xs">
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Next Appointment</span>
+                                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Next Appointment</span>
                                         <div class="mt-2 flex items-center gap-2.5">
                                             <div class="p-1.5 bg-brand-orange/10 rounded-lg text-brand-orange">
                                                 <i data-lucide="clock" class="w-4.5 h-4.5"></i>
@@ -181,14 +181,14 @@
                         <div class="flex items-center justify-end gap-3 pt-3 border-t border-admin-border/60">
                             <!-- Generate QR -->
                             <button @click.stop="generateQrCode(pet)"
-                                    class="text-xs border border-brand-navy/20 text-brand-navy dark:border-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold transition-colors">
+                                    class="text-xs border border-brand-navy/20 text-brand-navy dark:border-slate-700/40 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold transition-colors">
                                 <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
                                 <span>Generate QR</span>
                             </button>
 
                             <!-- View History -->
                             <button @click.stop="openViewHistory(pet)"
-                                    class="text-xs border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5">
+                                    class="text-xs border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5">
                                 <i data-lucide="history" class="w-3.5 h-3.5"></i>
                                 <span>View History</span>
                             </button>
@@ -303,7 +303,7 @@
                                     <span class="text-xs font-bold text-admin-textPrimary" x-text="vaccine.name"></span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="vaccine.status" class="sr-only peer">
-                                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                                        <div class="w-9 h-5 bg-slate-200 dark:bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 dark:after:border-slate-500 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                                         <span class="ml-2 text-xs font-semibold text-admin-textSecondary" x-text="vaccine.status ? 'Active' : 'Pending'"></span>
                                     </label>
                                 </div>
@@ -414,7 +414,7 @@
                                     <span class="text-xs font-bold text-admin-textPrimary" x-text="vaccine.name"></span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="vaccine.status" class="sr-only peer">
-                                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                                        <div class="w-9 h-5 bg-slate-200 dark:bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 dark:after:border-slate-500 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                                         <span class="ml-2 text-xs font-semibold text-admin-textSecondary" x-text="vaccine.status ? 'Active' : 'Pending'"></span>
                                     </label>
                                 </div>
@@ -490,7 +490,7 @@
                                 </span>
                                 
                                 <div>
-                                    <span class="inline-block text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded" x-text="item.date"></span>
+                                    <span class="inline-block text-[10px] font-bold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2 py-0.5 rounded" x-text="item.date"></span>
                                     <h4 class="text-sm font-extrabold text-admin-textPrimary mt-1.5" x-text="item.title"></h4>
                                     <p class="text-xs text-admin-textSecondary mt-1 leading-relaxed font-medium" x-text="item.notes"></p>
                                 </div>
@@ -538,13 +538,13 @@
                 <div class="mb-4">
                     <h2 class="text-sm font-extrabold text-brand-navy tracking-wider uppercase">ResQNet Digital Animal ID Tag</h2>
                     <p class="text-xs text-brand-orange mt-1 font-bold">
-                        <span x-text="activeRecord?.name"></span> &bull; <span x-text="activeRecord?.breed" class="font-semibold text-slate-500"></span>
+                        <span x-text="activeRecord?.name"></span> &bull; <span x-text="activeRecord?.breed" class="font-semibold text-slate-500 dark:text-slate-300"></span>
                     </p>
                 </div>
 
                 <!-- Center: QR Code Container -->
                 <div class="flex flex-col items-center my-6">
-                    <div id="pet-qr-code" class="flex justify-center p-4 bg-white rounded-xl shadow-sm border border-slate-100"></div>
+                    <div id="pet-qr-code" class="flex justify-center p-4 bg-white dark:bg-[#111c2a] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/40"></div>
                     
                     <!-- Simulated Scan Action Link -->
                     <a href="#" @click.prevent="search = activeRecord.name; isQrModalOpen = false; expandedRecordId = activeRecord.id"
@@ -556,12 +556,12 @@
                     <!-- Action Buttons: Download & Print -->
                     <div class="flex items-center justify-center gap-4 mt-4 w-full">
                         <button @click="downloadQrCode()"
-                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
+                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-[#111c2a] hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
                             <i data-lucide="download" class="w-3.5 h-3.5"></i>
                             <span>Download</span>
                         </button>
                         <button @click="printQrCode()"
-                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
+                                class="text-xs font-bold text-brand-navy hover:text-brand-orange flex items-center gap-1.5 bg-slate-100 dark:bg-[#111c2a] hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
                             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
                             <span>Print</span>
                         </button>
@@ -570,7 +570,7 @@
 
                 <!-- Bottom: Instruction and Close Button -->
                 <div class="space-y-4">
-                    <p class="text-[11px] text-slate-500 leading-relaxed font-medium">
+                    <p class="text-[11px] text-slate-500 dark:text-slate-300 leading-relaxed font-medium">
                         Scan this QR code with a mobile device to instantly fetch and display this pet's live vaccination and checkup tracking history.
                     </p>
                     <button @click="isQrModalOpen = false"

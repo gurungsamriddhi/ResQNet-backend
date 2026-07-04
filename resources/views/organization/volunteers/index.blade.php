@@ -5,7 +5,7 @@
          id="volunteer-dashboard-container">
 
         <!-- Page Header & Action Controls -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 dark:border-slate-700/40 pb-6">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2">
                     <span class="bg-brand-orange/10 text-brand-orange p-2 rounded-xl">
@@ -13,7 +13,7 @@
                     </span>
                     Volunteers Portal
                 </h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Manage your volunteer force, review applications, and coordinate dispatch schedules.</p>
+                <p class="text-sm text-slate-500 dark:text-slate-300 mt-2">Manage your volunteer force, review applications, and coordinate dispatch schedules.</p>
             </div>
             
             <div class="flex items-center gap-3">
@@ -29,90 +29,90 @@
         <!-- Analytical Metrics Section -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <!-- Metric 1: Total Active -->
-            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Active Team</span>
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Active Team</span>
                         <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="stats.active">0</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center">
                         <i data-lucide="shield-check" class="w-6 h-6"></i>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-300">
                     <span class="font-bold text-emerald-500" x-text="stats.onCall">0</span>
                     <span>currently on-call today</span>
                 </div>
             </div>
 
             <!-- Metric 2: Pending Applications -->
-            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Pending Reviews</span>
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Pending Reviews</span>
                         <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="stats.pending">0</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center">
                         <i data-lucide="clipboard-list" class="w-6 h-6"></i>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-300">
                     <span class="font-bold text-amber-500" x-text="stats.pending > 0 ? stats.pending + ' new' : 'No'">0</span>
                     <span>awaiting application review</span>
                 </div>
             </div>
 
             <!-- Metric 3: Specialized Skills -->
-            <div class="bg-brand-cream dark:bg-slate-800/40 border border-brand-orange/20 dark:border-slate-700/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="bg-brand-cream dark:bg-[#111c2a]/40 border border-brand-orange/20 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <span class="text-xs font-bold text-brand-orange dark:text-slate-400 uppercase tracking-widest block">Medical Responders</span>
+                        <span class="text-xs font-bold text-brand-orange dark:text-slate-300 uppercase tracking-widest block">Medical Responders</span>
                         <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="stats.medics">0</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
                         <i data-lucide="heart-pulse" class="w-6 h-6"></i>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-300">
                     <span>First-Aid & Vet qualified members</span>
                 </div>
             </div>
 
             <!-- Metric 4: Mobilized Cases -->
-            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Active Dispatches</span>
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Active Dispatches</span>
                         <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="stats.dispatched">0</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500 flex items-center justify-center">
                         <i data-lucide="truck" class="w-6 h-6"></i>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <div class="mt-4 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-300">
                     <span>Assigned to field rescue cases</span>
                 </div>
             </div>
         </div>
 
         <!-- Filters & Navigation Sub-Navbar -->
-        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl p-4 shadow-sm space-y-4">
+        <div class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm space-y-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 
                 <!-- Custom Navigation Tabs -->
-                <div class="flex items-center bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-xl self-start">
+                <div class="flex items-center bg-slate-100 dark:bg-[#111c2a]/60 p-1.5 rounded-xl self-start">
                     <button @click="currentTab = 'active'; recreateIcons()"
                             id="tab-active"
                             class="px-4 py-2 text-xs font-extrabold rounded-lg transition-all duration-200 flex items-center gap-2"
-                            :class="currentTab === 'active' ? 'bg-white dark:bg-slate-800/70 text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'">
+                            :class="currentTab === 'active' ? 'bg-white dark:bg-[#1a2333] text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-200'">
                         <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
                         <span>Active Team</span>
-                        <span class="bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] text-slate-600 dark:text-slate-400" x-text="filteredVolunteersCount('active')"></span>
+                        <span class="bg-slate-200 dark:bg-[#111c2a] px-2 py-0.5 rounded-md text-[10px] text-slate-600 dark:text-slate-300" x-text="filteredVolunteersCount('active')"></span>
                     </button>
                     <button @click="currentTab = 'pending'; recreateIcons()"
                             id="tab-pending"
                             class="px-4 py-2 text-xs font-extrabold rounded-lg transition-all duration-200 flex items-center gap-2"
-                            :class="currentTab === 'pending' ? 'bg-white dark:bg-slate-800/70 text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'">
+                            :class="currentTab === 'pending' ? 'bg-white dark:bg-[#1a2333] text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-200'">
                         <i data-lucide="inbox" class="w-3.5 h-3.5"></i>
                         <span>Applications</span>
                         <span class="bg-brand-orange/15 text-brand-orange px-2 py-0.5 rounded-md text-[10px] font-bold" x-text="filteredVolunteersCount('pending')"></span>
@@ -120,10 +120,10 @@
                     <button @click="currentTab = 'archived'; recreateIcons()"
                             id="tab-archived"
                             class="px-4 py-2 text-xs font-extrabold rounded-lg transition-all duration-200 flex items-center gap-2"
-                            :class="currentTab === 'archived' ? 'bg-white dark:bg-slate-800/70 text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'">
+                            :class="currentTab === 'archived' ? 'bg-white dark:bg-[#1a2333] text-brand-orange shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-200'">
                         <i data-lucide="archive" class="w-3.5 h-3.5"></i>
                         <span>Archived</span>
-                        <span class="bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] text-slate-600 dark:text-slate-400" x-text="filteredVolunteersCount('archived')"></span>
+                        <span class="bg-slate-200 dark:bg-[#111c2a] px-2 py-0.5 rounded-md text-[10px] text-slate-600 dark:text-slate-300" x-text="filteredVolunteersCount('archived')"></span>
                     </button>
                 </div>
 
@@ -131,21 +131,21 @@
                 <div class="flex flex-wrap items-center gap-3 flex-1 lg:justify-end">
                     <!-- Search Input -->
                     <div class="relative w-full sm:max-w-xs">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-300">
                             <i data-lucide="search" class="w-4 h-4"></i>
                         </div>
                         <input type="text" 
                                x-model="searchQuery"
                                id="search-volunteers-input"
                                placeholder="Search volunteers by name, email..."
-                               class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200">
+                               class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200">
                     </div>
 
                     <!-- Skills Filter Dropdown -->
                     <div class="w-full sm:w-auto">
                         <select x-model="selectedSkill"
                                 id="filter-skill"
-                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                             <option value="">All Skills</option>
                             <template x-for="skill in availableSkills" :key="skill">
                                 <option :value="skill" x-text="skill"></option>
@@ -157,7 +157,7 @@
                     <div class="w-full sm:w-auto" x-show="currentTab === 'active'">
                         <select x-model="selectedAvailability"
                                 id="filter-availability"
-                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                             <option value="">All Availability</option>
                             <option value="Available">Available</option>
                             <option value="On-Call">On-Call</option>
@@ -187,7 +187,7 @@
         <!-- Volunteer Cards List Grid -->
         <div class="space-y-4">
             <template x-for="vol in filteredVolunteers" :key="vol.email">
-                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-650"
+                <div class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-650"
                      :id="'volunteer-card-' + vol.email.split('@')[0]">
                     <div class="p-5">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
@@ -221,13 +221,13 @@
                                             </span>
                                         </template>
                                         <template x-if="vol.status === 'Archived'">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-650 uppercase tracking-wider">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-650 uppercase tracking-wider">
                                                 Archived
                                             </span>
                                         </template>
                                     </div>
-                                    <span class="text-xs text-slate-400 block mt-0.5" x-text="vol.email"></span>
-                                    <span class="block text-[10px] text-slate-450 dark:text-slate-500 mt-1 flex items-center gap-1.5">
+                                    <span class="text-xs text-slate-400 dark:text-slate-300 block mt-0.5" x-text="vol.email"></span>
+                                    <span class="block text-[10px] text-slate-450 dark:text-slate-300 mt-1 flex items-center gap-1.5">
                                         <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                                         Applied <span x-text="vol.appliedAt"></span>
                                     </span>
@@ -237,7 +237,7 @@
                             <!-- Center Section: Skill Tag Badges -->
                             <div class="flex flex-wrap items-center gap-1.5 flex-1 max-w-md">
                                 <template x-for="skill in vol.skills" :key="skill">
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-xl text-[10px] font-bold bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-750 text-slate-600 dark:text-slate-350">
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-xl text-[10px] font-bold bg-slate-50 dark:bg-[#111c2a] border border-slate-200/60 dark:border-slate-750 text-slate-600 dark:text-slate-350">
                                         <i data-lucide="star" class="w-3.5 h-3.5 text-brand-orange"></i>
                                         <span x-text="skill"></span>
                                     </span>
@@ -275,13 +275,13 @@
                                         </button>
                                         <button @click="openContactModal(vol)"
                                                 :id="'btn-contact-' + vol.email.split('@')[0]"
-                                                class="border border-slate-200 dark:border-slate-700 text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all duration-200">
+                                                class="border border-slate-200 dark:border-slate-700/40 text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all duration-200">
                                             <i data-lucide="mail" class="w-3.5 h-3.5"></i>
                                             <span>Contact</span>
                                         </button>
                                         <button @click="archiveVolunteer(vol.email)"
                                                 :id="'btn-archive-' + vol.email.split('@')[0]"
-                                                class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                                                class="p-2 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200 rounded-xl transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                 title="Archive Volunteer">
                                             <i data-lucide="archive" class="w-4 h-4"></i>
                                         </button>
@@ -309,7 +309,7 @@
                                    :class="expandedRow === vol.email ? 'rotate-180' : ''"></i>
                                 <span x-text="expandedRow === vol.email ? 'Hide Details' : 'View Details'"></span>
                             </button>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider" x-text="vol.sector"></span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-300 font-bold uppercase tracking-wider" x-text="vol.sector"></span>
                         </div>
                     </div>
 
@@ -321,62 +321,62 @@
                          x-transition:leave="transition ease-in duration-200"
                          x-transition:leave-start="opacity-100 max-h-[1000px]"
                          x-transition:leave-end="opacity-0 max-h-0"
-                         class="border-t border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/30"
+                         class="border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-[#111c2a]/30"
                          style="display: none;">
                         <div class="p-6 space-y-6">
                             
                             <!-- Detail Info Columns -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700 p-4 flex items-start gap-3 shadow-xs">
+                                <div class="bg-white dark:bg-[#111c2a] rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700/40 p-4 flex items-start gap-3 shadow-xs">
                                     <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500 flex items-center justify-center flex-shrink-0">
                                         <i data-lucide="phone" class="w-4 h-4"></i>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block">Phone Connection</span>
+                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-300 block">Phone Connection</span>
                                         <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-0.5" x-text="vol.contact"></span>
                                     </div>
                                 </div>
-                                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700 p-4 flex items-start gap-3 shadow-xs">
+                                <div class="bg-white dark:bg-[#111c2a] rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700/40 p-4 flex items-start gap-3 shadow-xs">
                                     <div class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center flex-shrink-0">
                                         <i data-lucide="map-pin" class="w-4 h-4"></i>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block">Operations Sector</span>
+                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-300 block">Operations Sector</span>
                                         <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-0.5" x-text="vol.sector"></span>
                                     </div>
                                 </div>
-                                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700 p-4 flex items-start gap-3 shadow-xs">
+                                <div class="bg-white dark:bg-[#111c2a] rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700/40 p-4 flex items-start gap-3 shadow-xs">
                                     <div class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-500 flex items-center justify-center flex-shrink-0">
                                         <i data-lucide="alert-triangle" class="w-4 h-4"></i>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block">Emergency Relation</span>
+                                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-300 block">Emergency Relation</span>
                                         <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block mt-0.5" x-text="vol.emergencyContact"></span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Preferred timeslot details -->
-                            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700 p-5 shadow-xs">
-                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-3">
+                            <div class="bg-white dark:bg-[#111c2a] rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700/40 p-5 shadow-xs">
+                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-300 flex items-center gap-1.5 mb-3">
                                     <i data-lucide="calendar" class="w-4 h-4 text-brand-orange"></i>
                                     Preferred Schedule & Bio
                                 </h4>
                                 <p class="text-xs text-slate-650 dark:text-slate-350 leading-relaxed mb-3" x-text="vol.bio || 'No bio details provided by volunteer.'"></p>
                                 <div class="flex items-center gap-1 text-xs">
                                     <span class="font-bold text-slate-600 dark:text-slate-450">Availability:</span>
-                                    <span class="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-lg font-bold" x-text="vol.availabilityDetails || 'Weekdays & Weekends (On-Call)'"></span>
+                                    <span class="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-[#111c2a] px-2.5 py-1 rounded-lg font-bold" x-text="vol.availabilityDetails || 'Weekdays & Weekends (On-Call)'"></span>
                                 </div>
                             </div>
 
                             <!-- Interactive Field Mission Log Timeline -->
-                            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700 p-5 shadow-xs space-y-4">
+                            <div class="bg-white dark:bg-[#111c2a] rounded-xl border border-slate-200 dark:border-slate-700/50 dark:border-slate-700/40 p-5 shadow-xs space-y-4">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <div class="w-6 h-6 rounded-md bg-brand-orange/10 text-brand-orange flex items-center justify-center">
                                             <i data-lucide="activity" class="w-3.5 h-3.5"></i>
                                         </div>
-                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Field Mission Log</span>
+                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-300">Field Mission Log</span>
                                     </div>
                                     <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider" 
                                           x-text="vol.missions.length + ' cases logged'">
@@ -392,10 +392,10 @@
                                                 <span class="w-1 h-1 rounded-full bg-white"></span>
                                             </div>
                                             <!-- Log Box -->
-                                            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 border border-slate-100 dark:border-slate-700/40 flex items-start justify-between gap-4">
+                                            <div class="bg-slate-50 dark:bg-[#111c2a]/50 rounded-xl p-3 border border-slate-100 dark:border-slate-700/40 flex items-start justify-between gap-4">
                                                 <div class="min-w-0">
                                                     <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block" x-text="mission.description"></span>
-                                                    <span class="text-[10px] text-slate-400 block mt-1 flex items-center gap-1">
+                                                    <span class="text-[10px] text-slate-400 dark:text-slate-300 block mt-1 flex items-center gap-1">
                                                         <i data-lucide="map-pin" class="w-3 h-3"></i>
                                                         <span x-text="mission.location"></span>
                                                         <span class="mx-1.5">•</span>
@@ -422,7 +422,7 @@
                                     
                                     <!-- Empty Timeline Log State -->
                                     <template x-if="vol.missions.length === 0">
-                                        <div class="text-slate-400 text-xs py-2 italic">
+                                        <div class="text-slate-400 dark:text-slate-300 text-xs py-2 italic">
                                             No field missions have been logged for this volunteer.
                                         </div>
                                     </template>
@@ -436,12 +436,12 @@
             <!-- Zero State / Empty Filters -->
             <div x-show="filteredVolunteers.length === 0"
                  id="volunteer-empty-state"
-                 class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:border-slate-700/80 rounded-2xl shadow-sm p-12 text-center transition-all duration-300">
-                <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900 text-slate-400 flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-slate-700/30">
+                 class="bg-white dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-800/80 rounded-2xl shadow-sm p-12 text-center transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-[#111c2a] text-slate-400 dark:text-slate-300 flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-slate-700/30">
                     <i data-lucide="users-round" class="w-8 h-8 text-slate-350"></i>
                 </div>
                 <h3 class="text-base font-extrabold text-slate-800 dark:text-slate-200">No volunteers found</h3>
-                <p class="text-xs text-slate-400 mt-2 max-w-sm mx-auto">There are no records matching your active tab, keyword query, or specific filter parameters.</p>
+                <p class="text-xs text-slate-400 dark:text-slate-300 mt-2 max-w-sm mx-auto">There are no records matching your active tab, keyword query, or specific filter parameters.</p>
                 <button @click="resetFilters()"
                         class="mt-4 text-xs font-extrabold text-brand-orange hover:text-brand-orange/80 transition-colors">
                     Clear Active Filters
@@ -456,15 +456,15 @@
              style="display: none;"
              @keydown.escape.window="addModalOpen = false">
             <div @click.away="addModalOpen = false" 
-                 class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
+                 class="bg-white dark:bg-[#111c2a] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
                 
                 <!-- Modal Header -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 dark:border-slate-750 flex items-center justify-between">
+                <div class="px-6 py-4 bg-slate-50 dark:bg-[#111c2a] border-b border-slate-200 dark:border-slate-700/40 dark:border-slate-750 flex items-center justify-between">
                     <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i data-lucide="user-plus" class="w-5 h-5 text-brand-orange"></i>
                         Add Volunteer to Database
                     </h3>
-                    <button @click="addModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <button @click="addModalOpen = false" class="text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -473,53 +473,53 @@
                 <form @submit.prevent="submitAddVolunteer()" class="p-6 space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Full Name</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Full Name</label>
                             <input type="text" x-model="addForm.name" required placeholder="e.g. John Doe"
                                    id="input-add-name"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Email Address</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Email Address</label>
                             <input type="email" x-model="addForm.email" required placeholder="name@example.com"
                                    id="input-add-email"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Contact Phone</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Contact Phone</label>
                             <input type="text" x-model="addForm.contact" required placeholder="98XXXXXXXX"
                                    id="input-add-phone"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Emergency Contact Details</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Emergency Contact Details</label>
                             <input type="text" x-model="addForm.emergencyContact" placeholder="Name (Phone)"
                                    id="input-add-emergency"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Operation Sector</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Operation Sector</label>
                             <input type="text" x-model="addForm.sector" placeholder="e.g. Pokhara Sector-1"
                                    id="input-add-sector"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Availability Schedule</label>
+                            <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Availability Schedule</label>
                             <input type="text" x-model="addForm.availabilityDetails" placeholder="e.g. Weekends only"
                                    id="input-add-schedule"
-                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                   class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                         </div>
                     </div>
 
                     <!-- Skills selection checklist -->
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Skills & Qualifications</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl">
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Skills & Qualifications</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl">
                             <template x-for="skill in availableSkills" :key="skill">
                                 <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-750 dark:text-slate-300">
                                     <input type="checkbox" :value="skill" x-model="addForm.skills"
@@ -532,10 +532,10 @@
 
                     <!-- Biography details -->
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Short Bio & Qualifications Notes</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Short Bio & Qualifications Notes</label>
                         <textarea x-model="addForm.bio" rows="2" placeholder="Write a short summary about the volunteer's experience..."
                                   id="input-add-bio"
-                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
+                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
                     </div>
 
                     <!-- Submit / Cancel footer -->
@@ -561,15 +561,15 @@
              style="display: none;"
              @keydown.escape.window="assignModalOpen = false">
             <div @click.away="assignModalOpen = false" 
-                 class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
+                 class="bg-white dark:bg-[#111c2a] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
                 
                 <!-- Modal Header -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 dark:border-slate-750 flex items-center justify-between">
+                <div class="px-6 py-4 bg-slate-50 dark:bg-[#111c2a] border-b border-slate-200 dark:border-slate-700/40 dark:border-slate-750 flex items-center justify-between">
                     <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i data-lucide="navigation" class="w-5 h-5 text-[#3D5A4E]"></i>
                         Dispatch Volunteer
                     </h3>
-                    <button @click="assignModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <button @click="assignModalOpen = false" class="text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -577,15 +577,15 @@
                 <!-- Modal Form Body -->
                 <form @submit.prevent="submitAssignMission()" class="p-6 space-y-4">
                     <div>
-                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1">Target Volunteer</span>
+                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1">Target Volunteer</span>
                         <span class="text-sm font-extrabold text-slate-800 dark:text-slate-200 block" x-text="activeTargetVolunteer ? activeTargetVolunteer.name : ''"></span>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Select Rescue Case</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Select Rescue Case</label>
                         <select x-model="assignForm.caseId" required
                                 id="select-dispatch-case"
-                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs text-slate-700 dark:text-slate-350 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                             <option value="">Choose a Rescue Mission...</option>
                             <option value="RQ-2450">Case RQ-2450: Injured Dog Rescue (Kathmandu-9)</option>
                             <option value="RQ-2458">Case RQ-2458: Stray Cat Vaccination (Lalitpur-3)</option>
@@ -594,10 +594,10 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Dispatch Instructions / Notes</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Dispatch Instructions / Notes</label>
                         <textarea x-model="assignForm.instruction" rows="3" required placeholder="What should the volunteer prepare for or do at the scene?..."
                                   id="input-dispatch-instructions"
-                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
+                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
                     </div>
 
                     <!-- Submit / Cancel -->
@@ -623,15 +623,15 @@
              style="display: none;"
              @keydown.escape.window="contactModalOpen = false">
             <div @click.away="contactModalOpen = false" 
-                 class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
+                 class="bg-white dark:bg-[#111c2a] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-750 transition-all transform scale-100">
                 
                 <!-- Header -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 dark:border-slate-750 flex items-center justify-between">
+                <div class="px-6 py-4 bg-slate-50 dark:bg-[#111c2a] border-b border-slate-200 dark:border-slate-700/40 dark:border-slate-750 flex items-center justify-between">
                     <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i data-lucide="mail" class="w-5 h-5 text-brand-orange"></i>
                         Contact Volunteer
                     </h3>
-                    <button @click="contactModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <button @click="contactModalOpen = false" class="text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -639,18 +639,18 @@
                 <!-- Form -->
                 <form @submit.prevent="submitContactVolunteer()" class="p-6 space-y-4">
                     <div>
-                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1">To:</span>
+                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1">To:</span>
                         <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block" x-text="activeTargetVolunteer ? activeTargetVolunteer.name + ' (' + activeTargetVolunteer.email + ')' : ''"></span>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Communication Medium</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Communication Medium</label>
                         <div class="grid grid-cols-2 gap-3">
-                            <label class="flex items-center justify-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80">
+                            <label class="flex items-center justify-center gap-2 p-2.5 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80">
                                 <input type="radio" name="medium" value="email" x-model="contactForm.medium" class="text-brand-orange focus:ring-brand-orange border-slate-300">
                                 <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Email</span>
                             </label>
-                            <label class="flex items-center justify-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80">
+                            <label class="flex items-center justify-center gap-2 p-2.5 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80">
                                 <input type="radio" name="medium" value="sms" x-model="contactForm.medium" class="text-brand-orange focus:ring-brand-orange border-slate-300">
                                 <span class="text-xs font-bold text-slate-700 dark:text-slate-350">SMS</span>
                             </label>
@@ -658,17 +658,17 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Subject / Header</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Subject / Header</label>
                         <input type="text" x-model="contactForm.subject" placeholder="e.g. Schedule changes, rescue coordination..." required
                                id="input-contact-subject"
-                               class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
+                               class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange">
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400 mb-1.5">Message Text</label>
+                        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-300 mb-1.5">Message Text</label>
                         <textarea x-model="contactForm.message" rows="4" required placeholder="Type your message here..."
                                   id="input-contact-message"
-                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
+                                  class="w-full px-3 py-2 bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40 dark:border-slate-700/40 rounded-xl text-xs focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange"></textarea>
                     </div>
 
                     <!-- Actions -->

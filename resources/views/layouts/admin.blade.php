@@ -84,11 +84,11 @@
         <!-- Main Content -->
         <main class="flex-1 flex flex-col min-w-0">
             <!-- Topbar -->
-            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
-                <h2 class="text-xl font-semibold text-gray-800">@yield('header')</h2>
+            <header class="h-16 bg-white dark:bg-[#111c2a] shadow-sm flex items-center justify-between px-6 z-10">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-slate-100">@yield('header')</h2>
                 
                 <div class="flex items-center gap-4">
-                    <span class="text-sm font-medium text-gray-600">{{ auth()->user()?->name ?? 'Dev User' }}</span>
+                    <span class="text-sm font-medium text-gray-600 dark:text-slate-300">{{ auth()->user()?->name ?? 'Dev User' }}</span>
                     <form method="POST" 
               action="{{ auth()->user()?->hasRole('super_admin') ? route('admin.logout') : route('organization.logout') }}">
             @csrf

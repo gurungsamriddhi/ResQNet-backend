@@ -198,18 +198,18 @@
             <!-- Logout Modal -->
             <template x-teleport="body">
                 <div x-show="logoutModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display: none;" @keydown.escape.window="logoutModalOpen = false">
-                    <div @click.away="logoutModalOpen = false" class="bg-white rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200">
+                    <div @click.away="logoutModalOpen = false" class="bg-white dark:bg-[#111c2a] rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700/40">
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-4">
-                                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 text-red-600">
+                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center flex-shrink-0 text-red-600 dark:text-red-400">
                                     <i data-lucide="log-out" class="w-5 h-5"></i>
                                 </div>
                                 <h3 class="text-lg font-extrabold text-slate-900">Confirm Logout</h3>
                             </div>
                             <p class="text-sm text-slate-500">Are you sure you want to sign out of your account?</p>
                         </div>
-                        <div class="bg-slate-50 p-4 flex justify-end gap-3 border-t border-slate-200">
-                            <button type="button" @click="logoutModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
+                        <div class="bg-slate-50 dark:bg-[#0b0f19] p-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700/40">
+                            <button type="button" @click="logoutModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">Cancel</button>
                             <form method="POST" action="{{ route('admin.logout') }}">
                                 @csrf
                                 <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Logout</button>
@@ -415,17 +415,17 @@
                     <!-- Mobile Logout Modal -->
                     <template x-teleport="body">
                         <div x-show="mobileLogoutModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display: none;" @keydown.escape.window="mobileLogoutModalOpen = false">
-                            <div @click.away="mobileLogoutModalOpen = false" class="bg-white rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200">
+                            <div @click.away="mobileLogoutModalOpen = false" class="bg-white dark:bg-[#111c2a] rounded-xl max-w-sm w-full mx-4 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700/40">
                                 <div class="p-6">
                                     <div class="flex items-center gap-3 mb-4">
-                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 text-red-600">
+                                        <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center flex-shrink-0 text-red-600 dark:text-red-400">
                                             <i data-lucide="log-out" class="w-5 h-5"></i>
                                         </div>
                                         <h3 class="text-lg font-extrabold text-slate-900">Confirm Logout</h3>
                                     </div>
                                     <p class="text-sm text-slate-500">Are you sure you want to sign out of your account?</p>
                                 </div>
-                                <div class="bg-slate-50 p-4 flex justify-end gap-3 border-t border-slate-200">
+                                <div class="bg-slate-50 dark:bg-[#0b0f19] p-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700/40">
                                     <button type="button" @click="mobileLogoutModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
                                     <form method="POST" action="{{ route('admin.logout') }}">
                                         @csrf

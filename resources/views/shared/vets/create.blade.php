@@ -13,7 +13,7 @@
     <div class="px-4 sm:px-6 md:px-8 py-8" x-data="{ isSubmitting: false }" x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
         
         <div class="max-w-3xl mx-auto">
-            <div class="bg-white border border-admin-border shadow-sm sm:rounded-2xl overflow-hidden">
+            <div class="bg-white dark:bg-[#1a2333] border border-admin-border shadow-sm sm:rounded-2xl overflow-hidden">
                 <div class="p-8 border-b border-admin-border bg-admin-bg/30">
                     <h3 class="text-lg font-bold text-admin-textPrimary">Veterinarian Details</h3>
                     <p class="text-sm text-admin-textSecondary mt-1">Enter the required information to register a new global veterinarian.</p>
@@ -116,8 +116,8 @@
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
                                 <input type="hidden" name="status" value="inactive">
                                 <input type="checkbox" name="status" id="status" value="active" class="peer sr-only" {{ old('status', 'active') === 'active' ? 'checked' : '' }}>
-                                <label for="status" class="block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer peer-checked:bg-green-500 transition-colors">
-                                    <span class="block w-6 h-6 rounded-full bg-white border border-slate-300 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
+                                <label for="status" class="block overflow-hidden h-6 rounded-full bg-slate-300 dark:bg-slate-600 cursor-pointer peer-checked:bg-green-500 transition-colors">
+                                    <span class="block w-6 h-6 rounded-full bg-white dark:bg-slate-200 border border-slate-300 dark:border-slate-500 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
                                 </label>
                             </div>
                         </div>

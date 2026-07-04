@@ -7,7 +7,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-admin-border pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Users & Roles</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Manage your organization's team members and system permissions</p>
+                <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">Manage your organization's team members and system permissions</p>
             </div>
         </div>
 
@@ -17,14 +17,14 @@
             <div class="flex items-center gap-3 flex-1">
                 <div class="relative flex-1 max-w-md">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 dark:text-slate-300"></i>
                     </span>
                     <input type="text" x-model="search"
                            placeholder="Search by name or email..."
                            class="w-full pl-9 pr-4 py-2 bg-admin-bg border border-admin-border rounded-xl text-xs text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                 </div>
                 <!-- Filter Button -->
-                <button class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-750 text-slate-600 dark:text-slate-400 font-semibold text-xs transition-all flex items-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700">
+                <button class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-750 text-slate-600 dark:text-slate-300 font-semibold text-xs transition-all flex items-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700">
                     <i data-lucide="filter" class="w-3.5 h-3.5"></i>
                     <span>Filter</span>
                 </button>
@@ -41,8 +41,8 @@
         <!-- Users Table -->
         <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
-                    <thead class="bg-slate-50 dark:bg-slate-900 border-b border-admin-border text-slate-800 dark:text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+                    <thead class="bg-slate-50 dark:bg-[#111c2a] border-b border-admin-border text-slate-800 dark:text-slate-200 font-semibold text-xs uppercase tracking-wider">
                         <tr>
                             <th class="px-6 py-4">User</th>
                             <th class="px-6 py-4">Email</th>
@@ -67,7 +67,7 @@
                                     </div>
                                 </td>
                                 <!-- Email -->
-                                <td class="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400" x-text="user.email"></td>
+                                <td class="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-300" x-text="user.email"></td>
                                 <!-- Role -->
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wide uppercase border shadow-sm"
@@ -111,49 +111,49 @@
                                 x-transition:leave-start="opacity-100"
                                 x-transition:leave-end="opacity-0"
                                 style="display: none;">
-                                <td colspan="5" class="px-6 py-4 bg-slate-50/50 dark:bg-slate-900/20 border-b border-admin-border/60">
+                                <td colspan="5" class="px-6 py-4 bg-slate-50/50 dark:bg-[#111c2a]/20 border-b border-admin-border/60">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <!-- Left Panel: Volunteer Profile -->
                                         <div>
-                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3">Volunteer Profile</span>
+                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3">Volunteer Profile</span>
                                             <div class="space-y-2.5 text-xs">
                                                 <div class="flex justify-between">
-                                                    <span class="text-slate-500">Contact</span>
+                                                    <span class="text-slate-500 dark:text-slate-300">Contact</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300">9851234567</span>
                                                 </div>
                                                 <div class="flex justify-between">
-                                                    <span class="text-slate-500">Availability Sector</span>
+                                                    <span class="text-slate-500 dark:text-slate-300">Availability Sector</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300">Pokhara Sector-9</span>
                                                 </div>
                                                 <div class="flex justify-between">
-                                                    <span class="text-slate-500">Emergency Contact</span>
+                                                    <span class="text-slate-500 dark:text-slate-300">Emergency Contact</span>
                                                     <span class="font-semibold text-slate-700 dark:text-slate-300">Sita Thapa (9847654321)</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- Right Panel: Field Mission Log -->
                                         <div>
-                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-3">Field Mission Log</span>
+                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-300 block mb-3">Field Mission Log</span>
                                             <div class="space-y-3">
                                                 <div class="flex items-start gap-2.5">
                                                     <div class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></div>
                                                     <div>
                                                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Currently responding to case RQ-2417</span>
-                                                        <span class="block text-[10px] text-slate-400">Active mission • Pokhara Zone</span>
+                                                        <span class="block text-[10px] text-slate-400 dark:text-slate-300">Active mission • Pokhara Zone</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-2.5">
                                                     <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0"></div>
                                                     <div>
                                                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Resolved case RQ-2398</span>
-                                                        <span class="block text-[10px] text-slate-400">Completed • 3 days ago</span>
+                                                        <span class="block text-[10px] text-slate-400 dark:text-slate-300">Completed • 3 days ago</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-2.5">
                                                     <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0"></div>
                                                     <div>
                                                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Resolved case RQ-2371</span>
-                                                        <span class="block text-[10px] text-slate-400">Completed • 1 week ago</span>
+                                                        <span class="block text-[10px] text-slate-400 dark:text-slate-300">Completed • 1 week ago</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -196,9 +196,9 @@
                 <div class="px-6 py-5 border-b border-admin-border bg-admin-bg/25 flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">Add New User</h2>
-                        <p class="text-[10px] text-slate-400">Invite a new member to your organization team</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-300">Invite a new member to your organization team</p>
                     </div>
-                    <button @click="isAddUserModalOpen = false" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 transition-colors">
+                    <button @click="isAddUserModalOpen = false" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-300 transition-colors">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -206,19 +206,19 @@
                 <!-- Form Content -->
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Full Name</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider mb-2">Full Name</label>
                         <input type="text" x-model="addUserForm.name" placeholder="E.g. Sarah Johnson"
                                class="w-full px-3 py-2 bg-admin-bg border border-admin-border rounded-xl text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Address</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
                         <input type="email" x-model="addUserForm.email" placeholder="sarah@shelter.org"
                                class="w-full px-3 py-2 bg-admin-bg border border-admin-border rounded-xl text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Assign Role</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider mb-2">Assign Role</label>
                         <select x-model="addUserForm.role"
                                 class="w-full px-3 py-2 bg-admin-bg border border-admin-border rounded-xl text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                             <option value="Admin">Admin</option>
