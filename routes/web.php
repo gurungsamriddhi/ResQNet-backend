@@ -127,6 +127,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::resource('vets', OrgVetController::class);
 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');
+    Route::patch('/settings', [OrgSettingsController::class, 'update'])->name('settings.update');
     Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
     Route::post('/staff/invite', [StaffController::class, 'invite'])->name('staff.invite');
     Route::delete('/staff/{user}', [StaffController::class, 'remove'])->name('staff.remove');
