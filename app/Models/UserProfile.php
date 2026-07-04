@@ -42,7 +42,7 @@ class UserProfile extends Model
         return [
             'family_members_count' => 'integer',
             'has_other_pets'       => 'boolean',
-            'experience_with_pets' => 'boolean',
+            'experience_with_pets' => 'string',
             'has_yard'             => 'boolean',
             'is_allergic'          => 'boolean',
             'max_pets_allowed'     => 'integer',

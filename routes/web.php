@@ -124,9 +124,6 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::post('/health/medications', [OrgHealthController::class, 'storeMedication'])->name('health.medications.store');
     Route::delete('/health/medications/{medication}', [OrgHealthController::class, 'destroyMedication'])->name('health.medications.destroy');
     
-    Route::apiResource('vets', OrgVetController::class);
-
-  
     Route::resource('vets', OrgVetController::class);
 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');

@@ -16,23 +16,20 @@ class AdoptionRequest extends Model
         'user_id',
         'message',
         'living_situation',
-        'has_other_pets',
-        'experience_with_pets',
-        'family_members_count',
-        'housing_type',
-        'employment_status',
         'status',
-        'admin_notes',
+        'organization_response',
+        'reviewed_by',
         'reviewed_at',
+        'response_sent_at',
+        'adopted_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'has_other_pets' => 'boolean',
-            'experience_with_pets' => 'boolean',
-            'family_members_count' => 'integer',
             'reviewed_at' => 'datetime',
+            'response_sent_at' => 'datetime',
+            'adopted_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
     }
@@ -45,5 +42,14 @@ class AdoptionRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reviewer(){
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
     }
 }

@@ -34,6 +34,7 @@ class User extends Authenticatable
         'avatar',
         'address',
         'is_active',
+        'fcm_token',
     ];
 
     /**
@@ -61,6 +62,11 @@ class User extends Authenticatable
             'deleted_at' => 'datetime',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token; // The column name where you store the mobile device token
     }
 
      // ─── Relationships ─────────────────────────────────
