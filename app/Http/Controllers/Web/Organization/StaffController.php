@@ -19,7 +19,7 @@ class StaffController extends Controller
         $organizationId = auth()->user()->organization_id;
 
         // Fetch all users who belong to this organization
-        $staffMembers = User::where('organization_id', $organizationId)->get();
+        $staffMembers = User::where('organization_id', $organizationId)->paginate(10);
 
         return view('organization.staff.index', compact('staffMembers'));
     }
