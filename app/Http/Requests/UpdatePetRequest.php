@@ -30,7 +30,7 @@ class UpdatePetRequest extends FormRequest
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'remove_image_ids' => 'nullable|array',
-            'remove_image_ids.*' => 'integer|exists:pet_images,id',
+            'remove_image_ids.*' => 'integer|exists:media,id',
         ];
     }
 }

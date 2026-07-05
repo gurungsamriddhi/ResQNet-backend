@@ -9,12 +9,13 @@ use App\Models\AdoptionRequest;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 use App\Notifications\AdoptionStatusUpdatedNotification;
+use App\Notifications\NewAdoptionRequestNotification;
 
 class AdoptionRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $requests = AdoptionRequest::with(['pet.primaryImage', 'pet.organization'])
+        $requests = AdoptionRequest::with(['pet.media', 'pet.organization'])
             ->where('user_id', $request->user()->id)
             ->orderByDesc('created_at')
             ->paginate(min((int) $request->get('per_page', 15), 50));
@@ -79,10 +80,9 @@ class AdoptionRequestController extends Controller
 
         // Rule 6: Async Notifications & Lifecycle updates
         // Dispatching notification (triggers push notifications and emails gracefully)
-        // Inside AdoptionController.php store() method:
-        $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
+        $adoption->pet->organization->notify(new NewAdoptionRequestNotification($adoption));
 
-        $adoption->load(['pet.primaryImage', 'pet.organization']);
+        $adoption->load(['pet.media', 'pet.organization']);
 
         return (new AdoptionRequestResource($adoption))
             ->additional(['message' => 'Adoption request submitted successfully!'])
@@ -96,7 +96,7 @@ class AdoptionRequestController extends Controller
             abort(403);
         }
 
-        $adoption->load(['pet.primaryImage', 'pet.organization', 'pet.images']);
+        $adoption->load(['pet.media', 'pet.organization']);
 
         return new AdoptionRequestResource($adoption);
     }

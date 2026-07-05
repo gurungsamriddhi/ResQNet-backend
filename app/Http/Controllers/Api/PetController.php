@@ -22,7 +22,7 @@ class PetController extends Controller
         ]);
 
         $query = Pet::query()
-            ->with(['primaryImage', 'organization'])
+            ->with('media', 'organization')
             ->where('status', 'available')
             ->orderByDesc('created_at');
 
@@ -97,8 +97,7 @@ class PetController extends Controller
     private function loadPetForApi(Request $request, Pet $pet): void
     {
         $relations = [
-            'primaryImage',
-            'images',
+            'media',
             'organization',
         ];
 

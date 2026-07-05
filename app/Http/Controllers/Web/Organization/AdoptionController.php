@@ -19,14 +19,14 @@ class AdoptionController extends Controller
     {
         $orgId = auth()->user()?->organization?->id;
 
-        $liveListings = Pet::with(['primaryImage'])
+        $liveListings = Pet::with('media')
             ->where('organization_id', $orgId)
             ->where('status', 'available')
             ->orderByDesc('created_at')
             ->get()
             ->map(fn ($pet) => $this->transformListing($pet));
 
-        $applications = AdoptionRequest::with(['pet.primaryImage', 'user'])
+        $applications = AdoptionRequest::with(['pet.media', 'user'])
             ->whereHas('pet', fn ($q) => $q->where('organization_id', $orgId))
             ->where('status', 'pending')
             ->orderByDesc('created_at')
@@ -40,64 +40,53 @@ class AdoptionController extends Controller
         return view('admin.adoptions.index', compact('liveListings', 'applications', 'successfulRehomings'));
     }
 
-    public function approve(Request $request, AdoptionRequest $adoption)
+    public function updateStatus(Request $request, AdoptionRequest $adoption)
     {
         $this->authorizeOrgPet($adoption);
+
+        $request->validate([
+            'status' => 'required|in:under_review,approved,rejected,completed',
+            'organization_response' => 'nullable|string|max:1000',
+        ]);
 
         if ($adoption->status !== 'pending') {
             return response()->json(['message' => 'This application has already been reviewed.'], 422);
         }
 
-        DB::transaction(function () use ($adoption, $request) {
+        DB::transaction(function () use ($request, $adoption) {
             $adoption->update([
-                'status' => 'approved',
-                'organization_response' => $request->input('organization_response'),
+                'status' => $request->status,
+                'organization_response' => $request->organization_response,
+                'reviewed_by' => $request->user()->id,
                 'reviewed_at' => now(),
             ]);
 
-            $adoption->pet->update([
-                'status' => 'adopted',
-                'adopted_at' => now(),
-            ]);
-
-            AdoptionRequest::where('pet_id', $adoption->pet_id)
-                ->where('id', '!=', $adoption->id)
-                ->where('status', 'pending')
-                ->update([
-                    'status' => 'rejected',
-                    'admin_notes' => 'Another application was approved.',
-                    'reviewed_at' => now(),
+            if ($request->status === 'approved') {
+                $adoption->pet->update([
+                    'status' => 'adopted',
+                    'adopted_at' => now(),
                 ]);
+
+                AdoptionRequest::where('pet_id', $adoption->pet_id)
+                    ->where('id', '!=', $adoption->id)
+                    ->where('status', 'pending')
+                    ->update([
+                        'status' => 'rejected',
+                        'admin_notes' => 'Another application was approved.',
+                        'reviewed_at' => now(),
+                    ]);
+            }
         });
 
-        $adoption->load(['pet.primaryImage', 'user']);
+        $adoption->load(['pet.media', 'user']);
+        $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
 
         return response()->json([
-            'message' => 'Adoption application approved.',
-            'application' => new AdoptionRequestResource($adoption),
-        ]);
-    }
-
-    public function reject(Request $request, AdoptionRequest $adoption)
-    {
-        $this->authorizeOrgPet($adoption);
-
-        if ($adoption->status !== 'pending') {
-            return response()->json(['message' => 'This application has already been reviewed.'], 422);
-        }
-
-        $request->validate(['organization_response' => 'nullable|string']);
-
-        $adoption->update([
-            'status' => 'rejected',
-            'organization_response' => $request->input('organization_response'),
-            'reviewed_at' => now(),
-        ]);
-
-        $adoption->load(['pet.primaryImage', 'user']);
-
-        return response()->json([
-            'message' => 'Adoption application rejected.',
+            'message' => match ($request->status) {
+                'approved' => 'Adoption application approved.',
+                'rejected' => 'Adoption application rejected.',
+                default => 'Application moved to ' . str_replace('_', ' ', $request->status) . '.',
+            },
             'application' => new AdoptionRequestResource($adoption),
         ]);
     }
@@ -134,47 +123,12 @@ class AdoptionController extends Controller
             'weight' => '-',
             'bio' => $pet->description ?? '',
             'traits' => array_filter([$pet->species, $pet->size, $pet->gender]),
-            'primary_image' => $pet->primaryImage?->image_url,
+            'primary_image' => $pet->getFirstMediaUrl('images') ?: null,
             'healthChecklist' => [
                 ['label' => 'Fully Vaccinated', 'done' => $pet->is_vaccinated],
                 ['label' => 'Neutered', 'done' => $pet->is_neutered],
             ],
         ];
-    }
-
-    public function updateStatus(Request $request, AdoptionRequest $adoption)
-    {
-        $request->validate([
-            'status' => 'required|in:under_review,approved,rejected,completed',
-            'organization_response' => 'nullable|string|max:1000'
-        ]);
-
-        // Build status changes array
-        $updateData = [
-            'status' => $request->status,
-            'organization_response' => $request->organization_response,
-            'reviewed_by' => $request->user()->id,
-            'reviewed_at' => now(),
-        ];
-
-        // Specific structural timestamps handled on completion
-        if ($request->status === 'completed') {
-            $updateData['adopted_at'] = now();
-
-            // Flip the Pet status flag automatically when adoption completes
-            $adoption->pet()->update(['status' => 'adopted']);
-        }
-
-        $adoption->update($updateData);
-        $adoption->load('pet');
-
-        // Fire the dynamic unified notification system
-        $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
-
-        return response()->json([
-            'message' => "Application moved to status: " . str_replace('_', ' ', $request->status),
-            'adoption' => $adoption
-        ]);
     }
 
     private function transformApplication(AdoptionRequest $req): array

@@ -18,7 +18,7 @@ class SavedPetController extends Controller
 
         // We load the same relationships as the PetController to reuse the PetResource
         $savedPets = $user->savedPets()
-            ->with(['primaryImage', 'images', 'organization'])
+            ->with(['media', 'organization'])
             ->orderByPivot('created_at', 'desc')
             ->paginate(min((int) $request->get('per_page', 15), 50));
 

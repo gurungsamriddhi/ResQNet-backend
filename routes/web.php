@@ -105,8 +105,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::get('/pets/{pet}/qr', [PetController::class, 'generateQr'])->name('pets.qr');
 
     Route::get('/adoptions', [AdoptionController::class, 'index'])->name('adoptions.index');
-    Route::post('/adoptions/{adoption}/approve', [AdoptionController::class, 'approve'])->name('adoptions.approve');
-    Route::post('/adoptions/{adoption}/reject', [AdoptionController::class, 'reject'])->name('adoptions.reject');
+    Route::post('/adoptions/{adoption}/status', [AdoptionController::class, 'updateStatus'])->name('adoptions.status');
 
     Route::get('/rescues', [RescueController::class, 'index'])->name('rescues.index');
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');

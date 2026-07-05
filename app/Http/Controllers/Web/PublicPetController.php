@@ -9,7 +9,7 @@ class PublicPetController extends Controller
 {
     public function showByQr(string $qrCodeId)
     {
-        $pet = Pet::with(['primaryImage', 'images', 'organization'])
+        $pet = Pet::with(['media', 'organization'])
             ->where('qr_code_id', $qrCodeId)
             ->firstOrFail();
 

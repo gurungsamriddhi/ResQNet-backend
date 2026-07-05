@@ -8,9 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OrganizationApproved;
-use App\Mail\OrganizationRejected;
-use App\Mail\OrganizationSuspended;
+use App\Mail\OrganizationRequestStatus\StatusMail;
 
 class OrganizationController extends Controller
 {
@@ -56,7 +54,7 @@ class OrganizationController extends Controller
         });
 
         if ($organization->user && $organization->user->email) {
-            Mail::to($organization->user->email)->queue(new OrganizationApproved($organization));
+            Mail::to($organization->user->email)->queue(new StatusMail($organization, 'approved'));
         }
 
         return redirect()->route('admin.organizations.index')
@@ -94,7 +92,7 @@ class OrganizationController extends Controller
         });
 
         if ($organization->user && $organization->user->email) {
-            Mail::to($organization->user->email)->queue(new OrganizationRejected($organization, $reasonString));
+            Mail::to($organization->user->email)->queue(new StatusMail($organization, 'rejected', $reasonString));
         }
 
         return redirect()->route('admin.organizations.index')
@@ -128,7 +126,7 @@ class OrganizationController extends Controller
         }
 
         if ($organization->user && $organization->user->email) {
-            Mail::to($organization->user->email)->queue(new OrganizationSuspended($organization, $reasonString));
+            Mail::to($organization->user->email)->queue(new StatusMail($organization, 'suspended', $reasonString));
         }
 
         return redirect()->route('admin.organizations.index')

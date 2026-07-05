@@ -8,7 +8,9 @@ trait TransformsPets
 {
     protected function transformPet(Pet $pet): array
     {
-        $pet->loadMissing(['primaryImage', 'images', 'organization']);
+        $pet->loadMissing('media', 'organization');
+
+        $allMedia = $pet->getMedia('images');
 
         return [
             'id' => $pet->id,
@@ -30,10 +32,8 @@ trait TransformsPets
             'organization_id' => $pet->organization_id,
             'created_at' => $pet->created_at?->toDateTimeString(),
             'updated_at' => $pet->updated_at?->toDateTimeString(),
-            'primary_image' => $pet->primaryImage?->image_url,
-            'images' => $pet->images->sortBy('sort_order')
-                ->map(fn ($img) => ['id' => $img->id, 'url' => $img->image_url])
-                ->values()
+            'primary_image' => $allMedia->first()?->getUrl(),
+            'images' => $allMedia->values()->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl()])
                 ->toArray(),
         ];
     }

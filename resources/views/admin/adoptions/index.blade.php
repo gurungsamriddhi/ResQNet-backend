@@ -411,9 +411,12 @@
                     const app = this.applications.find(a => a.email === email);
                     if (!app) return;
                     try {
-                        const res = await fetch(`/organization/adoptions/${app.id}/approve`, {
+                        const fd = new FormData();
+                        fd.append('status', 'approved');
+                        const res = await fetch(`/organization/adoptions/${app.id}/status`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                            body: fd,
                         });
                         if (!res.ok) {
                             const err = await res.json();
@@ -435,9 +438,12 @@
                     const app = this.applications.find(a => a.email === email);
                     if (!app || !confirm(`Decline ${app.name}'s application for ${app.pet}?`)) return;
                     try {
-                        const res = await fetch(`/organization/adoptions/${app.id}/reject`, {
+                        const fd = new FormData();
+                        fd.append('status', 'rejected');
+                        const res = await fetch(`/organization/adoptions/${app.id}/status`, {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                            body: fd,
                         });
                         if (!res.ok) {
                             const err = await res.json();

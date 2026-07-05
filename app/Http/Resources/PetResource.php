@@ -30,10 +30,9 @@ class PetResource extends JsonResource
                 'name' => $this->organization->name,
                 'slug' => $this->organization->slug,
             ]),
-            'primary_image' => $this->whenLoaded('primaryImage', fn () => $this->primaryImage?->image_url),
-            'images' => $this->whenLoaded('images', fn () => $this->images
-                ->sortBy('sort_order')
-                ->map(fn ($img) => ['id' => $img->id, 'url' => $img->image_url, 'is_primary' => $img->is_primary])
+            'primary_image' => $this->whenLoaded('media', fn () => $this->getFirstMediaUrl('images') ?: null),
+            'images' => $this->whenLoaded('media', fn () => $this->getMedia('images')
+                ->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl()])
                 ->values()),
             'medical_records' => MedicalRecordResource::collection($this->whenLoaded('medicalRecords')),
             'vaccinations' => VaccinationResource::collection($this->whenLoaded('vaccinations')),

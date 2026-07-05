@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Organization;
 use App\Models\Pet;
-use App\Models\PetImage;
 use Illuminate\Database\Seeder;
 
 class PetSeeder extends Seeder
@@ -120,13 +119,8 @@ class PetSeeder extends Seeder
                 $data
             );
 
-            PetImage::firstOrCreate(
-                ['pet_id' => $pet->id, 'is_primary' => true],
-                [
-                    'image_path' => 'pets/seed/' . $pet->qr_code_id . '.jpg',
-                    'sort_order' => 0,
-                ]
-            );
+            $pet->addMedia(storage_path('app/public/pets/seed/' . $pet->qr_code_id . '.jpg'))
+                ->toMediaCollection('images');
         }
     }
 }

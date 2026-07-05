@@ -27,9 +27,9 @@ class HealthController extends Controller
     {
         $orgId = auth()->user()?->organization?->id;
 
-        $medicalRecordsQuery = MedicalRecord::with('pet.primaryImage');
-        $vaccinationsQuery = Vaccination::with('pet.primaryImage');
-        $petsQuery = Pet::query()->with('primaryImage');
+        $medicalRecordsQuery = MedicalRecord::with('pet.media');
+        $vaccinationsQuery = Vaccination::with('pet.media');
+        $petsQuery = Pet::query()->with('media');
         $vetsQuery = Vet::where('status', 'active');
 
         if ($orgId) {
@@ -47,7 +47,7 @@ class HealthController extends Controller
             'pet_name' => $r->pet?->name ?? 'Unknown',
             'pet_breed' => $r->pet?->breed ?? '',
             'pet_species' => $r->pet?->species ?? '',
-            'pet_image' => $r->pet?->primaryImage?->image_url ?? null,
+            'pet_image' => $r->pet?->getFirstMediaUrl('images') ?: null,
             'pet_qr' => $r->pet?->qr_code_id ?? '',
             'type_label' => 'Medical Report',
             'type' => $r->type,
@@ -67,7 +67,7 @@ class HealthController extends Controller
             'pet_name' => $v->pet?->name ?? 'Unknown',
             'pet_breed' => $v->pet?->breed ?? '',
             'pet_species' => $v->pet?->species ?? '',
-            'pet_image' => $v->pet?->primaryImage?->image_url ?? null,
+            'pet_image' => $v->pet?->getFirstMediaUrl('images') ?: null,
             'pet_qr' => $v->pet?->qr_code_id ?? '',
             'type_label' => 'Vaccination',
             'type' => 'vaccine',
@@ -84,7 +84,7 @@ class HealthController extends Controller
         $healthRecords = $medicalRecords->concat($vaccinations)->sortByDesc('created_at');
         $vets = $vetsQuery->orderBy('name')->get();
         $pets = $petsQuery->orderBy('name')->get(['id', 'name', 'breed', 'species', 'gender', 'age_months', 'color']);
-        $pets->each(fn ($pet) => $pet->pet_image = $pet->primaryImage?->image_url);
+        $pets->each(fn ($pet) => $pet->pet_image = $pet->getFirstMediaUrl('images') ?: null);
 
         return view('organization.health.index', compact('healthRecords', 'vets', 'pets'));
     }

@@ -14,7 +14,7 @@ class PetController extends Controller
 
     public function index()
     {
-        $pets = Pet::with(['primaryImage', 'images', 'organization'])
+        $pets = Pet::with(['media', 'organization'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn ($pet) => $this->transformPet($pet));
@@ -27,8 +27,7 @@ class PetController extends Controller
     public function show(Pet $pet)
     {
         $pet->load([
-            'primaryImage',
-            'images',
+            'media',
             'organization',
             'creator',
             'adoptionRequests.user',

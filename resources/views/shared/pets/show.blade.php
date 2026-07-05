@@ -126,8 +126,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-8 border-b border-admin-border bg-admin-bg/30">
                 <!-- Image -->
                 <div class="lg:col-span-4">
-                    @if($pet->primaryImage)
-                        <img src="{{ Storage::url($pet->primaryImage->image_path) }}" alt="{{ $pet->name }}" class="rounded-xl object-cover w-full h-64 shadow-md border border-admin-border/50">
+                    @if($pet->getFirstMedia('images'))
+                        <img src="{{ $pet->getFirstMediaUrl('images') }}" alt="{{ $pet->name }}" class="rounded-xl object-cover w-full h-64 shadow-md border border-admin-border/50">
                     @else
                         <div class="w-full h-64 rounded-xl bg-admin-bg border border-admin-border/50 flex flex-col items-center justify-center text-admin-textSecondary/50">
                             <i data-lucide="camera-off" class="w-12 h-12 mb-3"></i>
@@ -298,16 +298,17 @@
                         </p>
                     </div>
 
-                    @if($pet->images && $pet->images->count() > 0)
+                    @php $gallery = $pet->getMedia('images')->skip(1); @endphp
+                    @if($gallery->isNotEmpty())
                     <!-- Photo Gallery -->
                     <div class="lg:col-span-3 bg-admin-surface p-6 rounded-xl border border-admin-border shadow-sm">
                         <h3 class="text-lg font-extrabold text-admin-textPrimary mb-4 flex items-center gap-2">
                             <i data-lucide="image" class="w-5 h-5 text-admin-primary"></i> Additional Photos
                         </h3>
                         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            @foreach($pet->images as $image)
-                                <a href="{{ Storage::url($image->image_path) }}" target="_blank" class="block aspect-square rounded-xl overflow-hidden border border-admin-border hover:ring-2 hover:ring-admin-primary/50 transition-all">
-                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{ $pet->name }} photo" class="w-full h-full object-cover">
+                            @foreach($gallery as $media)
+                                <a href="{{ $media->getUrl() }}" target="_blank" class="block aspect-square rounded-xl overflow-hidden border border-admin-border hover:ring-2 hover:ring-admin-primary/50 transition-all">
+                                    <img src="{{ $media->getUrl() }}" alt="{{ $pet->name }} photo" class="w-full h-full object-cover">
                                 </a>
                             @endforeach
                         </div>
@@ -637,9 +638,9 @@
                     description: @js($pet->description),
                     is_vaccinated: @js((bool)$pet->is_vaccinated),
                     is_neutered: @js((bool)$pet->is_neutered),
-                    primaryImageUrl: {{ $pet->primaryImage ? 'true' : 'false' }},
-                    existingPrimaryUrl: @js($pet->primaryImage ? Storage::url($pet->primaryImage->image_path) : ''),
-                    existingImages: @js($pet->images->where('is_primary', false)->values()->map(fn($i) => ['id' => $i->id, 'url' => Storage::url($i->image_path)])),
+                    primaryImageUrl: {{ $pet->getFirstMedia('images') ? 'true' : 'false' }},
+                    existingPrimaryUrl: @js($pet->getFirstMediaUrl('images') ?: ''),
+                    existingImages: @js($pet->getMedia('images')->skip(1)->values()->map(fn($m) => ['id' => $m->id, 'url' => $m->getUrl()])),
                     csrfToken: @js(csrf_token()),
                     action: @js(route('organization.pets.update', $pet)),
                  })">

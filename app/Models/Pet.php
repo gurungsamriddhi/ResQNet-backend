@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Pet extends Model
+class Pet extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'organization_id',
@@ -42,6 +44,13 @@ class Pet extends Model
         ];
     }
 
+    // ─── Media Collections ────────────────────────────────────
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images');
+    }
+
     // ─── Relationships ────────────────────────────────────────
 
     public function organization(): BelongsTo
@@ -52,16 +61,6 @@ class Pet extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function images(): HasMany
-    {
-        return $this->hasMany(PetImage::class)->orderBy('sort_order');
-    }
-
-    public function primaryImage()
-    {
-        return $this->hasOne(PetImage::class)->where('is_primary', true);
     }
 
     public function adoptionRequests(): HasMany

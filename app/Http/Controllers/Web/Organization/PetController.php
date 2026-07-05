@@ -7,9 +7,7 @@ use App\Http\Controllers\Concerns\TransformsPets;
 use App\Http\Requests\StorePetRequest;
 use App\Http\Requests\UpdatePetRequest;
 use App\Models\Pet;
-use App\Models\PetImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
 {
@@ -21,13 +19,13 @@ class PetController extends Controller
 
         if ($user && $user->organization) {
             $orgId = $user->organization->id;
-            $pets = Pet::with(['primaryImage', 'images'])
+            $pets = Pet::with('media')
                 ->where('organization_id', $orgId)
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->map(fn($pet) => $this->transformPet($pet));
         } else {
-            $pets = Pet::with(['primaryImage', 'images'])
+            $pets = Pet::with('media')
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->map(fn($pet) => $this->transformPet($pet));
@@ -53,7 +51,7 @@ class PetController extends Controller
 
         $this->handleImageUploads($request, $pet);
 
-        $pet->load(['primaryImage', 'images']);
+        $pet->load('media');
 
         return response()->json([
             'message' => 'Pet created successfully.',
@@ -68,8 +66,7 @@ class PetController extends Controller
             abort(403);
         }
         $pet->load([
-            'primaryImage',
-            'images',
+            'media',
             'organization',
             'creator',
             'adoptionRequests.user',
@@ -113,43 +110,34 @@ class PetController extends Controller
         }
         $pet->update($data);
 
-        if ($request->hasFile('primary_image')) {
-            $oldPrimary = $pet->primaryImage;
-            if ($oldPrimary) {
-                Storage::disk('public')->delete($oldPrimary->image_path);
-                $oldPrimary->delete();
-            }
-            $path = $request->file('primary_image')->store('pets/' . $pet->id, 'public');
-            $pet->images()->create([
-                'image_path' => $path,
-                'is_primary' => true,
-                'sort_order' => 0,
-            ]);
-        }
-
-        if ($request->hasFile('images')) {
-            $maxOrder = $pet->images()->where('is_primary', false)->max('sort_order') ?? 0;
-            foreach ($request->file('images') as $i => $file) {
-                $path = $file->store('pets/' . $pet->id, 'public');
-                $pet->images()->create([
-                    'image_path' => $path,
-                    'is_primary' => false,
-                    'sort_order' => $maxOrder + $i + 1,
-                ]);
-            }
-        }
-
+        // Remove specific images by media ID
         if ($request->filled('remove_image_ids')) {
-            $images = PetImage::whereIn('id', $request->remove_image_ids)
-                ->where('pet_id', $pet->id)
-                ->get();
-            foreach ($images as $img) {
-                Storage::disk('public')->delete($img->image_path);
-                $img->delete();
+            foreach ($request->remove_image_ids as $id) {
+                $media = $pet->media()->find($id);
+                if ($media) {
+                    $media->delete();
+                }
             }
         }
 
-        $pet->load(['primaryImage', 'images']);
+        // Replace primary image — delete old first, then add new
+        if ($request->hasFile('primary_image')) {
+            $existingPrimary = $pet->getFirstMedia('images');
+            if ($existingPrimary) {
+                $existingPrimary->delete();
+            }
+            $pet->addMedia($request->file('primary_image'))
+                ->toMediaCollection('images');
+        }
+
+        // Append new gallery images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $pet->addMedia($file)->toMediaCollection('images');
+            }
+        }
+
+        $pet->load('media');
 
         if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -200,22 +188,13 @@ class PetController extends Controller
     private function handleImageUploads(Request $request, Pet $pet): void
     {
         if ($request->hasFile('primary_image')) {
-            $path = $request->file('primary_image')->store('pets/' . $pet->id, 'public');
-            $pet->images()->create([
-                'image_path' => $path,
-                'is_primary' => true,
-                'sort_order' => 0,
-            ]);
+            $pet->addMedia($request->file('primary_image'))
+                ->toMediaCollection('images');
         }
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $i => $file) {
-                $path = $file->store('pets/' . $pet->id, 'public');
-                $pet->images()->create([
-                    'image_path' => $path,
-                    'is_primary' => false,
-                    'sort_order' => $i + 1,
-                ]);
+            foreach ($request->file('images') as $file) {
+                $pet->addMedia($file)->toMediaCollection('images');
             }
         }
     }
