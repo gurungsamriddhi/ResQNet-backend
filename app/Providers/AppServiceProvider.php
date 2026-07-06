@@ -3,25 +3,32 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Laravel\Sanctum\Sanctum; // <-- 1. Import this!
-use App\Models\User;         // <-- 2. Import your User model!
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
+use App\Models\Donation;
+use App\Models\RescueReport;
+use App\Models\AdoptionRequest;
+use App\Models\Pet;
+use App\Policies\DonationPolicy;
+use App\Policies\RescueReportPolicy;
+use App\Policies\AdoptionRequestPolicy;
+use App\Policies\PetPolicy;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // 3. Add this line to force Sanctum to bind directly to your User Model
         Sanctum::usePersonalAccessTokenModel(\Laravel\Sanctum\PersonalAccessToken::class);
+
+        Gate::policy(Donation::class, DonationPolicy::class);
+        Gate::policy(RescueReport::class, RescueReportPolicy::class);
+        Gate::policy(AdoptionRequest::class, AdoptionRequestPolicy::class);
+        Gate::policy(Pet::class, PetPolicy::class);
     }
 }

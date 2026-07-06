@@ -22,6 +22,7 @@ use App\Http\Controllers\Web\Organization\VolunteerController as OrgVolunteerCon
 use App\Http\Controllers\Web\Organization\DashboardController as OrgDashboardController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
 use App\Http\Controllers\Web\Organization\SettingsController as OrgSettingsController;
+use App\Http\Controllers\Web\Organization\AnalyticsController as OrgAnalyticsController;
 use App\Http\Controllers\Web\Organization\VetController as OrgVetController;
 
 
@@ -128,6 +129,8 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::delete('/health/medications/{medication}', [OrgHealthController::class, 'destroyMedication'])->name('health.medications.destroy');
 
     Route::resource('vets', OrgVetController::class);
+
+    Route::get('/analytics', [OrgAnalyticsController::class, 'index'])->name('analytics.index');
 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [OrgSettingsController::class, 'update'])->name('settings.update');

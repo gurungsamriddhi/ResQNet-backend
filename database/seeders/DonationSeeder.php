@@ -59,6 +59,36 @@ class DonationSeeder extends Seeder
                 'payment_payload' => ['gateway' => 'esewa', 'error' => 'Insufficient balance'],
                 'remarks' => 'Retry later',
             ],
+            [
+                'user_id' => $ramesh->id,
+                'organization_id' => $paws->id,
+                'amount' => 2000.00,
+                'payment_method' => 'khalti',
+                'transaction_id' => 'KHL-20260610-002',
+                'status' => 'completed',
+                'payment_payload' => ['gateway' => 'khalti', 'idx' => 'KHL-20260610-002'],
+                'remarks' => 'Sponsor a pet surgery',
+            ],
+            [
+                'user_id' => $priya->id,
+                'organization_id' => $kar->id,
+                'amount' => 750.00,
+                'payment_method' => 'esewa',
+                'transaction_id' => 'ESW-20260615-023',
+                'status' => 'completed',
+                'payment_payload' => ['gateway' => 'esewa', 'ref' => 'ESW-20260615-023'],
+                'remarks' => 'Flood relief for animals',
+            ],
+            [
+                'user_id' => $sita->id,
+                'organization_id' => $paws->id,
+                'amount' => 150.00,
+                'payment_method' => 'khalti',
+                'transaction_id' => 'KHL-20260618-004',
+                'status' => 'completed',
+                'payment_payload' => ['gateway' => 'khalti', 'idx' => 'KHL-20260618-004'],
+                'remarks' => 'Treats and toys',
+            ],
         ];
 
         foreach ($donations as $donation) {
