@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NewAdoptionRequestEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAdoptionRequest;
 use App\Http\Resources\AdoptionRequestResource;
@@ -81,6 +82,9 @@ class AdoptionRequestController extends Controller
         // Rule 6: Async Notifications & Lifecycle updates
         // Dispatching notification (triggers push notifications and emails gracefully)
         $adoption->pet->organization->notify(new NewAdoptionRequestNotification($adoption));
+
+        // Broadcast real-time event to the organization dashboard
+        broadcast(new NewAdoptionRequestEvent($adoption));
 
         $adoption->load(['pet.media', 'pet.organization']);
 

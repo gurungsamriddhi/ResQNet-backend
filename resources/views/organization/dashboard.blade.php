@@ -1,4 +1,5 @@
 <x-layouts.admin>
+    <div x-data="dashboardRealtime()">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-admin-textPrimary font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
@@ -25,7 +26,7 @@
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Active Pets</span>
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['active_pets'] }}</h3>
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200" x-text="activePets">{{ $stats['active_pets'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
@@ -44,7 +45,7 @@
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Active Rescues</span>
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['active_rescues'] }}</h3>
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200" x-text="activeRescues">{{ $stats['active_rescues'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-admin-errorBg text-admin-errorText shadow-sm">
@@ -63,7 +64,7 @@
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Pets In Care</span>
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['pets_in_care'] }}</h3>
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200" x-text="petsInCare">{{ $stats['pets_in_care'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
@@ -82,7 +83,7 @@
             <div class="flex flex-col justify-between h-full">
                 <div>
                     <span class="text-xs font-bold tracking-wider text-admin-textSecondary uppercase block">Pending Adoptions</span>
-                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200">{{ $stats['pending_adoptions'] }}</h3>
+                    <h3 class="text-admin-textPrimary text-3xl font-extrabold tracking-tight mt-3 group-hover:scale-105 origin-left transition-transform duration-200" x-text="pendingAdoptions">{{ $stats['pending_adoptions'] }}</h3>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-50 text-secondary-500 shadow-sm">
@@ -374,4 +375,88 @@
             </div>
         </div>
     </div>
+
+    <!-- Real-time Toast Notifications -->
+    <template x-for="(notification, index) in notifications" :key="notification.id">
+        <div x-show="index < 3"
+             x-transition:enter="transform transition ease-out duration-300"
+             x-transition:enter-start="translate-x-full opacity-0"
+             x-transition:enter-end="translate-x-0 opacity-100"
+             x-transition:leave="transform transition ease-in duration-200"
+             x-transition:leave-start="translate-x-0 opacity-100"
+             x-transition:leave-end="translate-x-full opacity-0"
+             class="fixed top-4 right-4 z-[100] w-80 bg-white border border-admin-border rounded-xl shadow-2xl p-4"
+             style="margin-top: calc(0.5rem + index * 5.5rem);">
+            <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                     :class="notification.type === 'adoption' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
+                    <i :data-lucide="notification.type === 'adoption' ? 'paw-print' : 'shield-alert'" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-admin-textPrimary" x-text="notification.title"></p>
+                    <p class="text-xs text-admin-textSecondary mt-0.5" x-text="notification.message"></p>
+                    <p class="text-[10px] text-admin-textSecondary/60 mt-1 font-semibold" x-text="notification.time"></p>
+                </div>
+                <button @click="removeNotification(notification.id)" class="flex-shrink-0 text-admin-textSecondary/40 hover:text-admin-textSecondary transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('dashboardRealtime', () => ({
+                notifications: [],
+                activePets: {{ $stats['active_pets'] }},
+                activeRescues: {{ $stats['active_rescues'] }},
+                pendingAdoptions: {{ $stats['pending_adoptions'] }},
+                petsInCare: {{ $stats['pets_in_care'] }},
+                totalDonations: {{ $stats['total_donations'] }},
+
+                init() {
+                    const adoptionHandler = (e) => {
+                        this.pendingAdoptions++;
+                        this.activePets++;
+                        this.addNotification('adoption', 'New Adoption Request', `${e.detail.user_name} applied to adopt ${e.detail.pet_name}`);
+                    };
+
+                    const rescueHandler = (e) => {
+                        this.activeRescues++;
+                        this.addNotification('rescue', 'New Rescue Report', `${e.detail.title} (${e.detail.urgency})`);
+                    };
+
+                    window.addEventListener('new-adoption-request', adoptionHandler);
+                    window.addEventListener('new-rescue-report', rescueHandler);
+
+                    this.$nextTick(() => {
+                        if (window.lucide) lucide.createIcons();
+                    });
+                },
+
+                addNotification(type, title, message) {
+                    this.notifications.unshift({
+                        id: Date.now(),
+                        type,
+                        title,
+                        message,
+                        time: 'Just now',
+                    });
+                    if (this.notifications.length > 5) this.notifications.pop();
+                },
+
+                removeNotification(id) {
+                    this.notifications = this.notifications.filter(n => n.id !== id);
+                },
+            }));
+        });
+
+        if (window.subscribeOrganization && {{ $orgId ?? 'null' }}) {
+            window.subscribeOrganization({{ $orgId }});
+        }
+    </script>
+    @endpush
 </x-layouts.admin>

@@ -18,7 +18,10 @@
             }
         }
     </script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>[x-cloak] { display: none !important; }</style>
+    @vite(['resources/js/app.js', 'resources/js/dashboard.js'])
+    @stack('scripts')
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900">
 

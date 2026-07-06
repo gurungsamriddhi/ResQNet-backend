@@ -30,6 +30,8 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('organization.dashboard', compact('stats'));
+        $orgId = $user && $user->organization ? $user->organization->id : null;
+
+        return view('organization.dashboard', compact('stats', 'orgId'));
     }
 }

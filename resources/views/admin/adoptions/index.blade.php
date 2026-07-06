@@ -371,94 +371,135 @@
                 <p class="text-xs text-slate-400 dark:text-slate-300 mt-1">Adoption requests from mobile users will appear here.</p>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('adoptionManager', (liveListings, applications, successfulRehomings) => ({
+                    activeTab: 'listings',
+                    expandedPet: null,
+                    expandedApplication: null,
+                    successfulRehomings: successfulRehomings,
+                    liveListings: liveListings,
+                    applications: applications,
+                    csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                    declineReason: '',
+                    decliningApp: null,
+                    isDeclineModalOpen: false,
+
+                    togglePetDetails(name) {
+                        this.expandedPet = this.expandedPet === name ? null : name;
+                    },
+
+                    toggleApplicationDetails(email) {
+                        this.expandedApplication = this.expandedApplication === email ? null : email;
+                    },
+
+                    getPetData(name) {
+                        return this.liveListings.find(p => p.name === name) || {};
+                    },
+                    getPetColor(name) { return this.getPetData(name).color || 'bg-slate-500'; },
+                    getPetBreed(name) { return this.getPetData(name).breed || ''; },
+                    getPetAge(name) { return this.getPetData(name).age || ''; },
+                    getPetWeight(name) { return this.getPetData(name).weight || ''; },
+                    getPetTraits(name) { return this.getPetData(name).traits || []; },
+
+                    delistPet(name) {
+                        if (confirm(`Remove ${name} from the mobile marketplace?`)) {
+                            this.liveListings = this.liveListings.filter(p => p.name !== name);
+                        }
+                    },
+
+                    async approveApplication(email) {
+                        const app = this.applications.find(a => a.email === email);
+                        if (!app) return;
+                        try {
+                            const fd = new FormData();
+                            fd.append('status', 'approved');
+                            const res = await fetch(`/organization/adoptions/${app.id}/status`, {
+                                method: 'POST',
+                                headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                                body: fd,
+                            });
+                            if (!res.ok) {
+                                const err = await res.json();
+                                alert(err.message || 'Failed to approve application.');
+                                return;
+                            }
+                            app.status = 'Approved';
+                            this.successfulRehomings++;
+                            this.liveListings = this.liveListings.filter(p => p.id !== app.pet_id);
+                            setTimeout(() => {
+                                this.applications = this.applications.filter(a => a.email !== email);
+                            }, 1500);
+                        } catch (e) {
+                            alert('An error occurred while approving the application.');
+                        }
+                    },
+
+                    declineApplication(email) {
+                        const app = this.applications.find(a => a.email === email);
+                        if (!app) return;
+                        this.decliningApp = app;
+                        this.declineReason = '';
+                        this.isDeclineModalOpen = true;
+                    },
+
+                    async confirmDecline() {
+                        const app = this.decliningApp;
+                        if (!app) return;
+                        try {
+                            const fd = new FormData();
+                            fd.append('status', 'rejected');
+                            fd.append('organization_response', this.declineReason);
+                            const res = await fetch(`/organization/adoptions/${app.id}/status`, {
+                                method: 'POST',
+                                headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                                body: fd,
+                            });
+                            if (!res.ok) {
+                                const err = await res.json();
+                                alert(err.message || 'Failed to reject application.');
+                                return;
+                            }
+                            app.status = 'Declined';
+                            this.isDeclineModalOpen = false;
+                            this.decliningApp = null;
+                            setTimeout(() => {
+                                this.applications = this.applications.filter(a => a.email !== app.email);
+                            }, 1000);
+                        } catch (e) {
+                            alert('An error occurred while rejecting the application.');
+                        }
+                    }
+                }));
+            });
+        </script>
+
+        <!-- Decline Reason Modal -->
+        <div x-show="isDeclineModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+             x-cloak x-transition.opacity>
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6" @click.away="isDeclineModalOpen = false">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Decline Application</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    Provide a reason for declining
+                    <span x-text="decliningApp?.name"></span>'s application for
+                    <span x-text="decliningApp?.pet"></span>.
+                </p>
+                <textarea x-model="declineReason" rows="4" maxlength="1000"
+                          class="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                          placeholder="Enter the reason for declining..."></textarea>
+                <div class="flex justify-end gap-3 mt-4">
+                    <button @click="isDeclineModalOpen = false; decliningApp = null"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        Cancel
+                    </button>
+                    <button @click="confirmDecline()"
+                            :disabled="!declineReason.trim()"
+                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Confirm Decline
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('adoptionManager', (liveListings, applications, successfulRehomings) => ({
-                activeTab: 'listings',
-                expandedPet: null,
-                expandedApplication: null,
-                successfulRehomings: successfulRehomings,
-                liveListings: liveListings,
-                applications: applications,
-                csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
-
-                togglePetDetails(name) {
-                    this.expandedPet = this.expandedPet === name ? null : name;
-                },
-
-                toggleApplicationDetails(email) {
-                    this.expandedApplication = this.expandedApplication === email ? null : email;
-                },
-
-                getPetData(name) {
-                    return this.liveListings.find(p => p.name === name) || {};
-                },
-                getPetColor(name) { return this.getPetData(name).color || 'bg-slate-500'; },
-                getPetBreed(name) { return this.getPetData(name).breed || ''; },
-                getPetAge(name) { return this.getPetData(name).age || ''; },
-                getPetWeight(name) { return this.getPetData(name).weight || ''; },
-                getPetTraits(name) { return this.getPetData(name).traits || []; },
-
-                delistPet(name) {
-                    if (confirm(`Remove ${name} from the mobile marketplace?`)) {
-                        this.liveListings = this.liveListings.filter(p => p.name !== name);
-                    }
-                },
-
-                async approveApplication(email) {
-                    const app = this.applications.find(a => a.email === email);
-                    if (!app) return;
-                    try {
-                        const fd = new FormData();
-                        fd.append('status', 'approved');
-                        const res = await fetch(`/organization/adoptions/${app.id}/status`, {
-                            method: 'POST',
-                            headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
-                            body: fd,
-                        });
-                        if (!res.ok) {
-                            const err = await res.json();
-                            alert(err.message || 'Failed to approve application.');
-                            return;
-                        }
-                        app.status = 'Approved';
-                        this.successfulRehomings++;
-                        this.liveListings = this.liveListings.filter(p => p.id !== app.pet_id);
-                        setTimeout(() => {
-                            this.applications = this.applications.filter(a => a.email !== email);
-                        }, 1500);
-                    } catch (e) {
-                        alert('An error occurred while approving the application.');
-                    }
-                },
-
-                async declineApplication(email) {
-                    const app = this.applications.find(a => a.email === email);
-                    if (!app || !confirm(`Decline ${app.name}'s application for ${app.pet}?`)) return;
-                    try {
-                        const fd = new FormData();
-                        fd.append('status', 'rejected');
-                        const res = await fetch(`/organization/adoptions/${app.id}/status`, {
-                            method: 'POST',
-                            headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
-                            body: fd,
-                        });
-                        if (!res.ok) {
-                            const err = await res.json();
-                            alert(err.message || 'Failed to reject application.');
-                            return;
-                        }
-                        app.status = 'Declined';
-                        setTimeout(() => {
-                            this.applications = this.applications.filter(a => a.email !== email);
-                        }, 1000);
-                    } catch (e) {
-                        alert('An error occurred while rejecting the application.');
-                    }
-                }
-            }));
-        });
-    </script>
 </x-layouts.admin>

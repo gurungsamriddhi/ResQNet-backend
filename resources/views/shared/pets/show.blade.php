@@ -472,10 +472,10 @@
                                 <div class="bg-admin-surface rounded-xl border border-admin-border p-5 shadow-sm flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 rounded-full bg-admin-primary/10 flex items-center justify-center text-admin-primary font-bold text-lg">
-                                            {{ strtoupper(substr($request->user->first_name ?? 'U', 0, 1)) }}
+                                            {{ strtoupper(substr($request->user->name ?? 'U', 0, 1)) }}
                                         </div>
                                         <div>
-                                            <h4 class="font-bold text-admin-textPrimary">{{ $request->user->first_name ?? 'Unknown' }} {{ $request->user->last_name ?? '' }}</h4>
+                                            <h4 class="font-bold text-admin-textPrimary">{{ $request->user->name ?? 'Unknown User' }}</h4>
                                             <p class="text-xs text-admin-textSecondary flex items-center gap-2 mt-1">
                                                 <i data-lucide="calendar" class="w-3 h-3"></i> Applied: {{ $request->created_at->format('M d, Y') }}
                                             </p>
@@ -485,9 +485,10 @@
                                         @php
                                             $statusColors = [
                                                 'pending' => 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+                                                'under_review' => 'bg-blue-500/10 text-blue-600 border-blue-500/20',
                                                 'approved' => 'bg-green-500/10 text-green-600 border-green-500/20',
                                                 'rejected' => 'bg-red-500/10 text-red-600 border-red-500/20',
-                                                'cancelled' => 'bg-gray-500/10 text-gray-600 border-gray-500/20',
+                                                'completed' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
                                             ];
                                             $colorClass = $statusColors[$request->status] ?? 'bg-admin-primary/10 text-admin-primary border-admin-primary/20';
                                         @endphp

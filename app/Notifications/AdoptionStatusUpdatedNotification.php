@@ -90,7 +90,9 @@ class AdoptionStatusUpdatedNotification extends Notification
             ],
             'rejected' => [
                 'Application Update 📋',
-                "A decision has been made on your application for {$petName}."
+                $this->adoption->organization_response
+                    ? "Your application for {$petName} was declined: {$this->adoption->organization_response}"
+                    : "A decision has been made on your application for {$petName}."
             ],
             'completed' => [
                 'Welcome Home! 🏡❤️',
