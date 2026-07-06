@@ -72,7 +72,7 @@ class AdoptionController extends Controller
                     ->where('status', 'pending')
                     ->update([
                         'status' => 'rejected',
-                        'admin_notes' => 'Another application was approved.',
+                        'organization_response' => 'Another application was approved.',
                         'reviewed_at' => now(),
                     ]);
             }

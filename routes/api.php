@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PetController;
-use App\Http\Controllers\Api\AdoptionController;
+use App\Http\Controllers\Api\AdoptionRequestController;
 use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\UserDashboardController;
@@ -65,9 +65,9 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
 
             // Adoptions
             Route::prefix('adoptions')->name('api.adoptions.')->group(function () {
-                Route::get('/', [AdoptionController::class, 'index'])->name('index');
-                Route::post('/', [AdoptionController::class, 'store'])->name('store');
-                Route::get('/{adoption}', [AdoptionController::class, 'show'])->name('show');
+                Route::get('/', [AdoptionRequestController::class, 'index'])->name('index');
+                Route::post('/', [AdoptionRequestController::class, 'store'])->name('store');
+                Route::get('/{adoption}', [AdoptionRequestController::class, 'show'])->name('show');
             });
 
             // Rescue Reports

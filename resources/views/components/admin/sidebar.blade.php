@@ -67,17 +67,7 @@
                         </a>
                     </li>
 
-                    <!-- Health Records -->
-                    <li>
-                        <a href="{{ $healthUrl }}"
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Health Records</span>
-                            </div>
-                            <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
-                        </a>
-                    </li>
+
 
                     <!-- Veterinarians -->
                     <li>
@@ -87,18 +77,6 @@
                                 <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Veterinarians</span>
                             </div>
-                        </a>
-                    </li>
-
-                    <!-- Rescues -->
-                    <li>
-                        <a href="{{ $rescueUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Rescue Cases</span>
-                            </div>
-                            <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
                         </a>
                     </li>
 
@@ -119,30 +97,6 @@
             <div>
                 <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Manage</span>
                 <ul class="space-y-1.5">
-                    <!-- Adoptions -->
-                    <li>
-                        <a href="{{ $adoptionsUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Adoptions</span>
-                            </div>
-                            <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
-                        </a>
-                    </li>
-
-                    <!-- Volunteers -->
-                    <li>
-                        <a href="{{ $volunteersUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Volunteers</span>
-                            </div>
-                            <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
-                        </a>
-                    </li>
-
                     <!-- Partner Orgs -->
                     <li>
                         <a href="{{ $organizationsUrl }}" 
@@ -300,16 +254,7 @@
                                     <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">42</span>
                                 </a>
                              </li>
-                             <li>
-                                <a href="{{ $healthUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Health Records</span>
-                                    </div>
-                                    <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
-                                </a>
-                             </li>
+
                              <li>
                                   <a href="{{ $vetsUrl }}"
                                      class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
@@ -319,16 +264,7 @@
                                       </div>
                                   </a>
                                </li>
-                               <li>
-                                  <a href="{{ $rescueUrl }}" 
-                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                      <div class="flex items-center gap-3">
-                                          <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                          <span>Rescue Cases</span>
-                                      </div>
-                                      <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
-                                  </a>
-                               </li>
+
                               <li>
                                  <a href="{{ $usersUrl }}" 
                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isUsersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
@@ -345,26 +281,6 @@
                     <div>
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Manage</span>
                         <ul class="space-y-1">
-                            <li>
-                                <a href="{{ $adoptionsUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Adoptions</span>
-                                    </div>
-                                    <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">12</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ $volunteersUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Volunteers</span>
-                                    </div>
-                                    <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">18</span>
-                                </a>
-                            </li>
                             <li>
                                 <a href="{{ $organizationsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isOrganizationsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">

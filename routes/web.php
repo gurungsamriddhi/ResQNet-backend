@@ -68,7 +68,10 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
 
     //Users Management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::post('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::post('/users/{user}/reactivate', [UserController::class, 'reactivate'])->name('users.reactivate');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     //Pets Management
     Route::get('/pets', [AdminPetController::class, 'index'])->name('pets.index');

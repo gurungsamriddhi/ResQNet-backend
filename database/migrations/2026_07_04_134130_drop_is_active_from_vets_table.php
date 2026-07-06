@@ -8,20 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('vets', function (Blueprint $table) {
-            $table->dropIndex(['is_active']);
-        });
-
-        Schema::table('vets', function (Blueprint $table) {
-            $table->dropColumn('is_active');
-        });
+        // is_active column + index were already dropped in 2026_06_15_165734
+        // This migration exists only for historical compatibility (was created
+        // before the vets redesign migration was fixed). It's a no-op now.
     }
 
     public function down(): void
     {
-        Schema::table('vets', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true);
-            $table->index('is_active');
-        });
+        // Restore handled by 2026_06_15_165734's down method
     }
 };
