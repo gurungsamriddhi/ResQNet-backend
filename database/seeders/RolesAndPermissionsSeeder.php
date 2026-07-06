@@ -19,5 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
         \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super_admin']);
         \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'organization']);
         \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'public_user']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'staff']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'vet']);
     }
 }

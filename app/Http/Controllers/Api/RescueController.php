@@ -10,10 +10,21 @@ use Illuminate\Http\Request;
 
 class RescueController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // TODO: Implement index
-        return response()->json(['message' => 'Not implemented yet - index']);
+        $reports = RescueReport::with(['user', 'organization', 'assignments.user', 'media'])
+            ->latest()
+            ->paginate($request->per_page ?? 20);
+
+        return response()->json([
+            'data' => $reports->items(),
+            'meta' => [
+                'current_page' => $reports->currentPage(),
+                'last_page' => $reports->lastPage(),
+                'per_page' => $reports->perPage(),
+                'total' => $reports->total(),
+            ],
+        ]);
     }
 
     public function store(StoreRescueReportRequest $request)
@@ -29,7 +40,7 @@ class RescueController extends Controller
             'longitude' => $request->longitude,
             'address' => $request->address,
             'urgency' => $request->urgency,
-            'status' => 'pending',
+            'status' => 'reported',
         ]);
 
         if ($request->hasFile('image')) {
@@ -46,9 +57,12 @@ class RescueController extends Controller
         ], 201);
     }
 
-    public function show()
+    public function show(RescueReport $report)
     {
-        // TODO: Implement show
-        return response()->json(['message' => 'Not implemented yet - show']);
+        $report->load(['user', 'organization', 'assignments.user', 'histories.changedBy', 'media']);
+
+        return response()->json([
+            'data' => $report,
+        ]);
     }
 }

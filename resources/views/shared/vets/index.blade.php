@@ -4,7 +4,7 @@
             <h2 class="font-bold text-2xl text-admin-textPrimary tracking-tight">
                 {{ __('Veterinarians Management') }}
             </h2>
-            <button type="button" @click="openCreateModal()" class="inline-flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-sm">
+            <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-create-vet-modal'))" class="inline-flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-sm">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 Add New Veterinarian
             </button>
@@ -102,7 +102,7 @@
                                         </div>
                                         <p class="text-lg font-bold text-admin-textPrimary mb-1">No Veterinarians Found</p>
                                         <p class="text-sm dark:text-slate-300">There are currently no veterinarians registered.</p>
-                                        <button type="button" @click="openCreateModal()" class="mt-4 text-brand-orange hover:text-brand-orange/80 font-bold text-sm">Add the first vet &rarr;</button>
+                                        <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-create-vet-modal'))" class="mt-4 text-brand-orange hover:text-brand-orange/80 font-bold text-sm">Add the first vet &rarr;</button>
                                     </div>
                                 </td>
                             </tr>
@@ -218,93 +218,106 @@
             </button>
         </div>
 
-        <!-- Show Details Modal -->
-        <template x-teleport="body">
-            <div x-show="createModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display: none;" @keydown.escape.window="createModalOpen = false">
-                <div @click.away="createModalOpen = false" class="bg-white rounded-xl max-w-xl w-full mx-4 shadow-2xl overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
-                    <div class="p-6 border-b border-slate-200 flex items-center justify-between flex-shrink-0">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                                <i data-lucide="plus" class="w-5 h-5"></i>
-                            </div>
-                            <h3 class="text-lg font-extrabold text-slate-900">Add New Veterinarian</h3>
-                        </div>
-                        <button @click="createModalOpen = false" class="text-slate-400 hover:text-slate-600">
-                            <i data-lucide="x" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="p-6 overflow-y-auto flex-1">
-                        <form @submit.prevent="submitCreateForm" class="space-y-4">
-                            <!-- Alert for general errors -->
-                            <div x-show="createErrors.general" class="p-3 bg-red-50 text-red-700 rounded-lg text-sm border border-red-200 flex items-start gap-2">
-                                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5"></i>
-                                <span x-text="createErrors.general"></span>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="col-span-1 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Full Name *</label>
-                                    <input type="text" x-model="createForm.name" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" required placeholder="Dr. Jane Doe">
-                                    <p x-show="createErrors.name" x-text="createErrors.name?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div class="col-span-1 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Specialization</label>
-                                    <input type="text" x-model="createForm.specialization" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="e.g. Feline Specialist">
-                                    <p x-show="createErrors.specialization" x-text="createErrors.specialization?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
-                                    <input type="text" x-model="createForm.phone" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="+1 234 567 8900">
-                                    <p x-show="createErrors.phone" x-text="createErrors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
-                                    <input type="email" x-model="createForm.email" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="jane@example.com">
-                                    <p x-show="createErrors.email" x-text="createErrors.email?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div class="col-span-1 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Clinic Address</label>
-                                    <input type="text" x-model="createForm.address" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="123 Vet Street, City">
-                                    <p x-show="createErrors.address" x-text="createErrors.address?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-                                
-                                <div class="col-span-1 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">License Number</label>
-                                    <input type="text" x-model="createForm.license_number" class="w-full rounded-lg border-slate-300 focus:border-brand-orange focus:ring-brand-orange sm:text-sm" placeholder="e.g. VET-123456">
-                                    <p x-show="createErrors.license_number" x-text="createErrors.license_number?.[0]" class="mt-1 text-xs text-red-600"></p>
-                                </div>
-
-                                <div class="col-span-1 md:col-span-2 flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-900">Active Status</label>
-                                        <p class="text-xs text-slate-500">Enable or disable this veterinarian immediately</p>
-                                    </div>
-                                    <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                        <input type="checkbox" :checked="createForm.status === 'active'" @change="createForm.status = $event.target.checked ? 'active' : 'inactive'" id="create_is_active" class="peer sr-only">
-                                        <label for="create_is_active" class="block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer peer-checked:bg-green-500 transition-colors">
-                                            <span class="block w-6 h-6 rounded-full bg-white border border-slate-300 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <div class="bg-slate-50 p-4 flex justify-end gap-3 border-t border-slate-200 flex-shrink-0">
-                        <button type="button" @click="createModalOpen = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
-                        <button type="button" @click="submitCreateForm" :disabled="isSavingCreate" class="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm inline-flex items-center gap-2">
-                            <i data-lucide="loader-2" class="w-4 h-4 animate-spin" x-show="isSavingCreate" style="display: none;"></i>
-                            <span x-text="isSavingCreate ? 'Creating...' : 'Create Veterinarian'"></span>
-                        </button>
-                    </div>
+        <!-- Create Modal -->
+        <div x-cloak x-show="createModalOpen"
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="createModalOpen = false"></div>
+            <div class="relative bg-white dark:bg-[#0f1a28] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700/40 w-full max-w-lg p-6"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+                 @click.outside="createModalOpen = false">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i data-lucide="stethoscope" class="w-5 h-5 text-brand-orange"></i>
+                        Add Veterinarian
+                    </h3>
+                    <button @click="createModalOpen = false" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
                 </div>
+
+                <form @submit.prevent="submitCreateForm" class="space-y-4">
+                    <div x-show="createErrors.general" class="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 rounded-xl text-sm border border-red-200 dark:border-red-800/30 flex items-start gap-2">
+                        <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5"></i>
+                        <span x-text="createErrors.general"></span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
+                        <input type="text" x-model="createForm.name" required
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="e.g. Dr. Jane Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Specialization</label>
+                        <input type="text" x-model="createForm.specialization"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="e.g. Feline Specialist">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                        <input type="text" x-model="createForm.phone"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="+1 234 567 890">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                        <input type="email" x-model="createForm.email"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="jane@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Clinic Address</label>
+                        <input type="text" x-model="createForm.address"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="123 Vet Street, City">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">License Number</label>
+                        <input type="text" x-model="createForm.license_number"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all placeholder:text-slate-400"
+                               placeholder="e.g. VET-123456">
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-700/40">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Status</label>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Enable or disable immediately</p>
+                        </div>
+                        <div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" :checked="createForm.status === 'active'" @change="createForm.status = $event.target.checked ? 'active' : 'inactive'" id="create_is_active" class="peer sr-only">
+                            <label for="create_is_active" class="block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer peer-checked:bg-green-500 transition-colors">
+                                <span class="block w-6 h-6 rounded-full bg-white border border-slate-300 shadow transform transition-transform peer-checked:translate-x-6 peer-checked:border-green-500"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 pt-2">
+                        <button type="submit" :disabled="isSavingCreate"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-orange hover:bg-brand-orange/90 disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all duration-200 shadow-sm">
+                            <i data-lucide="check" class="w-4 h-4" x-show="!isSavingCreate"></i>
+                            <svg x-show="isSavingCreate" class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                            </svg>
+                            <span x-text="isSavingCreate ? 'Adding...' : 'Add Veterinarian'"></span>
+                        </button>
+                        <button type="button" @click="createModalOpen = false"
+                                class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
-        </template>
+        </div>
 
         <!-- Show Details Modal -->
         <template x-teleport="body">
@@ -561,7 +574,7 @@
                     isDeleting: false,
                     
                     init() {
-                        // Initialization logic if any
+                        window.addEventListener('open-create-vet-modal', () => this.openCreateModal());
                     },
                     
                     showToast(message, type = 'success') {

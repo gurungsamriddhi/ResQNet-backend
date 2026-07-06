@@ -35,6 +35,7 @@ class User extends Authenticatable
         'address',
         'is_active',
         'fcm_token',
+        'organization_id',
     ];
 
     /**

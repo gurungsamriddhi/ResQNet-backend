@@ -7,6 +7,7 @@ use App\Models\Pet;
 use App\Models\RescueReport;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class RescueReportSeeder extends Seeder
 {
@@ -20,9 +21,59 @@ class RescueReportSeeder extends Seeder
         $ramesh = User::where('email', 'ramesh@example.com')->firstOrFail();
         $priya = User::where('email', 'priya@example.com')->firstOrFail();
 
-        $ram = User::where('email', 'sita@example.com')->firstOrFail(); // re-use sita for additional reports
+        // ── Fix org admin organization_id (migration may have missed them) ──
+        foreach (Organization::all() as $org) {
+            $admin = User::find($org->user_id);
+            if ($admin && !$admin->organization_id) {
+                $admin->organization_id = $org->id;
+                $admin->save();
+            }
+        }
 
+        // ── Create team members (rescuers) for each org ──
+        $password = Hash::make('12345678');
+
+        $pawsRescuers = [
+            ['name' => 'Anisha Gurung', 'email' => 'anisha@pawsandclaws.np'],
+            ['name' => 'Bikash Thapa', 'email' => 'bikash@pawsandclaws.np'],
+            ['name' => 'Sunita Rai', 'email' => 'sunita@pawsandclaws.np'],
+        ];
+        $karRescuers = [
+            ['name' => 'Rajesh Hamal', 'email' => 'rajesh@kar.np'],
+            ['name' => 'Nisha Poudel', 'email' => 'nisha@kar.np'],
+        ];
+
+        foreach ($pawsRescuers as $data) {
+            User::firstOrCreate(
+                ['email' => $data['email']],
+                [
+                    'name' => $data['name'],
+                    'password' => $password,
+                    'phone' => '+97798' . random_int(10000000, 99999999),
+                    'is_active' => true,
+                    'email_verified_at' => now(),
+                    'organization_id' => $paws->id,
+                ]
+            );
+        }
+
+        foreach ($karRescuers as $data) {
+            User::firstOrCreate(
+                ['email' => $data['email']],
+                [
+                    'name' => $data['name'],
+                    'password' => $password,
+                    'phone' => '+97798' . random_int(10000000, 99999999),
+                    'is_active' => true,
+                    'email_verified_at' => now(),
+                    'organization_id' => $kar->id,
+                ]
+            );
+        }
+
+        // ── Rescue reports ──
         $reports = [
+            // Existing reports (preserved)
             [
                 'user_id' => $sita->id,
                 'organization_id' => $paws->id,
@@ -109,6 +160,96 @@ class RescueReportSeeder extends Seeder
                 'urgency' => 'low',
                 'status' => 'resolved',
                 'resolved_at' => now()->subDays(10),
+            ],
+
+            // ── NEW: Extra reported cases (unclaimed) for "Help Now" testing ──
+            [
+                'user_id' => $sita->id,
+                'organization_id' => null,
+                'pet_id' => null,
+                'title' => 'Dog hit by vehicle on highway',
+                'description' => 'Brown street dog was hit by a speeding vehicle near the highway toll plaza. Bleeding from hind leg.',
+                'latitude' => 28.2150,
+                'longitude' => 83.9700,
+                'address' => 'Highway Toll Plaza, Pokhara',
+                'urgency' => 'critical',
+                'status' => 'reported',
+            ],
+            [
+                'user_id' => $ramesh->id,
+                'organization_id' => null,
+                'pet_id' => null,
+                'title' => 'Cow stuck in ditch',
+                'description' => 'A cow has fallen into an open drainage ditch near the vegetable market. Needs lifting.',
+                'latitude' => 27.7100,
+                'longitude' => 85.3300,
+                'address' => 'Vegetable Market, Kathmandu',
+                'urgency' => 'high',
+                'status' => 'reported',
+            ],
+            [
+                'user_id' => $priya->id,
+                'organization_id' => null,
+                'pet_id' => null,
+                'title' => 'Parrot with injured wing',
+                'description' => 'Green parrot found on balcony unable to fly. Looks like a wing injury.',
+                'latitude' => 28.2070,
+                'longitude' => 83.9900,
+                'address' => 'Baidam-4, Pokhara',
+                'urgency' => 'low',
+                'status' => 'reported',
+            ],
+
+            // ── NEW: Cases already assigned to orgs for "Assign Team" testing ──
+            [
+                'user_id' => $sita->id,
+                'organization_id' => $paws->id,
+                'pet_id' => null,
+                'title' => 'Rabbit found in schoolyard',
+                'description' => 'Domestic rabbit found hopping around the school playground. Likely escaped from home.',
+                'latitude' => 28.2080,
+                'longitude' => 83.9800,
+                'address' => 'Shishuwa School, Pokhara',
+                'urgency' => 'low',
+                'status' => 'assigned',
+            ],
+            [
+                'user_id' => $ramesh->id,
+                'organization_id' => $kar->id,
+                'pet_id' => null,
+                'title' => 'Monkey causing disturbance',
+                'description' => 'Rhesus monkey entered residential area, snatching food and scaring children.',
+                'latitude' => 27.6980,
+                'longitude' => 85.3480,
+                'address' => 'New Baneshwor, Kathmandu',
+                'urgency' => 'medium',
+                'status' => 'assigned',
+            ],
+
+            // ── NEW: Cases in progress for "Mark Complete" testing ──
+            [
+                'user_id' => $priya->id,
+                'organization_id' => $paws->id,
+                'pet_id' => null,
+                'title' => 'Dehydrated calf near riverbank',
+                'description' => 'Young calf collapsed near the riverbank. Seems dehydrated and weak.',
+                'latitude' => 28.2120,
+                'longitude' => 83.9620,
+                'address' => 'Seti Riverbank, Pokhara',
+                'urgency' => 'high',
+                'status' => 'in_progress',
+            ],
+            [
+                'user_id' => $sita->id,
+                'organization_id' => $kar->id,
+                'pet_id' => null,
+                'title' => 'Burning garbage harming strays',
+                'description' => 'Trash fire in an empty lot where stray dogs usually rest. Some dogs have singed fur.',
+                'latitude' => 27.7050,
+                'longitude' => 85.3350,
+                'address' => 'Shantinagar, Kathmandu',
+                'urgency' => 'critical',
+                'status' => 'in_progress',
             ],
         ];
 

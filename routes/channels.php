@@ -10,3 +10,11 @@ Broadcast::channel('organization.{orgId}', function ($user, $orgId) {
 
     return false;
 });
+
+Broadcast::channel('rescue-updates', function ($user) {
+    if ($user->hasRole('organization') || $user->hasRole('super_admin')) {
+        return ['id' => $user->id, 'name' => $user->name, 'organization_id' => $user->organization_id];
+    }
+
+    return false;
+});

@@ -112,6 +112,8 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::post('/adoptions/{adoption}/status', [AdoptionController::class, 'updateStatus'])->name('adoptions.status');
 
     Route::get('/rescues', [RescueController::class, 'index'])->name('rescues.index');
+    Route::post('/rescues/{report}/accept', [RescueController::class, 'acceptCase'])->name('rescues.accept');
+    Route::post('/rescues/{report}/assign-team', [RescueController::class, 'assignTeam'])->name('rescues.assign-team');
     Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
     Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
 
@@ -139,6 +141,8 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::delete('/staff/{user}', [StaffController::class, 'remove'])->name('staff.remove');
 
     Route::get('/volunteers', [OrgVolunteerController::class, 'index'])->name('volunteers.index');
+    Route::post('/volunteers/invite', [OrgVolunteerController::class, 'invite'])->name('volunteers.invite');
+    Route::delete('/volunteers/{user}', [OrgVolunteerController::class, 'remove'])->name('volunteers.remove');
 
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
 

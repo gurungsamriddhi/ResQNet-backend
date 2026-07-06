@@ -32,6 +32,11 @@ class RescueReportPolicy
         return $user->hasRole('super_admin') || $user->hasRole('organization');
     }
 
+    public function accept(User $user, RescueReport $rescueReport): bool
+    {
+        return $user->hasRole('organization') && $rescueReport->canBeClaimed();
+    }
+
     public function update(User $user, RescueReport $rescueReport): bool
     {
         if ($user->hasRole('super_admin')) return true;

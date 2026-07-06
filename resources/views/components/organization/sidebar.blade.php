@@ -4,7 +4,6 @@
     $petsUrl = route('organization.pets.index');
     $rescueUrl = route('organization.rescues.index');
     $healthUrl = route('organization.health.index');
-    $staffUrl = route('organization.staff.index');
     $adoptionsUrl = route('organization.adoptions.index');
     $volunteersUrl = route('organization.volunteers.index');
     $vetsUrl = route('organization.vets.index');
@@ -14,7 +13,6 @@
     $isPetsActive = request()->routeIs('organization.pets.*');
     $isRescueActive = request()->routeIs('organization.rescues.*');
     $isHealthActive = request()->routeIs('organization.health.*');
-    $isStaffActive = request()->routeIs('organization.staff.*');
     $isAdoptionsActive = request()->routeIs('organization.adoptions.*');
     $isVolunteersActive = request()->routeIs('organization.volunteers.*');
     $isVetsActive = request()->routeIs('organization.vets.*');
@@ -104,17 +102,6 @@
                             <div class="flex items-center gap-3">
                                 <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Adoptions</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    <!-- Staff -->
-                    <li>
-                        <a href="{{ $staffUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isStaffActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="user-cog" class="w-4 h-4 {{ $isStaffActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Staff</span>
                             </div>
                         </a>
                     </li>
@@ -333,15 +320,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ $staffUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isStaffActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="user-cog" class="w-4 h-4 {{ $isStaffActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Staff</span>
-                                    </div>
-                                </a>
-                            </li>
+
                             <li>
                                 <a href="{{ $volunteersUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
