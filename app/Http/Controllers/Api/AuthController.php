@@ -57,6 +57,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:8',
+            'fcm_token' => 'nullable|string|max:500',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -81,7 +82,10 @@ class AuthController extends Controller
                 403);
         }
 
-        $user->update(['last_login_at' => now()]);
+        $user->update([
+            'last_login_at' => now(),
+            'fcm_token' => $request->fcm_token ?? $user->fcm_token,
+        ]);
         
         
         $token = $user->createToken('mobile-app')->plainTextToken;
@@ -141,6 +145,9 @@ class AuthController extends Controller
    // ====================== LOGOUT ======================
     public function logout(Request $request)
     {
+        // Clear FCM token to prevent stale push notifications
+        $request->user()->update(['fcm_token' => null]);
+
         // Delete the token that was used to authenticate the current request
         $request->user()->currentAccessToken()->delete();
 

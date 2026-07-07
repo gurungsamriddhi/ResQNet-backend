@@ -20,7 +20,7 @@ class AdoptionRequestResource extends JsonResource
             'family_members_count' => $this->user?->profile?->family_members_count,
             'experience_with_pets' => $this->user?->profile?->experience_with_pets,
             'status' => $this->status,
-            'admin_notes' => $this->admin_notes,
+            'organization_response' => $this->organization_response,
             'reviewed_at' => $this->reviewed_at?->toIso8601String(),
             'pet' => new PetResource($this->whenLoaded('pet')),
             'user' => $this->whenLoaded('user', fn () => [

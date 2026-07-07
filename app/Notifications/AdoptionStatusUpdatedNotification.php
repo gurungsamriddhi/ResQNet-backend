@@ -4,13 +4,14 @@ namespace App\Notifications;
 
 use App\Models\AdoptionRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-class AdoptionStatusUpdatedNotification extends Notification
+class AdoptionStatusUpdatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -23,9 +24,12 @@ class AdoptionStatusUpdatedNotification extends Notification
 
     public function via($notifiable): array
     {
-        // Every status update triggers a mobile Push. 
-        // We only trigger Emails for high-importance updates (submitted, approved, rejected).
-        $channels = [FcmChannel::class];
+        // Only include FCM channel if the user has a device token registered
+        $channels = [];
+
+        if ($notifiable->routeNotificationForFcm()) {
+            $channels[] = FcmChannel::class;
+        }
 
         if (in_array($this->adoption->status, ['pending', 'approved', 'rejected'])) {
             $channels[] = 'mail';

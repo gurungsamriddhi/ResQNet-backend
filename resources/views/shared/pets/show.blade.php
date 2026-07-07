@@ -1,6 +1,6 @@
 <x-layouts.admin>
     @php
-        $qrScanUrl = rtrim(config('app.url'), '/') . route('public.pets.qr.show', $pet->qr_code_id, false);
+        $qrScanUrl = route('public.pets.qr.show', $pet->qr_code_id);
         $qrCodeSvg = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
             ->size(180)
             ->margin(2)

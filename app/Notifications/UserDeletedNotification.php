@@ -3,13 +3,14 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-class UserDeletedNotification extends Notification
+class UserDeletedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -22,7 +23,11 @@ class UserDeletedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['mail', FcmChannel::class];
+        $channels = ['mail'];
+        if ($notifiable->routeNotificationForFcm()) {
+            $channels[] = FcmChannel::class;
+        }
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage

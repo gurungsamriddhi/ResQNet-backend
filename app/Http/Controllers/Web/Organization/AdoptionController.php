@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Organization;
 
+use App\Events\AdoptionStatusUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\TransformsPets;
 use App\Http\Resources\AdoptionRequestResource;
@@ -26,7 +27,8 @@ class AdoptionController extends Controller
             ->get()
             ->map(fn ($pet) => $this->transformListing($pet));
 
-        $applications = AdoptionRequest::with(['pet.media', 'user'])
+        // Fix: eager-load user.profile to prevent N+1 queries in transformApplication()
+        $applications = AdoptionRequest::with(['pet.media', 'user.profile'])
             ->whereHas('pet', fn ($q) => $q->where('organization_id', $orgId))
             ->where('status', 'pending')
             ->orderByDesc('created_at')
@@ -37,7 +39,7 @@ class AdoptionController extends Controller
             ->where('status', 'adopted')
             ->count();
 
-        return view('admin.adoptions.index', compact('liveListings', 'applications', 'successfulRehomings'));
+        return view('admin.adoptions.index', compact('liveListings', 'applications', 'successfulRehomings', 'orgId'));
     }
 
     public function updateStatus(Request $request, AdoptionRequest $adoption)
@@ -53,7 +55,10 @@ class AdoptionController extends Controller
             return response()->json(['message' => 'This application has already been reviewed.'], 422);
         }
 
-        DB::transaction(function () use ($request, $adoption) {
+        // Collect auto-rejected application IDs so we can notify those users after commit
+        $autoRejectedIds = collect();
+
+        DB::transaction(function () use ($request, $adoption, &$autoRejectedIds) {
             $adoption->update([
                 'status' => $request->status,
                 'organization_response' => $request->organization_response,
@@ -67,6 +72,12 @@ class AdoptionController extends Controller
                     'adopted_at' => now(),
                 ]);
 
+                // Capture IDs of other pending applications before auto-rejecting
+                $autoRejectedIds = AdoptionRequest::where('pet_id', $adoption->pet_id)
+                    ->where('id', '!=', $adoption->id)
+                    ->where('status', 'pending')
+                    ->pluck('id');
+
                 AdoptionRequest::where('pet_id', $adoption->pet_id)
                     ->where('id', '!=', $adoption->id)
                     ->where('status', 'pending')
@@ -78,8 +89,26 @@ class AdoptionController extends Controller
             }
         });
 
+        // Reload with all relationships needed for notification + resource
         $adoption->load(['pet.media', 'user']);
+
+        // FCM push + email notification to the primary applicant
         $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
+
+        // WebSocket broadcast for real-time mobile UI update
+        broadcast(new AdoptionStatusUpdatedEvent($adoption));
+
+        // Notify auto-rejected users (when another applicant was approved)
+        if ($autoRejectedIds->isNotEmpty()) {
+            $rejectedApplications = AdoptionRequest::with(['pet', 'user'])
+                ->whereIn('id', $autoRejectedIds)
+                ->get();
+
+            foreach ($rejectedApplications as $rejected) {
+                $rejected->user->notify(new AdoptionStatusUpdatedNotification($rejected));
+                broadcast(new AdoptionStatusUpdatedEvent($rejected));
+            }
+        }
 
         return response()->json([
             'message' => match ($request->status) {
