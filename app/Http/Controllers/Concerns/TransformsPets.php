@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Concerns;
 
 use App\Models\Pet;
+use App\Support\AppUrl;
 
 trait TransformsPets
 {
@@ -32,9 +33,11 @@ trait TransformsPets
             'organization_id' => $pet->organization_id,
             'created_at' => $pet->created_at?->toDateTimeString(),
             'updated_at' => $pet->updated_at?->toDateTimeString(),
-            'primary_image' => $allMedia->first()?->getUrl(),
-            'images' => $allMedia->values()->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl()])
-                ->toArray(),
+            'primary_image' => AppUrl::absolute($allMedia->first()?->getUrl()),
+            'images' => $allMedia->values()->map(fn ($m) => [
+                'id' => $m->id,
+                'url' => AppUrl::absolute($m->getUrl()),
+            ])->toArray(),
         ];
     }
 }

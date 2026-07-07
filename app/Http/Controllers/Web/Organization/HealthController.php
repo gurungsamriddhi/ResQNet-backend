@@ -331,7 +331,7 @@ class HealthController extends Controller
         $redirectTo = $request->input('redirect_to');
 
         if (is_string($redirectTo) && $redirectTo !== '') {
-            $appUrl = rtrim((string) config('app.url'), '/');
+            $appUrl = \App\Support\AppUrl::root();
             if (str_starts_with($redirectTo, '/') || ($appUrl !== '' && str_starts_with($redirectTo, $appUrl))) {
                 return $redirectTo;
             }

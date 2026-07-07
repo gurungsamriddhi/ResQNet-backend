@@ -56,6 +56,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Dynamic Application URL
+    |--------------------------------------------------------------------------
+    |
+    | When true, web and API requests derive APP_URL from the incoming Host
+    | header (including ngrok tunnels). Keeps QR codes, storage URLs, and API
+    | responses reachable without editing .env on every tunnel change.
+    | Defaults to true in local environment.
+    |
+    */
+
+    'dynamic_url' => env('DYNAMIC_APP_URL', env('APP_ENV') === 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

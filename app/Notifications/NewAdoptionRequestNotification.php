@@ -4,11 +4,10 @@ namespace App\Notifications;
 
 use App\Models\AdoptionRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
 
-class NewAdoptionRequestNotification extends Notification
+class NewAdoptionRequestNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,25 +15,14 @@ class NewAdoptionRequestNotification extends Notification
 
     public function via($notifiable)
     {
-        return [FcmChannel::class, 'mail']; // or just FcmChannel if you prefer
+        return ['mail'];
     }
 
-    public function toFcm($notifiable): FcmMessage
+    public function toMail($notifiable): \Illuminate\Notifications\Messages\MailMessage
     {
-        $petName = $this->adoption->pet->name;
-        $userName = $this->adoption->user->name;
-
-        return (new FcmMessage())
-            ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create(
-                "New Adoption Request",
-                "{$userName} applied to adopt {$petName}"
-            ))
-            ->setData([
-                'type' => 'new_adoption_request',
-                'adoption_id' => $this->adoption->id,
-                'pet_id' => $this->adoption->pet_id,
-            ]);
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+            ->subject('New Adoption Request')
+            ->line("{$this->adoption->user->name} applied to adopt {$this->adoption->pet->name}.")
+            ->action('View Request', url('/organization/adoptions/' . $this->adoption->id));
     }
-
-    // Optional: toMail() for email
 }

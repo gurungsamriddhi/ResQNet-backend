@@ -18,3 +18,8 @@ Broadcast::channel('rescue-updates', function ($user) {
 
     return false;
 });
+// Mobile user channel — used by AdoptionStatusUpdatedEvent
+// The mobile client subscribes to `private-user.{userId}` after login
+Broadcast::channel('user.{userId}', function ($user, $userId) {
+    return $user->id === (int) $userId;
+});

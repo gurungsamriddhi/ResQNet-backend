@@ -502,4 +502,19 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        // Subscribe to real-time adoption request events on this page
+        if (window.subscribeOrganization && {{ $orgId ?? 'null' }}) {
+            window.subscribeOrganization({{ $orgId }});
+        }
+
+        // When a new adoption request arrives via WebSocket, reload the page
+        // to pull fresh data (simpler and more reliable than client-side state sync)
+        window.addEventListener('new-adoption-request', () => {
+            window.location.reload();
+        });
+    </script>
+    @endpush
 </x-layouts.admin>

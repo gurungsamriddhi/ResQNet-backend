@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Organization extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes, InteractsWithMedia, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +35,13 @@ class Organization extends Model implements HasMedia
         'status',
         'rejection_reason',
         'suspension_reason',
+        'fcm_token',
     ];
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
 
     /**
      * The attributes that should be cast.

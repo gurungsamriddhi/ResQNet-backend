@@ -17,11 +17,9 @@ class PublicPetController extends Controller
             abort(403, 'This pet is suspended.');
         }
 
-        $baseUrl = rtrim(config('app.url'), '/');
-
         return view('public.pets.qr-show', [
             'pet' => $pet,
-            'apiUrl' => $baseUrl . '/api/pets/qr/' . $pet->qr_code_id,
+            'apiUrl' => url('/api/pets/qr/' . $pet->qr_code_id),
             'appDeepLink' => 'resqnet://pets/qr/' . $pet->qr_code_id,
         ]);
     }

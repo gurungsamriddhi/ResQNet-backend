@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\UserDashboardController;
 use App\Http\Controllers\Api\SavedPetController;
+use App\Http\Controllers\Api\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,16 @@ use App\Http\Controllers\Api\SavedPetController;
 |--------------------------------------------------------------------------
 | Base URL: http://yourapp.test/api/
 */
+
+// Broadcasting auth endpoint (used by mobile app to authenticate private channels)
+Route::post('/broadcasting/auth', function (Request $request) {
+    $request->validate([
+        'channel_name' => 'required|string',
+        'socket_id' => 'required|string',
+    ]);
+
+    return Illuminate\Support\Facades\Broadcast::auth($request);
+})->middleware(['auth:sanctum']);
 
 Route::prefix('v1')->group(function () {   // Optional but recommended: versioning
 
@@ -51,10 +62,17 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
         // Apply 'is_active' middleware to all user-specific actions
         Route::middleware(['is_active'])->group(function () {
 
-            // User Profile
+            // User Dashboard (account-level)
             Route::prefix('user')->name('api.user.')->group(function () {
                 Route::get('/', [UserDashboardController::class, 'show'])->name('show');
                 Route::patch('/', [UserDashboardController::class, 'update'])->name('update');
+                Route::post('/fcm-token', [UserDashboardController::class, 'updateFcmToken'])->name('fcm-token');
+            });
+
+            // Adoption Profile (screening details — separate from account)
+            Route::prefix('user/profile')->name('api.user-profile.')->group(function () {
+                Route::get('/', [UserProfileController::class, 'show'])->name('show');
+                Route::post('/', [UserProfileController::class, 'storeOrUpdate'])->name('store-update');
             });
 
             // Saved Pets (Favorites)
