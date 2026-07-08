@@ -80,9 +80,14 @@ class AdoptionRequestController extends Controller
             'status' => 'pending',
         ]);
 
-        // Rule 6: Async Notifications & Lifecycle updates
         // Dispatching notification (triggers push notifications and emails gracefully)
         $adoption->pet->organization->notify(new NewAdoptionRequestNotification($adoption));
+        $adoption->pet->organization->notify(new \App\Notifications\OrganizationAlertNotification(
+            'adoption',
+            'New Adoption Request',
+            "{$user->name} applied to adopt {$pet->name}.",
+            "/organization/adoptions"
+        ));
 
         // Broadcast real-time event to the organization dashboard
         broadcast(new NewAdoptionRequestEvent($adoption));
@@ -104,5 +109,28 @@ class AdoptionRequestController extends Controller
         $adoption->load(['pet.media', 'pet.organization']);
 
         return new AdoptionRequestResource($adoption);
+    }
+
+    public function destroy(Request $request, AdoptionRequest $adoption)
+    {
+        // Rule 1: Security Check - Ensure the user owns this specific request
+        if ($adoption->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
+        // Rule 2: Status Check - Only allow cancellation before a final decision is made
+        if (!in_array($adoption->status, ['pending', 'under_review'])) {
+            return response()->json([
+                'message' => 'You cannot cancel an application that is already ' . $adoption->status . '.'
+            ], 422);
+        }
+
+        // Action: Delete the request 
+        // (Since you have a 'deleted_at' column, this will soft-delete it)
+        $adoption->delete();
+
+        return response()->json([
+            'message' => 'Your adoption request has been successfully cancelled.'
+        ], 200);
     }
 }

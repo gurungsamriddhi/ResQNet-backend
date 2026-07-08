@@ -155,8 +155,14 @@ class PetController extends Controller
         if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
+        $petName = $pet->name;
         $pet->delete();
-        return response()->json(['message' => 'Pet deleted successfully.']);
+
+        if (request()->expectsJson() || request()->wantsJson() || request()->ajax()) {
+            return response()->json(['message' => "{$petName} deleted successfully."]);
+        }
+
+        return redirect()->route('organization.pets.index')->with('success', "{$petName} deleted successfully.");
     }
 
     public function changeStatus(Request $request, Pet $pet)

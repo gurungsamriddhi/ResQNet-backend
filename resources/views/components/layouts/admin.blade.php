@@ -202,18 +202,91 @@
                         </span>
                     </button>
 
-                    <!-- Notification Bell with bg-admin-btnRed Badge -->
-                    <button class="p-2 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors relative group" aria-label="Notifications">
-                        <i data-lucide="bell" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110"></i>
-                        <!-- Red Badge Dot matching bg-admin-btnRed -->
-                        <span class="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 dark:bg-red-500 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600 dark:bg-red-500"></span>
-                        </span>
-                        <span class="absolute top-full right-0 mt-2 hidden group-hover:block bg-slate-900 dark:bg-slate-100 text-white text-xs rounded py-1 px-2 whitespace-nowrap shadow-md">
-                            4 notifications
-                        </span>
-                    </button>
+                    <!-- Notification Bell with Alpine.js -->
+                    <div x-data="notificationManager()" @click.away="open = false" class="relative">
+                        <button @click="toggle()" class="p-2 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl transition-colors relative group" aria-label="Notifications">
+                            <i data-lucide="bell" class="w-5 h-5 transition-transform duration-200 group-hover:scale-110"></i>
+                            
+                            <!-- Red Badge Dot -->
+                            <span x-show="unreadCount > 0" class="absolute top-1 right-1 flex h-3 w-3" style="display: none;">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 dark:bg-red-500 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600 dark:bg-red-500 border-2 border-white dark:border-[#1a2333]"></span>
+                            </span>
+                            
+                            <!-- Unread Count Tooltip -->
+                            <span class="absolute top-full right-0 mt-2 hidden group-hover:block bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded py-1 px-2 whitespace-nowrap shadow-md z-50">
+                                <span x-text="unreadCount"></span> unread notifications
+                            </span>
+                        </button>
+
+                        <!-- Notification Dropdown -->
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute right-0 mt-3 w-80 sm:w-96 bg-white dark:bg-[#1a2333] border border-slate-200 dark:border-slate-700/40 rounded-2xl shadow-xl overflow-hidden z-50"
+                             style="display: none;">
+                            <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700/40 flex items-center justify-between bg-slate-50 dark:bg-[#0b0f19]">
+                                <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">Notifications</h3>
+                                <button x-show="notifications.length > 0" @click="markAllAsRead()" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300">
+                                    Mark all as read
+                                </button>
+                            </div>
+                            
+                            <div class="max-h-[28rem] overflow-y-auto">
+                                <template x-if="notifications.length === 0">
+                                    <div class="p-6 text-center">
+                                        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+                                            <i data-lucide="bell-off" class="w-5 h-5"></i>
+                                        </div>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">You're all caught up!</p>
+                                    </div>
+                                </template>
+                                
+                                <template x-for="notification in notifications" :key="notification.id">
+                                    <div class="p-4 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group relative flex gap-3">
+                                        <!-- Icon -->
+                                        <div class="flex-shrink-0 mt-0.5">
+                                            <template x-if="notification.type === 'rescue'">
+                                                <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                                                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                                                </div>
+                                            </template>
+                                            <template x-if="notification.type === 'adoption'">
+                                                <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                                                    <i data-lucide="paw-print" class="w-4 h-4"></i>
+                                                </div>
+                                            </template>
+                                            <template x-if="notification.type !== 'rescue' && notification.type !== 'adoption'">
+                                                <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                                                    <i data-lucide="info" class="w-4 h-4"></i>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        
+                                        <!-- Content -->
+                                        <div class="flex-1 min-w-0">
+                                            <a :href="notification.action_url" @click="markAsRead(notification.id)" class="block outline-none">
+                                                <p class="text-sm font-bold text-slate-900 dark:text-slate-100 truncate" x-text="notification.title"></p>
+                                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2 leading-relaxed" x-text="notification.message"></p>
+                                                <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-1.5 uppercase tracking-wider" x-text="notification.time"></p>
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Mark Read Button -->
+                                        <div class="opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 top-4">
+                                            <button @click.prevent="markAsRead(notification.id)" class="p-1 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-colors tooltip" title="Mark as read">
+                                                <i data-lucide="check" class="w-4 h-4"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Vertical Separator -->
                     <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 hidden xs:block"></div>
@@ -299,6 +372,118 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+        });
+    </script>
+
+    <!-- Notification Manager Alpine Component -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('notificationManager', () => ({
+                open: false,
+                notifications: [],
+                unreadCount: 0,
+                
+                init() {
+                    this.fetchNotifications();
+                    
+                    // Listen to window events from Echo/Pusher (broadcasted from dashboard.js)
+                    window.addEventListener('new-rescue-report', (e) => {
+                        this.addNotification({
+                            id: Date.now(), // temporary until fetch
+                            type: 'rescue',
+                            title: 'New Rescue Report',
+                            message: `New rescue report submitted: ${e.detail.title}`,
+                            action_url: `/organization/rescues/${e.detail.rescue_id}`,
+                            time: 'Just now'
+                        });
+                        if(window.lucide) {
+                            setTimeout(() => lucide.createIcons(), 50);
+                        }
+                    });
+                    
+                    window.addEventListener('new-adoption-request', (e) => {
+                        this.addNotification({
+                            id: Date.now(),
+                            type: 'adoption',
+                            title: 'New Adoption Request',
+                            message: `${e.detail.user_name} applied to adopt ${e.detail.pet_name}.`,
+                            action_url: `/organization/adoptions`,
+                            time: 'Just now'
+                        });
+                        if(window.lucide) {
+                            setTimeout(() => lucide.createIcons(), 50);
+                        }
+                    });
+                },
+                
+                toggle() {
+                    this.open = !this.open;
+                },
+                
+                addNotification(notification) {
+                    this.notifications.unshift(notification);
+                    this.unreadCount++;
+                    if (this.notifications.length > 20) {
+                        this.notifications.pop();
+                    }
+                },
+                
+                async fetchNotifications() {
+                    try {
+                        const response = await fetch('/organization/notifications', {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        if (response.ok) {
+                            this.notifications = await response.json();
+                            this.unreadCount = this.notifications.length;
+                            if(window.lucide) {
+                                setTimeout(() => lucide.createIcons(), 100);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching notifications', error);
+                    }
+                },
+                
+                async markAsRead(id) {
+                    this.notifications = this.notifications.filter(n => n.id !== id);
+                    this.unreadCount = Math.max(0, this.unreadCount - 1);
+                    
+                    try {
+                        await fetch(`/organization/notifications/${id}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error marking notification as read', error);
+                    }
+                },
+                
+                async markAllAsRead() {
+                    this.notifications = [];
+                    this.unreadCount = 0;
+                    
+                    try {
+                        await fetch(`/organization/notifications/read-all`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error marking all as read', error);
+                    }
+                }
+            }));
         });
     </script>
 </body>

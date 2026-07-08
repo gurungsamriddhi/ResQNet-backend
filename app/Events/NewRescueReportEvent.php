@@ -4,13 +4,13 @@ namespace App\Events;
 
 use App\Models\RescueReport;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewRescueReportEvent implements ShouldBroadcast
+class NewRescueReportEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,7 +19,7 @@ class NewRescueReportEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         $channels = [
-            new PresenceChannel('rescue-updates'),
+            new Channel('rescue-updates'), // Now it's a simple public channel
         ];
 
         if ($this->rescue->organization_id) {

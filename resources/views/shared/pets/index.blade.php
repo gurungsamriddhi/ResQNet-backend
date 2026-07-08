@@ -33,6 +33,15 @@
             </div>
         </div>
 
+        <!-- Toast Notification -->
+        <div x-show="toastVisible" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="fixed top-6 right-6 z-50 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-semibold" style="display: none;">
+            <i data-lucide="check-circle-2" class="w-5 h-5 shrink-0"></i>
+            <span x-text="toastMessage"></span>
+            <button @click="toastVisible = false" class="ml-2 hover:opacity-75 transition-opacity">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
         <!-- Search and Filters Control Row -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div class="relative md:col-span-2">
@@ -1055,9 +1064,18 @@
                     primary_image_file: null,
                     image_files: [],
                 },
+                toastMessage: '',
+                toastVisible: false,
+                toastTimeout: null,
                 csrfToken: document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute(
                     'content') ?? '',
                 petsBase: petsBase,
+
+                init() {
+                    @if(session('success'))
+                        this.showToastMessage(@js(session('success')));
+                    @endif
+                },
 
                 get filteredPets() {
                     return this.pets.filter(pet => {
@@ -1175,8 +1193,19 @@
                     this.petToDelete = null;
                 },
 
+                showToastMessage(msg) {
+                    this.toastMessage = msg;
+                    this.toastVisible = true;
+                    if (this.toastTimeout) clearTimeout(this.toastTimeout);
+                    this.toastTimeout = setTimeout(() => {
+                        this.toastVisible = false;
+                        this.toastMessage = '';
+                    }, 4000);
+                },
+
                 async executeDelete() {
                     if (!this.petToDelete) return;
+                    const petName = this.petToDelete.name;
                     try {
                         const res = await fetch(this.petsBase + '/' + this.petToDelete.id, {
                             method: 'DELETE',
@@ -1195,6 +1224,7 @@
                             this.isModalOpen = false;
                             this.selectedPet = {};
                         }
+                        this.showToastMessage(petName + ' deleted successfully.');
                     } catch (e) {
                         console.error('Delete failed', e);
                         alert('An error occurred while deleting the pet.');

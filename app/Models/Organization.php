@@ -111,6 +111,14 @@ class Organization extends Model implements HasMedia
     }
 
     /**
+     * Team members belonging to this organization.
+     */
+    public function organizationTeams()
+    {
+        return $this->hasMany(OrganizationTeam::class);
+    }
+
+    /**
      * Media Library Collections
      */
     public function registerMediaCollections(): void
@@ -138,8 +146,8 @@ class Organization extends Model implements HasMedia
         return $this->status === 'active';
     }
 
-    public function getIsVerifiedAttribute(): bool
+    public function getIsVerifiedAttribute($value = null): bool
     {
-        return $this->is_verified && $this->verified_at !== null;
+        return (bool) ($value ?? false) && $this->verified_at !== null;
     }
 }

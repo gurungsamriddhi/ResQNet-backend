@@ -12,7 +12,7 @@ class RescueAssignment extends Model
 
     protected $fillable = [
         'rescue_report_id',
-        'user_id',
+        'organization_team_id',
         'role',
         'assigned_at',
     ];
@@ -29,8 +29,8 @@ class RescueAssignment extends Model
         return $this->belongsTo(RescueReport::class);
     }
 
-    public function user(): BelongsTo
+    public function teamMember(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(OrganizationTeam::class, 'organization_team_id');
     }
 }

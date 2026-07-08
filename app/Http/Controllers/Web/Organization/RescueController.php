@@ -11,6 +11,7 @@ use App\Models\Pet;
 use App\Models\RescueAssignment;
 use App\Models\RescueCaseHistory;
 use App\Models\RescueReport;
+use App\Notifications\RescueTeamAssignedNotification;
 use App\Notifications\TeamDispatchNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class RescueController extends Controller
     {
         $orgId = auth()->user()->organization_id;
 
-        $rescues = RescueReport::with(['user', 'assignments.user', 'histories'])
+        $rescues = RescueReport::with(['user', 'organization', 'assignments.teamMember', 'histories'])
             ->where(function ($q) use ($orgId) {
                 $q->where('organization_id', $orgId)
                   ->orWhereNull('organization_id');
@@ -29,10 +30,29 @@ class RescueController extends Controller
             ->latest()
             ->get();
 
-        $teamMembers = \App\Models\User::where('organization_id', $orgId)
+        $teamMembers = \App\Models\OrganizationTeam::where('organization_id', $orgId)
             ->get(['id', 'name', 'email']);
 
-        return view('admin.rescue.index', compact('rescues', 'teamMembers'));
+        return view('organization.rescue.index', compact('rescues', 'teamMembers'));
+    }
+
+    //for the magic link
+    public function show($id)
+    {
+        // 1. Find the report with all necessary data
+        $report = RescueReport::with(['user', 'organization', 'assignments.teamMember', 'histories'])
+            ->findOrFail($id);
+
+        // 2. Authorization: Allow if admin OR if Magic Link session is active
+        $isAuthorized = (auth()->check() && auth()->user()->organization_id === $report->organization_id)
+            || session()->has('team_member_id');
+
+        if (!$isAuthorized) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // 3. Return the view (you'll need to create this blade file)
+        return view('organization.rescue.show', compact('report'));
     }
 
     public function acceptCase(Request $request, RescueReport $report)
@@ -80,7 +100,7 @@ class RescueController extends Controller
 
         $validated = $request->validate([
             'team_members' => 'required|array|min:1',
-            'team_members.*.user_id' => 'required|exists:users,id',
+            'team_members.*.team_member_id' => 'required|exists:organization_teams,id',
             'team_members.*.role' => 'nullable|string|max:100',
         ]);
 
@@ -96,7 +116,7 @@ class RescueController extends Controller
             foreach ($validated['team_members'] as $member) {
                 RescueAssignment::create([
                     'rescue_report_id' => $report->id,
-                    'user_id' => $member['user_id'],
+                    'organization_team_id' => $member['team_member_id'],
                     'role' => $member['role'] ?? 'rescuer',
                     'assigned_at' => now(),
                 ]);
@@ -119,24 +139,29 @@ class RescueController extends Controller
             }
         });
 
-        $report->load('assignments.user');
+        $report->load('assignments.teamMember');
         $teamData = $report->assignments->map(fn ($a) => [
-            'id' => $a->user_id,
-            'name' => $a->user?->name,
+            'id' => $a->organization_team_id,
+            'name' => $a->teamMember?->name,
             'role' => $a->role,
         ])->toArray();
 
         broadcast(new CaseTeamAssignedEvent($report, $teamData));
 
         foreach ($report->assignments as $assignment) {
-            if ($assignment->user) {
-                $assignment->user->notify(new TeamDispatchNotification($report, $assignment->role));
+            if ($assignment->teamMember) {
+                $assignment->teamMember->notify(new TeamDispatchNotification($report, $assignment->role));
             }
+        }
+
+        // Notify the citizen who submitted the report
+        if ($report->user && $report->user->fcm_token) {
+            $report->user->notify(new RescueTeamAssignedNotification($report));
         }
 
         return response()->json([
             'message' => 'Team assigned successfully. Team members have been notified.',
-            'data' => $report->load('assignments.user', 'organization'),
+            'data' => $report->load('assignments.teamMember', 'organization'),
         ]);
     }
 
@@ -228,7 +253,7 @@ class RescueController extends Controller
 
         return response()->json([
             'message' => $message,
-            'data' => $report->fresh()->load('assignments.user', 'histories', 'pet'),
+            'data' => $report->fresh()->load('assignments.teamMember', 'histories', 'pet'),
             'pet' => $pet ? $pet->fresh() : null,
         ]);
     }

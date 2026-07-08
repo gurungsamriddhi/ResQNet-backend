@@ -25,6 +25,7 @@ class AdoptionStatusUpdatedEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
+            //private channel for specific user
             new PrivateChannel("user.{$this->adoption->user_id}"),
         ];
     }
@@ -32,6 +33,7 @@ class AdoptionStatusUpdatedEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
+            'type'=>'adoption_status_updated',
             'adoption_id' => $this->adoption->id,
             'pet_name' => $this->adoption->pet->name,
             'status' => $this->adoption->status,

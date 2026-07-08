@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
 class TeamDispatchNotification extends Notification implements ShouldQueue
 {
@@ -18,7 +19,7 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
     {
         $channels = ['mail'];
 
-        if ($notifiable->fcm_token) {
+        if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
             $channels[] = 'fcm';
         }
 
@@ -27,16 +28,38 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject("🚨 Rescue Dispatch: {$this->rescue->case_code} - {$this->rescue->title}")
             ->greeting("Hello {$notifiable->name},")
             ->line("You have been dispatched as a **{$this->role}** for a rescue operation.")
             ->line("**Case:** {$this->rescue->case_code}")
             ->line("**Title:** {$this->rescue->title}")
-            ->line("**Urgency:** {$this->rescue->urgency}")
-            ->line("**Location:** {$this->rescue->address}")
-            ->line("**Description:** {$this->rescue->description}")
-            ->action('View Case Details', url('/organization/rescues'))
+            ->line("**Urgency:** {$this->rescue->urgency}");
+
+        if ($this->rescue->user) {
+            $mail->line("**Reporter:** {$this->rescue->user->name} ({$this->rescue->user->phone})");
+        }
+
+        $mail->line("**Location:** {$this->rescue->address}");
+        
+        if ($this->rescue->latitude && $this->rescue->longitude) {
+            $mapUrl = "https://www.google.com/maps/search/?api=1&query={$this->rescue->latitude},{$this->rescue->longitude}";
+            $mail->line("**Map:** [View on Google Maps]({$mapUrl})");
+        }
+
+        $mail->line("**Description:** {$this->rescue->description}");
+
+        if ($this->rescue->image_path) {
+            // Generates a full URL to storage directory
+            $imageUrl = url('storage/' . $this->rescue->image_path);
+            $mail->line('**Reported Image:**');
+            $mail->line("![Rescue Image]({$imageUrl})");
+        }
+
+        $signedUrl = URL::signedRoute('rescue.access', ['report' => $this->rescue, 'teamMember' => $notifiable]);
+
+        return $mail
+            ->action('View Case Details', $signedUrl)
             ->line('Please respond promptly and proceed to the location.')
             ->line('Thank you for your service.');
     }

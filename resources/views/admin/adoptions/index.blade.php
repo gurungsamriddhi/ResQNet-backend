@@ -67,22 +67,37 @@
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 <template x-for="(pet, idx) in liveListings" :key="pet.name + idx">
                     <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden">
+                        <!-- Pet Image Banner -->
+                        <template x-if="pet.primary_image">
+                            <div class="h-36 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img :src="pet.primary_image" :alt="pet.name"
+                                     class="w-full h-full object-cover">
+                            </div>
+                        </template>
+                        <template x-if="!pet.primary_image">
+                            <div class="h-36 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
+                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold text-white shadow-lg" :class="pet.color">
+                                    <span x-text="pet.name.charAt(0)"></span>
+                                </div>
+                            </div>
+                        </template>
+
                         <div class="p-4 space-y-3">
                             <!-- Pet Avatar + Name -->
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white uppercase shadow-sm"
+                                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white uppercase shadow-sm flex-shrink-0"
                                          :class="pet.color">
                                         <span x-text="pet.name.charAt(0)"></span>
                                     </div>
-                                    <div>
-                                        <span class="font-bold text-sm text-slate-800 dark:text-slate-100 block" x-text="pet.name"></span>
-                                        <span class="text-[11px] text-slate-500 dark:text-slate-300" x-text="pet.breed"></span>
+                                    <div class="min-w-0">
+                                        <span class="font-bold text-sm text-slate-800 dark:text-slate-100 block truncate" x-text="pet.name"></span>
+                                        <span class="text-[11px] text-slate-500 dark:text-slate-300 truncate block" x-text="pet.breed || 'No breed specified'"></span>
                                     </div>
                                 </div>
-                                <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-1 rounded-full border border-emerald-200/50">
+                                <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-1 rounded-full border border-emerald-200/50 flex-shrink-0">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    Live on Mobile App
+                                    Live
                                 </span>
                             </div>
 
@@ -103,7 +118,7 @@
                                        :class="expandedPet === pet.name ? 'rotate-180' : ''"></i>
                                     <span>View Details</span>
                                 </button>
-                                <button @click="delistPet(pet.name)"
+                                <button @click="openDelistModal(pet)"
                                         class="border border-amber-200 dark:border-amber-700/50 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all duration-200">
                                     <i data-lucide="toggle-left" class="w-3.5 h-3.5"></i>
                                     <span>Delist from App</span>
@@ -199,7 +214,7 @@
         </div>
 
         <!-- ============ TAB 2: ADOPTION APPLICATIONS ============ -->
-        <div x-show="activeTab === 'applications'">
+        <div x-show="activeTab === 'applications'" style="display: none;">
             <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-sm overflow-hidden">
                 <!-- Grid Header -->
                 <div class="hidden md:grid grid-cols-[1fr_140px_120px_120px_360px] gap-0 bg-slate-50 dark:bg-[#111c2a] border-b border-admin-border text-slate-800 dark:text-slate-200 font-semibold text-xs uppercase tracking-wider">
@@ -386,6 +401,12 @@
                     decliningApp: null,
                     isDeclineModalOpen: false,
 
+                    // Delist modal state
+                    isDelistModalOpen: false,
+                    delistingPet: null,
+                    delistReason: '',
+                    delistLoading: false,
+
                     togglePetDetails(name) {
                         this.expandedPet = this.expandedPet === name ? null : name;
                     },
@@ -403,9 +424,36 @@
                     getPetWeight(name) { return this.getPetData(name).weight || ''; },
                     getPetTraits(name) { return this.getPetData(name).traits || []; },
 
-                    delistPet(name) {
-                        if (confirm(`Remove ${name} from the mobile marketplace?`)) {
-                            this.liveListings = this.liveListings.filter(p => p.name !== name);
+                    openDelistModal(pet) {
+                        this.delistingPet = pet;
+                        this.delistReason = '';
+                        this.isDelistModalOpen = true;
+                    },
+
+                    async confirmDelist() {
+                        const pet = this.delistingPet;
+                        if (!pet) return;
+                        this.delistLoading = true;
+                        try {
+                            const fd = new FormData();
+                            fd.append('status', 'unavailable');
+                            const res = await fetch(`/organization/pets/${pet.id}/status`, {
+                                method: 'POST',
+                                headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                                body: fd,
+                            });
+                            if (!res.ok) {
+                                const err = await res.json();
+                                alert(err.message || 'Failed to delist pet.');
+                                return;
+                            }
+                            this.liveListings = this.liveListings.filter(p => p.id !== pet.id);
+                            this.isDelistModalOpen = false;
+                            this.delistingPet = null;
+                        } catch (e) {
+                            alert('An error occurred while delisting the pet.');
+                        } finally {
+                            this.delistLoading = false;
                         }
                     },
 
@@ -476,27 +524,107 @@
         </script>
 
         <!-- Decline Reason Modal -->
-        <div x-show="isDeclineModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-             x-cloak x-transition.opacity>
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6" @click.away="isDeclineModalOpen = false">
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Decline Application</h3>
-                <p class="text-sm text-gray-600 mb-4">
-                    Provide a reason for declining
-                    <span x-text="decliningApp?.name"></span>'s application for
-                    <span x-text="decliningApp?.pet"></span>.
+        <div x-show="isDeclineModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+             x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             style="display: none;">
+            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" @click.away="isDeclineModalOpen = false">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-950/20 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-admin-textPrimary">Decline Application</h3>
+                        <p class="text-xs text-admin-textSecondary/70">Provide a reason for the applicant</p>
+                    </div>
+                </div>
+                <p class="text-sm text-admin-textSecondary mb-3">
+                    Declining <span class="font-semibold text-admin-textPrimary" x-text="decliningApp?.name"></span>'s application for <span class="font-semibold text-admin-textPrimary" x-text="decliningApp?.pet"></span>.
                 </p>
                 <textarea x-model="declineReason" rows="4" maxlength="1000"
-                          class="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                          class="w-full border border-admin-border bg-admin-bg rounded-xl p-3 text-sm resize-none focus:ring-2 focus:ring-red-400 focus:border-red-400 text-admin-textPrimary placeholder-admin-textSecondary/50 outline-none transition"
                           placeholder="Enter the reason for declining..."></textarea>
                 <div class="flex justify-end gap-3 mt-4">
                     <button @click="isDeclineModalOpen = false; decliningApp = null"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            class="px-4 py-2 text-sm font-semibold text-admin-textSecondary bg-admin-bg border border-admin-border rounded-xl hover:bg-admin-surface transition-all">
                         Cancel
                     </button>
                     <button @click="confirmDecline()"
                             :disabled="!declineReason.trim()"
-                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm">
                         Confirm Decline
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delist from App Modal -->
+        <div x-show="isDelistModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+             x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             style="display: none;">
+            <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" @click.away="isDelistModalOpen = false">
+                <!-- Modal Header -->
+                <div class="p-6 pb-4">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/20 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="toggle-left" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-admin-textPrimary">Delist from App</h3>
+                            <p class="text-xs text-admin-textSecondary/70">Pet will be marked as unavailable</p>
+                        </div>
+                    </div>
+
+                    <!-- Pet preview -->
+                    <template x-if="delistingPet">
+                        <div class="flex items-center gap-3 bg-admin-bg border border-admin-border rounded-xl p-3 mb-4">
+                            <template x-if="delistingPet.primary_image">
+                                <img :src="delistingPet.primary_image" :alt="delistingPet.name"
+                                     class="w-12 h-12 rounded-lg object-cover flex-shrink-0 border border-admin-border">
+                            </template>
+                            <template x-if="!delistingPet.primary_image">
+                                <div class="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold text-white flex-shrink-0"
+                                     :class="delistingPet.color">
+                                    <span x-text="delistingPet.name?.charAt(0)"></span>
+                                </div>
+                            </template>
+                            <div class="min-w-0">
+                                <span class="font-bold text-sm text-admin-textPrimary block" x-text="delistingPet.name"></span>
+                                <span class="text-xs text-admin-textSecondary/70" x-text="delistingPet.breed || 'No breed'"></span>
+                            </div>
+                            <span class="ml-auto flex items-center gap-1.5 text-[10px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/20 px-2 py-1 rounded-full border border-amber-200/50 flex-shrink-0">
+                                <i data-lucide="eye-off" class="w-3 h-3"></i>
+                                Will be hidden
+                            </span>
+                        </div>
+                    </template>
+
+                    <p class="text-sm text-admin-textSecondary mb-3">
+                        This pet will be removed from the mobile app and marked as <span class="font-semibold text-amber-600">unavailable</span>. Provide an optional reason for internal records.
+                    </p>
+                    <textarea x-model="delistReason" rows="3" maxlength="500"
+                              class="w-full border border-admin-border bg-admin-bg rounded-xl p-3 text-sm resize-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-admin-textPrimary placeholder-admin-textSecondary/50 outline-none transition"
+                              placeholder="Reason for delisting (optional)..."></textarea>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-end gap-3 px-6 py-4 bg-admin-bg border-t border-admin-border">
+                    <button @click="isDelistModalOpen = false; delistingPet = null"
+                            class="px-4 py-2 text-sm font-semibold text-admin-textSecondary bg-admin-surface border border-admin-border rounded-xl hover:bg-admin-bg transition-all">
+                        Cancel
+                    </button>
+                    <button @click="confirmDelist()"
+                            :disabled="delistLoading"
+                            class="px-5 py-2 text-sm font-bold text-white bg-amber-500 rounded-xl hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-2">
+                        <template x-if="delistLoading">
+                            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                        </template>
+                        <i data-lucide="toggle-left" class="w-4 h-4" x-show="!delistLoading"></i>
+                        <span x-text="delistLoading ? 'Delisting...' : 'Confirm Delist'"></span>
                     </button>
                 </div>
             </div>

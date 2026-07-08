@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\AdoptionRequest;
+use App\Traits\DatabaseNotificationTrait;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,6 +15,7 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 class AdoptionStatusUpdatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+    use DatabaseNotificationTrait;
 
     protected $adoption;
 
@@ -22,18 +24,22 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
         $this->adoption = $adoption;
     }
 
+    //this method tells laravel where to send notification through which channel 
     public function via($notifiable): array
     {
         // Only include FCM channel if the user has a device token registered
         $channels = [];
 
         if ($notifiable->routeNotificationForFcm()) {
+            //calls tofcm
             $channels[] = FcmChannel::class;
         }
 
         if (in_array($this->adoption->status, ['pending', 'approved', 'rejected'])) {
             $channels[] = 'mail';
         }
+        //added database channel
+        $channels[]='database';
 
         return $channels;
     }
@@ -107,10 +113,31 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
         return (new FcmMessage())
             ->setNotification(FcmNotification::create($title, $body))
             ->setData([
-                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'click_action' => 'NOTIFICATION_CLICK',
                 'adoption_request_id' => (string) $this->adoption->id,
                 'status' => $this->adoption->status,
                 'type' => 'lifecycle_update' // Mobile code uses this to refresh the exact tab view
             ]);
+    }
+     
+    //required by databasenotification trait
+    public function getTitle()
+    {
+        return "Adoption Update";
+    }
+
+    public function getMessage()
+    {
+        return "Your application for {$this->adoption->pet->name} is now {$this->adoption->status}.";
+    }
+
+    public function getType()
+    {
+        return "adoption_status_updated";
+    }
+
+    public function getLink()
+    {
+        return "/requests/{$this->adoption->id}";
     }
 }

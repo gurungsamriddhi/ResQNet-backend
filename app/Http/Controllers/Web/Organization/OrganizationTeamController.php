@@ -3,29 +3,26 @@
 namespace App\Http\Controllers\Web\Organization;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\OrganizationTeam;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
-class VolunteerController extends Controller
+class OrganizationTeamController extends Controller
 {
     public function index()
     {
         $orgId = auth()->user()->organization_id;
 
-        $teamMembers = User::where('organization_id', $orgId)
-            ->select(['id', 'name', 'email', 'phone', 'is_active', 'created_at'])
+        $teamMembers = OrganizationTeam::where('organization_id', $orgId)
             ->get()
-            ->map(function ($user) {
+            ->map(function ($member) {
                 return [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'contact' => $user->phone ?? 'N/A',
-                    'status' => $user->is_active ? 'Active' : 'Inactive',
-                    'availability' => $user->is_active ? 'Available' : 'Unavailable',
-                    'appliedAt' => $user->created_at->diffForHumans(),
+                    'id' => $member->id,
+                    'name' => $member->name,
+                    'email' => $member->email,
+                    'contact' => $member->phone ?? 'N/A',
+                    'status' => $member->status === 'active' ? 'Active' : 'Inactive',
+                    'availability' => $member->status === 'active' ? 'Available' : 'Unavailable',
+                    'appliedAt' => $member->created_at->diffForHumans(),
                     'skills' => ['Available for Dispatch'],
                     'sector' => 'Main Sector',
                     'emergencyContact' => 'N/A',
@@ -35,41 +32,39 @@ class VolunteerController extends Controller
                 ];
             });
 
-        return view('organization.volunteers.index', compact('teamMembers'));
+        return view('organization.organizationteam.index', compact('teamMembers'));
     }
 
     public function invite(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:organization_teams,email',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:staff,vet',
+            'role' => 'required|string',
         ]);
 
         $organizationId = auth()->user()->organization_id;
 
-        $user = User::create([
+        $member = OrganizationTeam::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make(Str::random(12)),
+            'role' => $request->role,
             'organization_id' => $organizationId,
-            'is_active' => true,
+            'status' => 'active',
         ]);
-
-        $user->assignRole($request->role);
 
         return response()->json([
             'message' => 'Volunteer added successfully!',
             'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'contact' => $user->phone ?? 'N/A',
+                'id' => $member->id,
+                'name' => $member->name,
+                'email' => $member->email,
+                'contact' => $member->phone ?? 'N/A',
                 'status' => 'Active',
                 'availability' => 'Available',
-                'appliedAt' => $user->created_at->diffForHumans(),
+                'appliedAt' => $member->created_at->diffForHumans(),
                 'skills' => ['Available for Dispatch'],
                 'sector' => 'Main Sector',
                 'emergencyContact' => 'N/A',
@@ -80,18 +75,17 @@ class VolunteerController extends Controller
         ]);
     }
 
-    public function remove(User $user)
+    public function remove(OrganizationTeam $user)
     {
-        if ($user->organization_id !== auth()->user()->organization_id) {
+        // the parameter is named $user but it's an OrganizationTeam model
+        $member = $user;
+        
+        if ($member->organization_id !== auth()->user()->organization_id) {
             return response()->json(['message' => 'Unauthorized action.'], 403);
         }
 
-        if ($user->id === auth()->id()) {
-            return response()->json(['message' => 'You cannot remove yourself!'], 422);
-        }
+        $member->delete();
 
-        $user->delete();
-
-        return response()->json(['message' => 'Volunteer removed.']);
+        return response()->json(['message' => 'Team member removed.']);
     }
 }

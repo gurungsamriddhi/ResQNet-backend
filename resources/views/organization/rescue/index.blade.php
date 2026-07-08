@@ -41,7 +41,7 @@
                     <div class="space-y-3 max-h-64 overflow-y-auto">
                         <template x-for="(member, idx) in availableTeamMembers" :key="member.id">
                             <label :for="'member-' + idx" class="flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all"
-                                    :class="selectedMembers.some(m => m.user_id === member.id) ? 'border-brand-orange bg-brand-orange/5 dark:bg-brand-orange/10' : 'border-admin-border hover:border-admin-border/80 bg-white dark:bg-slate-700/50'">
+                                    :class="selectedMembers.some(m => m.team_member_id === member.id) ? 'border-brand-orange bg-brand-orange/5 dark:bg-brand-orange/10' : 'border-admin-border hover:border-admin-border/80 bg-white dark:bg-slate-700/50'">
                                 <input type="checkbox" :id="'member-' + idx" :value="member.id"
                                        @change="toggleMember(member.id, member.name)"
                                        class="w-4 h-4 text-brand-orange accent-brand-orange flex-shrink-0 rounded">
@@ -160,7 +160,7 @@
                             <div x-show="rescue.claimedByOther"
                                  x-cloak class="bg-slate-100/90 dark:bg-slate-800/90 px-4 py-2 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700">
                                 <i data-lucide="shield-off" class="w-3.5 h-3.5 text-slate-400"></i>
-                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Handled by Another Organization</span>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider" x-text="rescue.claimedByName ? 'Handled by ' + rescue.claimedByName : 'Handled by Another Organization'"></span>
                             </div>
 
                             <div :class="{ 'opacity-60': rescue.status === 'resolved' || rescue.claimedByOther }">
@@ -233,7 +233,7 @@
                                                  x-cloak class="mt-2 flex items-center gap-2">
                                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-500/20 border border-blue-100 dark:border-blue-500/30 text-[10px] font-bold text-blue-700 dark:text-blue-400">
                                                     <i data-lucide="users" class="w-3 h-3"></i>
-                                                    <span x-text="rescue.assignments?.map(a => a.name || a.user?.name).filter(Boolean).join(', ')"></span>
+                                                    <span x-text="rescue.assignments?.map(a => a.name || a.teamMember?.name).filter(Boolean).join(', ')"></span>
                                                 </span>
                                                 <span class="text-[10px] text-admin-textSecondary" x-text="rescue.status === 'resolved' ? 'completed' : 'dispatched'"></span>
                                             </div>
@@ -347,10 +347,10 @@
                                                     <template x-for="member in (rescue.assignments || [])" :key="member.id">
                                                         <div class="flex items-center gap-3 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
                                                             <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                                                                <span x-text="(member.name || member.user?.name || '?').charAt(0)"></span>
+                                                                <span x-text="(member.name || member.teamMember?.name || '?').charAt(0)"></span>
                                                             </div>
                                                             <div class="min-w-0">
-                                                                <p class="text-xs font-bold text-admin-textPrimary" x-text="member.name || member.user?.name || 'Unknown'"></p>
+                                                                <p class="text-xs font-bold text-admin-textPrimary" x-text="member.name || member.teamMember?.name || 'Unknown'"></p>
                                                                 <p class="text-[10px] text-admin-textSecondary" x-text="member.role || 'Rescuer'"></p>
                                                             </div>
                                                         </div>
@@ -514,7 +514,11 @@
     <script>
         function rescuesApp() {
             return {
-                rescues: @json($rescues->toArray() ?? []),
+                rescues: @json($rescues->toArray() ?? []).map(r => ({
+                    ...r,
+                    claimedByOther: r.organization_id && r.organization_id !== {{ auth()->user()->organization_id ?? 'null' }},
+                    claimedByName: r.organization ? r.organization.name : 'Another Organization'
+                })),
                 teamMembers: @json($teamMembers->toArray() ?? []),
                 assignModalOpen: false,
                 assignTarget: null,
@@ -563,12 +567,12 @@
                     this.toastTimeout = setTimeout(() => { this.toastVisible = false; }, 4000);
                 },
 
-                toggleMember(userId, userName) {
-                    const idx = this.selectedMembers.findIndex(m => m.user_id === userId);
+                toggleMember(memberId, userName) {
+                    const idx = this.selectedMembers.findIndex(m => m.team_member_id === memberId);
                     if (idx > -1) {
                         this.selectedMembers.splice(idx, 1);
                     } else {
-                        this.selectedMembers.push({ user_id: userId, role: 'rescuer' });
+                        this.selectedMembers.push({ team_member_id: memberId, role: 'rescuer' });
                     }
                 },
 
@@ -590,8 +594,8 @@
                         const data = await response.json();
                         if (response.ok) {
                             const teamData = data.data?.assignments || this.selectedMembers.map(m => ({
-                                id: m.user_id,
-                                name: this.teamMembers.find(t => t.id === m.user_id)?.name || 'Unknown',
+                                id: m.team_member_id,
+                                name: this.teamMembers.find(t => t.id === m.team_member_id)?.name || 'Unknown',
                                 role: m.role,
                             }));
                             this.rescues = this.rescues.map(r => {
@@ -747,6 +751,7 @@
                                     return {
                                         ...r,
                                         claimedByOther: e.organization_id !== orgId ? true : r.claimedByOther,
+                                        claimedByName: e.claimed_by || 'Another Organization',
                                         organization_id: e.organization_id,
                                         status: e.organization_id === orgId ? 'assigned' : r.status,
                                     };

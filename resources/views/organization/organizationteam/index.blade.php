@@ -11,7 +11,7 @@
                     <span class="bg-brand-orange/10 text-brand-orange p-2 rounded-xl">
                         <i data-lucide="users" class="w-7 h-7"></i>
                     </span>
-                    Volunteers Portal
+                    Team Members Portal
                 </h1>
                 <p class="text-sm text-slate-500 dark:text-slate-300 mt-2">Team members ready for rescue task dispatching.</p>
             </div>
@@ -46,7 +46,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Total Members</span>
-                        <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="volunteers.length">0</span>
+                        <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mt-1 block" x-text="orgteams.length">0</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500 flex items-center justify-center">
                         <i data-lucide="users" class="w-6 h-6"></i>
@@ -65,11 +65,11 @@
                     <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i>
                     Team Members
                 </h3>
-                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2.5 py-1 rounded-lg" x-text="volunteers.length + ' members'"></span>
+                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2.5 py-1 rounded-lg" x-text="orgteams.length + ' members'"></span>
             </div>
 
             <div class="space-y-2">
-                <template x-for="member in volunteers" :key="member.id">
+                <template x-for="member in orgteams" :key="member.id">
                     <div class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700/40">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-10 h-10 rounded-full bg-brand-navy flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
@@ -95,7 +95,7 @@
                     </div>
                 </template>
 
-                <template x-if="volunteers.length === 0">
+                <template x-if="orgteams.length === 0">
                     <div class="text-center py-10">
                         <i data-lucide="users" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
                         <h3 class="text-sm font-bold text-slate-500">No team members yet</h3>
@@ -106,7 +106,7 @@
         </div>
 
         <!-- Invite Modal -->
-        <div x-cloak x-show="showInviteModal"
+        <div x-cloak x-show="showInviteModal" style="display: none;"
              class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0"
@@ -180,7 +180,7 @@
         </div>
 
         <!-- Remove Confirmation Modal -->
-        <div x-cloak x-show="showRemoveModal"
+        <div x-cloak x-show="showRemoveModal" style="display: none;"
              class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0"
@@ -224,7 +224,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('volunteerManager', () => ({
-                volunteers: @json($teamMembers ?? []),
+                orgteams: @json($teamMembers ?? []),
 
                 showInviteModal: false,
                 inviteForm: { name: '', email: '', phone: '', role: 'staff' },
@@ -236,22 +236,22 @@
 
                 get stats() {
                     return {
-                        active: this.volunteers.filter(v => v.status === 'Active').length,
-                        available: this.volunteers.filter(v => v.availability === 'Available').length,
+                        active: this.orgteams.filter(v => v.status === 'Active').length,
+                        available: this.orgteams.filter(v => v.availability === 'Available').length,
                     };
                 },
 
                 async submitInvite() {
                     this.inviteSubmitting = true;
                     try {
-                        const res = await fetch('{{ route('organization.volunteers.invite') }}', {
+                        const res = await fetch('{{ route('organization.orgteams.invite') }}', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                             body: JSON.stringify(this.inviteForm),
                         });
                         const data = await res.json();
                         if (res.ok) {
-                            this.volunteers.push(data.user);
+                            this.orgteams.push(data.user);
                             this.showInviteModal = false;
                             this.inviteForm = { name: '', email: '', phone: '', role: 'staff' };
                         } else {
@@ -274,12 +274,12 @@
                     if (!this.removeTarget) return;
                     this.removeSubmitting = true;
                     try {
-                        const res = await fetch('{{ route('organization.volunteers.remove', ['user' => '__ID__']) }}'.replace('__ID__', this.removeTarget.id), {
+                        const res = await fetch('{{ route('organization.orgteams.remove', ['user' => '__ID__']) }}'.replace('__ID__', this.removeTarget.id), {
                             method: 'DELETE',
                             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                         });
                         if (res.ok) {
-                            this.volunteers = this.volunteers.filter(v => v.id !== this.removeTarget.id);
+                            this.orgteams = this.orgteams.filter(v => v.id !== this.removeTarget.id);
                             this.showRemoveModal = false;
                             this.removeTarget = null;
                         } else {

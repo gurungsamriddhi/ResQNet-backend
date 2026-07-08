@@ -107,4 +107,28 @@ class PetModuleTest extends TestCase
         $this->assertEquals('suspended', $pet->status);
         $this->assertEquals('Violation of terms', $pet->suspension_reason);
     }
+
+    public function test_org_can_delete_pet()
+    {
+        [$orgUser, $org] = $this->createOrgUser();
+        $pet = Pet::factory()->create(['organization_id' => $org->id]);
+
+        $response = $this->actingAs($orgUser)->delete(route('organization.pets.destroy', $pet));
+
+        $response->assertRedirect(route('organization.pets.index'));
+        $response->assertSessionHas('success', "{$pet->name} deleted successfully.");
+        $this->assertSoftDeleted($pet);
+    }
+
+    public function test_org_can_delete_pet_via_json()
+    {
+        [$orgUser, $org] = $this->createOrgUser();
+        $pet = Pet::factory()->create(['organization_id' => $org->id]);
+
+        $response = $this->actingAs($orgUser)->deleteJson(route('organization.pets.destroy', $pet));
+
+        $response->assertSuccessful();
+        $response->assertJson(['message' => "{$pet->name} deleted successfully."]);
+        $this->assertSoftDeleted($pet);
+    }
 }

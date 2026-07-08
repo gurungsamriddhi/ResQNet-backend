@@ -3,14 +3,22 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class StoreRescueReportRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        // Simply check if the user is logged in
+        return auth()->user() !== null;
     }
-
+    // Add this to your StoreRescueReportRequest.php file
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        \Log::error('VALIDATION FAILED:', $validator->errors()->toArray());
+        \Log::error('RAW INPUT RECEIVED:', $this->all());
+        parent::failedValidation($validator);
+    }
     public function rules(): array
     {
         return [

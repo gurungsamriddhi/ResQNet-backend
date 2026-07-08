@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterOrganizationController;
-use App\Http\Controllers\Web\Admin\AnalyticsController;
 use App\Http\Controllers\Web\PublicPetController;
+use App\Http\Controllers\Web\Admin\AnalyticsController;
 use App\Http\Controllers\Web\Admin\OrganizationController;
 use App\Http\Controllers\Web\Admin\UserController;
 use App\Http\Controllers\Web\Admin\VolunteerController as AdminVolunteerController;
@@ -12,13 +12,14 @@ use App\Http\Controllers\Web\Admin\PetController as AdminPetController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\HealthController as AdminHealthController;
-use App\Http\Controllers\Web\Organization\PetController;
-use App\Http\Controllers\Web\Organization\AdoptionController;
-use App\Http\Controllers\Web\Organization\RescueController;
-use App\Http\Controllers\Web\Organization\FinanceController;
-use App\Http\Controllers\Web\Organization\StaffController;
+use App\Http\Controllers\Web\Organization\PetController as OrgPetController;
+use App\Http\Controllers\Web\Organization\AdoptionController as OrgAdoptionController;
+use App\Http\Controllers\Web\Organization\RescueController as OrgRescueController;
+use App\Http\Controllers\Web\Organization\FinanceController as OrgFinanceController;
+use App\Http\Controllers\Web\Organization\StaffController as OrgStaffController;
+use App\Http\Controllers\Web\Organization\TeamAccessController as OrgTeamAccessController;
 use App\Http\Controllers\Web\Organization\HealthController as OrgHealthController;
-use App\Http\Controllers\Web\Organization\VolunteerController as OrgVolunteerController;
+use App\Http\Controllers\Web\Organization\OrganizationTeamController as OrgTeamController;
 use App\Http\Controllers\Web\Organization\DashboardController as OrgDashboardController;
 use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileController;
 use App\Http\Controllers\Web\Organization\SettingsController as OrgSettingsController;
@@ -60,21 +61,21 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    //Organization Management
+    //Organization Management by Admin
     Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
     Route::post('/organizations/{organization}/approve', [OrganizationController::class, 'approve'])->name('organizations.approve');
     Route::post('/organizations/{organization}/reject', [OrganizationController::class, 'reject'])->name('organizations.reject');
     Route::post('/organizations/{organization}/suspend', [OrganizationController::class, 'suspend'])->name('organizations.suspend');
     Route::post('/organizations/{organization}/verify', [OrganizationController::class, 'verify'])->name('organizations.verify');
 
-    //Users Management
+    //Users Management by Admin
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::post('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
     Route::post('/users/{user}/reactivate', [UserController::class, 'reactivate'])->name('users.reactivate');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    //Pets Management
+    //Pets Management by Admin
     Route::get('/pets', [AdminPetController::class, 'index'])->name('pets.index');
     Route::get('/pets/{pet}', [AdminPetController::class, 'show'])->name('pets.show');
     Route::post('/pets/{pet}/suspend', [AdminPetController::class, 'suspend'])->name('pets.suspend');
@@ -102,22 +103,28 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
 // ================================================
 Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organization')->name('organization.')->group(function () {
 
+
+    //Organization Dashboard
     Route::get('/dashboard', [OrgDashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('pets', PetController::class);
-    Route::post('/pets/{pet}/status', [PetController::class, 'changeStatus'])->name('pets.status');
-    Route::get('/pets/{pet}/qr', [PetController::class, 'generateQr'])->name('pets.qr');
+    //Organization Pet Management routes
+    Route::resource('pets', OrgPetController::class);
+    Route::post('/pets/{pet}/status', [OrgPetController::class, 'changeStatus'])->name('pets.status');
+    Route::get('/pets/{pet}/qr', [OrgPetController::class, 'generateQr'])->name('pets.qr');
 
-    Route::get('/adoptions', [AdoptionController::class, 'index'])->name('adoptions.index');
-    Route::post('/adoptions/{adoption}/status', [AdoptionController::class, 'updateStatus'])->name('adoptions.status');
+    //Organization Adoption Request Management routes
+    Route::get('/adoptions', [OrgAdoptionController::class, 'index'])->name('adoptions.index');
+    Route::post('/adoptions/{adoption}/status', [OrgAdoptionController::class, 'updateStatus'])->name('adoptions.status');
 
-    Route::get('/rescues', [RescueController::class, 'index'])->name('rescues.index');
-    Route::post('/rescues/{report}/accept', [RescueController::class, 'acceptCase'])->name('rescues.accept');
-    Route::post('/rescues/{report}/assign-team', [RescueController::class, 'assignTeam'])->name('rescues.assign-team');
-    Route::post('/rescues/{report}/update', [RescueController::class, 'updateStatus'])->name('rescues.update');
-    Route::post('/rescues/{report}/link', [RescueController::class, 'linkToPet'])->name('rescues.link');
+    //Organization Rescue Report Management
+    Route::get('/rescues', [OrgRescueController::class, 'index'])->name('rescues.index');
+    Route::post('/rescues/{report}/accept', [OrgRescueController::class, 'acceptCase'])->name('rescues.accept');
+    Route::post('/rescues/{report}/assign-team', [OrgRescueController::class, 'assignTeam'])->name('rescues.assign-team');
+    Route::post('/rescues/{report}/update', [OrgRescueController::class, 'updateStatus'])->name('rescues.update');
+    Route::post('/rescues/{report}/link', [OrgRescueController::class, 'linkToPet'])->name('rescues.link');
+    Route::get('/rescues/{report}', [OrgRescueController::class, 'show'])->name('rescues.show');
 
-
+    //Organization Health Management of pets that includes medications, vaccinations, medical records
     Route::get('/health', [OrgHealthController::class, 'index'])->name('health.index');
     Route::post('/health/medical-records', [OrgHealthController::class, 'storeMedicalRecord'])->name('health.medical-records.store');
     Route::put('/health/medical-records/{record}', [OrgHealthController::class, 'updateMedicalRecord'])->name('health.medical-records.update');
@@ -130,24 +137,46 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::post('/health/medications', [OrgHealthController::class, 'storeMedication'])->name('health.medications.store');
     Route::delete('/health/medications/{medication}', [OrgHealthController::class, 'destroyMedication'])->name('health.medications.destroy');
 
+    //Organization handling vets resource handles routes for crud
     Route::resource('vets', OrgVetController::class);
 
+    //Organization analytics include total pets rescued in this month , donations made by users shown by months and years
     Route::get('/analytics', [OrgAnalyticsController::class, 'index'])->name('analytics.index');
 
+    // Organization Notifications
+    Route::get('/notifications', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+
+   //lets keep this minimal 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [OrgSettingsController::class, 'update'])->name('settings.update');
-    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
-    Route::post('/staff/invite', [StaffController::class, 'invite'])->name('staff.invite');
-    Route::delete('/staff/{user}', [StaffController::class, 'remove'])->name('staff.remove');
 
-    Route::get('/volunteers', [OrgVolunteerController::class, 'index'])->name('volunteers.index');
-    Route::post('/volunteers/invite', [OrgVolunteerController::class, 'invite'])->name('volunteers.invite');
-    Route::delete('/volunteers/{user}', [OrgVolunteerController::class, 'remove'])->name('volunteers.remove');
+    //Organization handling staffs that can access the dashboard certain funcitionalities this is a future scope where they can invite users to use the dashboard certain functions
+    Route::get('/staff', [OrgStaffController::class, 'index'])->name('staff.index');
+    Route::post('/staff/invite', [OrgStaffController::class, 'invite'])->name('staff.invite');
+    Route::delete('/staff/{user}', [OrgStaffController::class, 'remove'])->name('staff.remove');
 
-    Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+    //Organization creates a team member they can assign for rescues 
+    Route::get('/OrgTeam', [OrgTeamController::class, 'index'])->name('orgteams.index');
+    Route::post('/OrgTeam/invite', [OrgTeamController::class, 'invite'])->name('orgteams.invite');
+    Route::delete('/OrgTeam/{user}', [OrgTeamController::class, 'remove'])->name('orgteams.remove');
 
+    //Rather than finance we will have donation index that shows the donations made by musers using payment method and keep a button that sends the email saying thank you for their contribution
+    Route::get('/finance', [OrgFinanceController::class, 'index'])->name('finance.index');
+ 
+    //Organization profile include changing their email, passsword, name, phone number, address basically information that they were asked to put during registration
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
+
+//magic link for access to case details for team members do not require login
+Route::get('/rescue/access/{report}/{teamMember}', [OrgTeamAccessController::class, 'accessCase'])
+    ->name('rescue.access')
+    ->middleware('signed');
+//signed middleware is built directly into laravel.,It works by checking a digital signature (a hash) attached to the end of the URL to ensure the link has not been tampered with or modified by anyone.
+Route::post('/rescue/arrived/{report}/{teamMember}', [OrgTeamAccessController::class, 'markArrived'])
+    ->name('rescue.arrived')
+    ->middleware('signed');
 
 require __DIR__ . '/auth.php';

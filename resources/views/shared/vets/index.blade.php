@@ -195,7 +195,7 @@
         @endif
 
         <!-- Toast Notification -->
-        <div x-show="toastVisible" x-cloak 
+        <div x-show="toastVisible" x-cloak style="display: none;"
              @show-toast.window="showToast($event.detail.message, $event.detail.type)"
              x-transition:enter="transition ease-out duration-300" 
              x-transition:enter-start="opacity-0 translate-x-4" 
@@ -219,7 +219,7 @@
         </div>
 
         <!-- Create Modal -->
-        <div x-cloak x-show="createModalOpen"
+        <div x-cloak x-show="createModalOpen" style="display: none;"
              class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0"
