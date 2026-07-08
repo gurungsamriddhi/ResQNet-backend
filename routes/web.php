@@ -17,7 +17,6 @@ use App\Http\Controllers\Web\Organization\AdoptionController as OrgAdoptionContr
 use App\Http\Controllers\Web\Organization\RescueController as OrgRescueController;
 use App\Http\Controllers\Web\Organization\FinanceController as OrgFinanceController;
 use App\Http\Controllers\Web\Organization\StaffController as OrgStaffController;
-use App\Http\Controllers\Web\Organization\TeamAccessController as OrgTeamAccessController;
 use App\Http\Controllers\Web\Organization\HealthController as OrgHealthController;
 use App\Http\Controllers\Web\Organization\OrganizationTeamController as OrgTeamController;
 use App\Http\Controllers\Web\Organization\DashboardController as OrgDashboardController;
@@ -25,6 +24,7 @@ use App\Http\Controllers\Web\Organization\ProfileController as OrgProfileControl
 use App\Http\Controllers\Web\Organization\SettingsController as OrgSettingsController;
 use App\Http\Controllers\Web\Organization\AnalyticsController as OrgAnalyticsController;
 use App\Http\Controllers\Web\Organization\VetController as OrgVetController;
+use App\Http\Controllers\Web\Organization\NotificationController;
 
 
 // This controls http://127.0.0.1:8000/
@@ -144,11 +144,11 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
     Route::get('/analytics', [OrgAnalyticsController::class, 'index'])->name('analytics.index');
 
     // Organization Notifications
-    Route::get('/notifications', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{id}/read', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [\App\Http\Controllers\Web\Organization\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
 
-   //lets keep this minimal 
+    //lets keep this minimal 
     Route::get('/settings', [OrgSettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [OrgSettingsController::class, 'update'])->name('settings.update');
 
@@ -164,18 +164,18 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
 
     //Rather than finance we will have donation index that shows the donations made by musers using payment method and keep a button that sends the email saying thank you for their contribution
     Route::get('/finance', [OrgFinanceController::class, 'index'])->name('finance.index');
- 
+
     //Organization profile include changing their email, passsword, name, phone number, address basically information that they were asked to put during registration
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
 });
 
 //magic link for access to case details for team members do not require login
-Route::get('/rescue/access/{report}/{teamMember}', [OrgTeamAccessController::class, 'accessCase'])
+Route::get('/rescue/access/{report}/{teamMember}', 'App\\Http\\Controllers\\Web\\Organization\\TeamAccessController@accessCase')
     ->name('rescue.access')
     ->middleware('signed');
 //signed middleware is built directly into laravel.,It works by checking a digital signature (a hash) attached to the end of the URL to ensure the link has not been tampered with or modified by anyone.
-Route::post('/rescue/arrived/{report}/{teamMember}', [OrgTeamAccessController::class, 'markArrived'])
+Route::post('/rescue/arrived/{report}/{teamMember}', 'App\\Http\\Controllers\\Web\\Organization\\TeamAccessController@markArrived')
     ->name('rescue.arrived')
     ->middleware('signed');
 

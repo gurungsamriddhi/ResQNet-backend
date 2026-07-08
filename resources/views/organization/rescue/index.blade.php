@@ -724,7 +724,7 @@
                     if (typeof Echo !== 'undefined') {
                         Echo.join('rescue-updates')
                             .here(() => {})
-                            .listen('NewRescueReportEvent', (e) => {
+                            .listen('.NewRescueReportEvent', (e) => {
                                 if (!this.rescues.some(r => r.id === e.rescue_id)) {
                                     this.rescues = [{
                                         id: e.rescue_id,
@@ -744,7 +744,7 @@
                                     setTimeout(() => this.initMap(), 300);
                                 }
                             })
-                            .listen('CaseClaimedEvent', (e) => {
+                            .listen('.CaseClaimedEvent', (e) => {
                                 const orgId = {{ auth()->user()->organization_id ?? 'null' }};
                                 this.rescues = this.rescues.map(r => {
                                     if (r.id !== e.rescue_id) return r;
@@ -757,7 +757,7 @@
                                     };
                                 });
                             })
-                            .listen('CaseTeamAssignedEvent', (e) => {
+                            .listen('.CaseTeamAssignedEvent', (e) => {
                                 const orgId = {{ auth()->user()->organization_id ?? 'null' }};
                                 this.rescues = this.rescues.map(r => {
                                     if (r.id !== e.rescue_id || r.organization_id !== orgId) return r;
@@ -768,7 +768,7 @@
                                     };
                                 });
                             })
-                            .listen('CaseStatusUpdatedEvent', (e) => {
+                            .listen('.CaseStatusUpdatedEvent', (e) => {
                                 const orgId = {{ auth()->user()->organization_id ?? 'null' }};
                                 this.rescues = this.rescues.map(r => {
                                     if (r.id !== e.rescue_id || r.organization_id !== orgId) return r;

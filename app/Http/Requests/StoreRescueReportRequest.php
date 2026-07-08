@@ -15,8 +15,7 @@ class StoreRescueReportRequest extends FormRequest
     // Add this to your StoreRescueReportRequest.php file
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        \Log::error('VALIDATION FAILED:', $validator->errors()->toArray());
-        \Log::error('RAW INPUT RECEIVED:', $this->all());
+       
         parent::failedValidation($validator);
     }
     public function rules(): array

@@ -14,7 +14,7 @@ class RescueController extends Controller
 {
     public function index(Request $request)
     {
-        $reports = RescueReport::with(['user', 'organization', 'assignments.user', 'media'])
+        $reports = RescueReport::with(['user', 'organization', 'assignments.teamMember', 'histories'])
             ->latest()
             ->paginate($request->per_page ?? 20);
 
@@ -29,17 +29,36 @@ class RescueController extends Controller
         ]);
     }
 
-    // app/Http/Controllers/Api/RescueController.php
+    public function show($id)
+    {
+        // 1. Fetch the report with all necessary relationships
+        $report = RescueReport::with([
+            'user',
+            'organization',
+            'assignments.teamMember',
+            'histories'
+        ])->findOrFail($id);
+
+        // 2. Security Check: 
+        // Allow if the current user is the Reporter OR the Organization it belongs to
+        $user = auth()->user();
+
+        // Check if user is the reporter OR if the user belongs to the assigned organization
+        $isOwner = $report->user_id === $user->id;
+        $isOrg = ($user->organization_id && $report->organization_id === $user->organization_id);
+
+        if (!$isOwner && !$isOrg) {
+            return response()->json(['message' => 'Unauthorized. You do not have permission to view this report.'], 403);
+        }
+
+        return response()->json([
+            'data' => $report
+        ], 200);
+    }
 
     public function store(StoreRescueReportRequest $request)
     {
-        // // Debugging: Log what is coming in to see the exact format
-        // Print everything to storage/logs/laravel.log
-        Log::info('POSTMAN DEBUG:', [
-            'data' => $request->all(),
-            'files' => $request->allFiles()
-        ]);
-         $user = $request->user();
+        $user = $request->user();
 
         // Spam Prevention: Check if user has a 'reported' case already
         $hasActiveReport = RescueReport::where('user_id', $user->id)
@@ -88,5 +107,33 @@ class RescueController extends Controller
             'message' => 'Rescue report submitted successfully!',
             'data' => $report,
         ], 201);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $report = RescueReport::findOrFail($id);
+
+        // 1. Security Check: Ensure the user actually owns this report
+        if ($report->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
+        // 2. Logic Check: Only allow cancellation if it hasn't been claimed yet
+        if ($report->status !== 'reported') {
+            return response()->json([
+                'message' => 'You cannot cancel this report because it has already been assigned or is in progress.'
+            ], 422);
+        }
+
+        // 3. Soft Delete
+        $report->delete();
+
+        // 4. Real-time sync (Optional but recommended)
+        // Broadcast an event so the org dashboard removes it from their list instantly
+        // broadcast(new \App\Events\RescueReportCancelledEvent($report));
+
+        return response()->json([
+            'message' => 'Rescue report cancelled successfully.'
+        ], 200);
     }
 }

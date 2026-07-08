@@ -88,6 +88,20 @@ class RescueController extends Controller
 
         broadcast(new CaseClaimedEvent($report));
 
+        // Notify other organizations that this case has been claimed
+        $otherOrgs = \App\Models\Organization::where('status', 'active')
+            ->where('id', '!=', $orgId)
+            ->get();
+
+        if ($otherOrgs->isNotEmpty()) {
+            \Illuminate\Support\Facades\Notification::send($otherOrgs, new \App\Notifications\OrganizationAlertNotification(
+                'info',
+                'Case Claimed',
+                "Another organization has claimed rescue case {$report->case_code}. You can ignore it.",
+                "#"
+            ));
+        }
+
         return response()->json([
             'message' => 'Case accepted successfully. Assign a team to proceed.',
             'data' => $report->load('organization'),

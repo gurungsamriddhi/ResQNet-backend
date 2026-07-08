@@ -6,6 +6,7 @@ use App\Models\RescueReport;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -19,7 +20,7 @@ class NewRescueReportEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         $channels = [
-            new Channel('rescue-updates'), // Now it's a simple public channel
+            new PresenceChannel('rescue-updates'), // Presence channel for global dashboard updates
         ];
 
         if ($this->rescue->organization_id) {
