@@ -25,4 +25,5 @@ window.subscribeOrganization = (orgId) => {
     });
 };
 
+window.Echo = echo;
 export default echo;
