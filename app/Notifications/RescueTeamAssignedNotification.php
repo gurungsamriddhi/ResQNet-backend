@@ -6,6 +6,9 @@ use App\Models\RescueReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class RescueTeamAssignedNotification extends Notification implements ShouldQueue
 {
@@ -18,24 +21,25 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
         $channels = [];
 
         if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
-            $channels[] = 'fcm';
+            $channels[] = FcmChannel::class;
         }
 
         return $channels;
     }
 
-    public function toFcm(object $notifiable): array
+    public function toFcm(object $notifiable): FcmMessage
     {
         $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'a rescue organization';
 
-        return [
-            'title' => "Help is on the way! 🚨",
-            'body' => "A rescue team from {$orgName} has been assigned to your report.",
-            'data' => [
+        return (new FcmMessage())
+            ->setNotification(FcmNotification::create(
+                "Help is on the way! 🚨",
+                "A rescue team from {$orgName} has been assigned to your report."
+            ))
+            ->setData([
                 'type' => 'rescue_assigned',
                 'rescue_id' => (string) $this->rescue->id,
                 'case_code' => $this->rescue->case_code,
-            ],
-        ];
+            ]);
     }
 }
