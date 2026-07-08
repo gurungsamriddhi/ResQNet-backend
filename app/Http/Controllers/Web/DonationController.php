@@ -69,7 +69,7 @@ class DonationController extends Controller
             'organization_id' => $validated['organization_id'] ?? null,
             'purchase_order_id' => $purchaseOrderId,
             'donor_name' => $isAnonymous ? null : ($validated['donor_name'] ?? null),
-            'donor_email' => $isAnonymous ? null : ($validated['donor_email'] ?? null),
+            'donor_email' => $validated['donor_email'],
             'donor_phone' => $isAnonymous ? null : ($validated['donor_phone'] ?? null),
             'is_anonymous' => $isAnonymous,
             'frequency' => $validated['frequency'],
@@ -87,7 +87,7 @@ class DonationController extends Controller
             if (! $isAnonymous && $validated['donor_email']) {
                 $customerInfo['email'] = $validated['donor_email'];
             }
-            if ($validated['donor_phone']) {
+            if (! $isAnonymous && ($validated['donor_phone'] ?? null)) {
                 $customerInfo['phone'] = $validated['donor_phone'];
             }
 

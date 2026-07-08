@@ -62,17 +62,6 @@
             </div>
         @endif
 
-        @if($errors->any())
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-                <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-                    <ul class="list-disc list-inside space-y-1">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
     </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 space-y-20">
@@ -197,23 +186,41 @@
                             </label>
                         </div>
 
-                        {{-- Donor Fields (hidden when anonymous) --}}
-                        <div class="space-y-4 pt-2 border-t border-brand-navy/10" x-show="!isAnonymous" x-cloak>
+                        {{-- Donor Fields (always visible, disabled when anonymous) --}}
+                        <div class="space-y-4 pt-2 border-t border-brand-navy/10">
                             <div>
-                                <label for="donor_name" class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-1.5">Full Name</label>
+                                <label for="donor_name" class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-1.5">
+                                    Full Name <span x-show="!isAnonymous" class="text-red-500">*</span>
+                                </label>
                                 <input type="text" id="donor_name" name="donor_name" value="{{ old('donor_name') }}"
+                                       x-bind:disabled="isAnonymous"
+                                       x-bind:placeholder="isAnonymous ? 'Not required for anonymous donations' : 'Your full name'"
+                                       :class="isAnonymous ? 'opacity-50 cursor-not-allowed' : ''"
                                        class="w-full px-4 py-2.5 rounded-xl border border-brand-navy/10 bg-slate-50 text-brand-navy text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                @error('donor_name')
+                                    <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label for="donor_phone" class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-1.5">Phone</label>
                                     <input type="tel" id="donor_phone" name="donor_phone" value="{{ old('donor_phone') }}"
+                                           x-bind:disabled="isAnonymous"
+                                           :class="isAnonymous ? 'opacity-50 cursor-not-allowed' : ''"
                                            class="w-full px-4 py-2.5 rounded-xl border border-brand-navy/10 bg-slate-50 text-brand-navy text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                    @error('donor_phone')
+                                        <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
-                                    <label for="donor_email" class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-1.5">Email</label>
+                                    <label for="donor_email" class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-1.5">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="email" id="donor_email" name="donor_email" value="{{ old('donor_email') }}"
                                            class="w-full px-4 py-2.5 rounded-xl border border-brand-navy/10 bg-slate-50 text-brand-navy text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
+                                    @error('donor_email')
+                                        <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -232,6 +239,17 @@
                                      :class="isAnonymous ? 'translate-x-5' : 'translate-x-0'"></div>
                             </div>
                         </label>
+
+                        {{-- Error banner above CTA --}}
+                        @if($errors->any())
+                            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                         {{-- CTA --}}
                         <button type="submit"

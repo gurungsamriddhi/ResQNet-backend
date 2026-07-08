@@ -24,7 +24,7 @@ class StoreDonationRequest extends FormRequest
             ],
             'frequency' => 'required|in:one_time,monthly',
             'donor_name' => 'required_unless:is_anonymous,1,true|nullable|string|max:255',
-            'donor_email' => 'required_unless:is_anonymous,1,true|email|max:255',
+            'donor_email' => 'required|email|max:255',
             'donor_phone' => 'nullable|string|max:20',
             'is_anonymous' => 'sometimes|boolean',
             'remarks' => 'nullable|string|max:1000',
@@ -38,7 +38,7 @@ class StoreDonationRequest extends FormRequest
             'amount.max' => 'Donation amount is too large.',
             'payment_method.in' => 'Please select a valid payment method.',
             'donor_name.required_unless' => 'Please enter your name or choose to donate anonymously.',
-            'donor_email.required_unless' => 'Email is required for acknowledgment purposes.',
+            'donor_email.required' => 'Email is required for acknowledgment purposes.',
         ];
     }
 
