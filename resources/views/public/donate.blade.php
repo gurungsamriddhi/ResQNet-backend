@@ -189,13 +189,12 @@
                         <input type="hidden" name="payment_method" value="khalti">
                         <div>
                             <label class="block text-xs font-extrabold uppercase tracking-widest text-brand-navy mb-3">Payment Method</label>
-                            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border border-brand-orange/20 bg-brand-orange/5">
-                                <div class="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center">
-                                    <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+                            <label class="flex items-center gap-3 px-4 py-3 rounded-xl border border-brand-orange/20 bg-brand-orange/5 cursor-pointer">
+                                <div class="w-5 h-5 rounded-md border-2 border-brand-orange bg-brand-orange flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 <span class="text-sm font-bold text-brand-navy">Khalti</span>
-                                <span class="ml-auto text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">Connected</span>
-                            </div>
+                            </label>
                         </div>
 
                         {{-- Donor Fields (hidden when anonymous) --}}
@@ -251,7 +250,55 @@
         </section>
 
         {{-- ============================================================ --}}
-        {{-- 2. Where Your Donation Goes                                   --}}
+        {{-- 2. Our Donors — Public Transparency Ledger                   --}}
+        {{-- ============================================================ --}}
+        @if($recentDonors->isNotEmpty())
+            <section>
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-extrabold text-brand-navy">Our Donors</h2>
+                    <p class="text-sm text-slate-500 mt-2 max-w-xl mx-auto">Every contribution brings us closer to our mission. Thank you for your generosity.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-brand-navy/10 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-brand-navy/10 bg-slate-50/80">
+                                    <th class="text-left px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-brand-navy">Name</th>
+                                    <th class="text-left px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-brand-navy">Donate Date</th>
+                                    <th class="text-right px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-brand-navy">Donate Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-brand-navy/5">
+                                @foreach($recentDonors as $donor)
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4 font-semibold text-brand-navy">
+                                            {{ $donor->is_anonymous || blank($donor->donor_name) ? 'Anonymous' : $donor->donor_name }}
+                                        </td>
+                                        <td class="px-6 py-4 text-slate-600">
+                                            {{ $donor->created_at->format('F j, Y') }}
+                                        </td>
+                                        <td class="px-6 py-4 text-right font-bold text-brand-navy">
+                                            Rs. {{ number_format($donor->amount, 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            @php $tableTotal = $recentDonors->sum('amount'); @endphp
+                            <tfoot>
+                                <tr class="bg-brand-navy/5 border-t-2 border-brand-navy/15">
+                                    <td colspan="2" class="px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-brand-navy">Total</td>
+                                    <td class="px-6 py-4 text-right font-extrabold text-brand-navy">Rs. {{ number_format($tableTotal, 2) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        {{-- ============================================================ --}}
+        {{-- 3. Where Your Donation Goes                                   --}}
         {{-- ============================================================ --}}
         <section>
             <div class="text-center mb-10">
@@ -259,10 +306,33 @@
                 <p class="text-sm text-slate-500 mt-2 max-w-xl mx-auto">Every contribution is allocated transparently to keep ResQNet running and growing.</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                @foreach($allocationBreakdown as $item)
+                @foreach($allocationBreakdown as $index => $item)
                     <div class="bg-white rounded-2xl border border-brand-navy/10 p-5 text-center shadow-sm hover:shadow-md transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3
+                            @switch($index)
+                                @case(0) bg-blue-50 text-blue-500 @break
+                                @case(1) bg-violet-50 text-violet-500 @break
+                                @case(2) bg-amber-50 text-amber-500 @break
+                                @case(3) bg-rose-50 text-rose-500 @break
+                                @case(4) bg-slate-100 text-slate-500 @break
+                            @endswitch">
+                            @switch($index)
+                                @case(0)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                @break
+                                @case(1)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                @break
+                                @case(2)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                                @break
+                                @case(3)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                                @break
+                                @case(4)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                                @break
+                            @endswitch
                         </div>
                         <p class="text-2xl font-extrabold text-brand-orange">{{ $item['percent'] }}</p>
                         <p class="text-sm font-bold text-brand-navy mt-1">{{ $item['title'] }}</p>
@@ -273,7 +343,7 @@
         </section>
 
         {{-- ============================================================ --}}
-        {{-- 3. Impact Stats                                               --}}
+        {{-- 4. Impact Stats                                               --}}
         {{-- ============================================================ --}}
         <section>
             <div class="text-center mb-10">
@@ -282,12 +352,27 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 @foreach($impactStats as $index => $stat)
                     <div class="bg-white rounded-2xl border border-brand-navy/10 p-6 text-center shadow-sm">
-                        <div class="w-12 h-12 rounded-full {{ $index === 3 ? 'bg-red-50 text-red-500' : 'bg-brand-orange/10 text-brand-orange' }} flex items-center justify-center mx-auto mb-4">
-                            @if($index === 3)
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            @else
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-                            @endif
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4
+                            @switch($index)
+                                @case(0) bg-blue-50 text-blue-500 @break
+                                @case(1) bg-amber-50 text-amber-500 @break
+                                @case(2) bg-red-50 text-red-500 @break
+                                @case(3) bg-emerald-50 text-emerald-500 @break
+                            @endswitch">
+                            @switch($index)
+                                @case(0)
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                @break
+                                @case(1)
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                @break
+                                @case(2)
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                @break
+                                @case(3)
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                                @break
+                            @endswitch
                         </div>
                         <p class="text-3xl font-extrabold text-brand-navy">{{ $stat['value'] }}</p>
                         <p class="text-sm font-bold text-brand-navy mt-1">{{ $stat['label'] }}</p>
@@ -298,7 +383,7 @@
         </section>
 
         {{-- ============================================================ --}}
-        {{-- 4. Footer Appreciation Banner                                 --}}
+        {{-- 5. Footer Appreciation Banner                                 --}}
         {{-- ============================================================ --}}
         <section class="bg-white rounded-3xl border border-brand-navy/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
             <div class="flex items-start gap-4">

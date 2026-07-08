@@ -16,7 +16,7 @@ class StoreDonationRequest extends FormRequest
     {
         return [
             'organization_id' => 'nullable|exists:organizations,id',
-            'amount' => 'required|numeric|min:1|max:9999999.99',
+            'amount' => 'required|numeric|min:10|max:9999999.99',
             'payment_method' => [
                 'required',
                 'string',
@@ -24,7 +24,7 @@ class StoreDonationRequest extends FormRequest
             ],
             'frequency' => 'required|in:one_time,monthly',
             'donor_name' => 'required_unless:is_anonymous,1,true|nullable|string|max:255',
-            'donor_email' => 'nullable|email|max:255',
+            'donor_email' => 'required_unless:is_anonymous,1,true|email|max:255',
             'donor_phone' => 'nullable|string|max:20',
             'is_anonymous' => 'sometimes|boolean',
             'remarks' => 'nullable|string|max:1000',
@@ -34,10 +34,11 @@ class StoreDonationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount.min' => 'Donation must be at least NPR 1.',
+            'amount.min' => 'Donation must be at least NPR 10.',
             'amount.max' => 'Donation amount is too large.',
             'payment_method.in' => 'Please select a valid payment method.',
             'donor_name.required_unless' => 'Please enter your name or choose to donate anonymously.',
+            'donor_email.required_unless' => 'Email is required for acknowledgment purposes.',
         ];
     }
 

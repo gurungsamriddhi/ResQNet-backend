@@ -55,6 +55,7 @@ Route::get('/pets/qr/{qrCodeId}', [PublicPetController::class, 'showByQr'])
 
 Route::get('/donation', [DonationController::class, 'create'])->name('donate');
 Route::post('/donation', [DonationController::class, 'store'])->name('donate.store');
+Route::get('/donation/callback', [DonationController::class, 'khaltiCallback'])->name('donate.callback');
 
 
 
