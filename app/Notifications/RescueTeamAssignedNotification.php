@@ -13,12 +13,13 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 class RescueTeamAssignedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+    use \App\Traits\DatabaseNotificationTrait;
 
     public function __construct(public RescueReport $rescue) {}
 
     public function via(object $notifiable): array
     {
-        $channels = [];
+        $channels = ['database'];
 
         if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
             $channels[] = FcmChannel::class;
@@ -41,5 +42,27 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
                 'rescue_id' => (string) $this->rescue->id,
                 'case_code' => $this->rescue->case_code,
             ]);
+    }
+
+    public function getTitle()
+    {
+        return "Help is on the way! 🚨";
+    }
+
+    public function getMessage()
+    {
+        $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'a rescue organization';
+        return "A rescue team from {$orgName} has been assigned to your report.";
+    }
+
+    public function getType()
+    {
+        return "rescue_assigned";
+    }
+
+    public function getLink()
+    {
+        // Assuming mobile deep link or web fallback
+        return "/rescues/{$this->rescue->id}";
     }
 }
