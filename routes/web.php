@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\PublicPetController;
+use App\Http\Controllers\Web\DonationController;
 use App\Http\Controllers\Web\Admin\AnalyticsController;
 use App\Http\Controllers\Web\Admin\OrganizationController;
 use App\Http\Controllers\Web\Admin\UserController;
@@ -51,6 +52,9 @@ Route::get('/registration-pending', function () {
 
 Route::get('/pets/qr/{qrCodeId}', [PublicPetController::class, 'showByQr'])
     ->name('public.pets.qr.show');
+
+Route::get('/donation', [DonationController::class, 'create'])->name('donate');
+Route::post('/donation', [DonationController::class, 'store'])->name('donate.store');
 
 
 
