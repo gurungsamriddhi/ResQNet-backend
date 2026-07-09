@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\PublicPetController;
+use App\Http\Controllers\Web\DonationController;
 use App\Http\Controllers\Web\Admin\AnalyticsController;
 use App\Http\Controllers\Web\Admin\OrganizationController;
 use App\Http\Controllers\Web\Admin\UserController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Web\Admin\PetController as AdminPetController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\HealthController as AdminHealthController;
+use App\Http\Controllers\Web\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Web\Organization\PetController as OrgPetController;
 use App\Http\Controllers\Web\Organization\AdoptionController as OrgAdoptionController;
 use App\Http\Controllers\Web\Organization\RescueController as OrgRescueController;
@@ -51,6 +53,10 @@ Route::get('/registration-pending', function () {
 
 Route::get('/pets/qr/{qrCodeId}', [PublicPetController::class, 'showByQr'])
     ->name('public.pets.qr.show');
+
+Route::get('/donation', [DonationController::class, 'create'])->name('donate');
+Route::post('/donation', [DonationController::class, 'store'])->name('donate.store');
+Route::get('/donation/callback', [DonationController::class, 'khaltiCallback'])->name('donate.callback');
 
 
 
@@ -93,6 +99,10 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
     Route::get('/medical-records', [AdminHealthController::class, 'index'])->name('medical-records.index');
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    // Donations Management
+    Route::get('/donation', [AdminDonationController::class, 'index'])->name('donations.index');
+    Route::post('/donation/{donation}/appreciation', [AdminDonationController::class, 'sendAppreciation'])->name('donations.appreciation');
 });
 
 

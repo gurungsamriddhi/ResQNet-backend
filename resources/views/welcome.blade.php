@@ -75,6 +75,7 @@
                     <a href="#features" class="text-gray-600 hover:text-primary-600 font-medium transition">Features</a>
                     <a href="#how-it-works" class="text-gray-600 hover:text-primary-600 font-medium transition">How It Works</a>
                     <a href="#ngos" class="text-gray-600 hover:text-primary-600 font-medium transition">For NGOs</a>
+                    <a href="{{ route('donate') }}" class="text-primary-600 font-bold transition">Donation</a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-4">

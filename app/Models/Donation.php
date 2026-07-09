@@ -14,6 +14,13 @@ class Donation extends Model
     protected $fillable = [
         'user_id',
         'organization_id',
+        'purchase_order_id',
+        'pidx',
+        'donor_name',
+        'donor_email',
+        'donor_phone',
+        'is_anonymous',
+        'frequency',
         'amount',
         'payment_method',
         'transaction_id',
@@ -26,6 +33,7 @@ class Donation extends Model
     {
         return [
             'amount' => 'decimal:2',
+            'is_anonymous' => 'boolean',
             'payment_payload' => 'array',
             'deleted_at' => 'datetime',
         ];

@@ -19,7 +19,7 @@ export default {
             colors: {
                 brand: {
                     navy: '#111827',
-                    orange: '#EA7235',
+                    orange: '#FF7315',
                     cream: '#FEF7ED',
                 },
                 secondary: {

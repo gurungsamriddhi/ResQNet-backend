@@ -9,6 +9,7 @@
     $organizationsUrl = route('admin.organizations.index');
     $adoptionsUrl = '#'; // No admin adoptions route yet
     $volunteersUrl = route('admin.volunteers.index');
+    $donationsUrl = route('admin.donations.index');
     $analyticsUrl = route('admin.analytics.index');
     $settingsUrl = route('admin.settings.index');
     $isDashboardActive = request()->routeIs('admin.dashboard');
@@ -21,6 +22,7 @@
     $isAdoptionsActive = request()->routeIs('admin.adoptions.*');
     $isVolunteersActive = request()->routeIs('admin.volunteers.*');
     $isAnalyticsActive = request()->routeIs('admin.analytics.*');
+    $isDonationsActive = request()->routeIs('admin.donations.*');
     $isSettingsActive = request()->routeIs('admin.settings.*');
 @endphp
 <div>
@@ -87,6 +89,17 @@
                             <div class="flex items-center gap-3">
                                 <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Users</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Donations -->
+                    <li>
+                        <a href="{{ $donationsUrl }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDonationsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="wallet" class="w-4 h-4 {{ $isDonationsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
+                                <span>Donations</span>
                             </div>
                         </a>
                     </li>
@@ -271,6 +284,16 @@
                                      <div class="flex items-center gap-3">
                                          <i data-lucide="users" class="w-4 h-4 {{ $isUsersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                          <span>Users</span>
+                                     </div>
+                                 </a>
+                              </li>
+
+                              <li>
+                                 <a href="{{ $donationsUrl }}" 
+                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDonationsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                     <div class="flex items-center gap-3">
+                                         <i data-lucide="wallet" class="w-4 h-4 {{ $isDonationsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                         <span>Donations</span>
                                      </div>
                                  </a>
                               </li>
