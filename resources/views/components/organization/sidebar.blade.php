@@ -20,6 +20,16 @@
     $isProfileActive = request()->routeIs('organization.profile.*');
     $organization = auth()->user()?->organization;
     $orgLogoUrl = $organization && $organization->logo ? Storage::url($organization->logo) : null;
+
+    // Dynamic sidebar badge counts from database
+    $orgId = auth()->user()?->organization_id;
+    $sidebarPetCount = $orgId ? \App\Models\Pet::where('organization_id', $orgId)->count() : 0;
+    $sidebarRescueCount = $orgId ? \App\Models\RescueReport::where(function ($q) use ($orgId) {
+        $q->where('organization_id', $orgId)->orWhereNull('organization_id');
+    })->whereIn('status', ['reported', 'assigned', 'in_progress'])->count() : 0;
+    $sidebarHealthCount = $orgId ? \App\Models\MedicalRecord::whereHas('pet', function ($q) use ($orgId) {
+        $q->where('organization_id', $orgId);
+    })->count() : 0;
 @endphp
 <div>
     <!-- 1. DESKTOP SIDEBAR (Visible on lg screens and up) -->
@@ -61,7 +71,7 @@
                                 <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Pet Directory</span>
                             </div>
-                            <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">42</span>
+                            <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">{{ $sidebarPetCount }}</span>
                         </a>
                     </li>
 
@@ -73,7 +83,7 @@
                                 <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Health Records</span>
                             </div>
-                            <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
+                            <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">{{ $sidebarHealthCount }}</span>
                         </a>
                     </li>
 
@@ -85,7 +95,7 @@
                                 <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Rescue Cases</span>
                             </div>
-                            <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
+                            <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">{{ $sidebarRescueCount }}</span>
                         </a>
                     </li>
                 </ul>
@@ -281,7 +291,7 @@
                                         <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Pet Directory</span>
                                     </div>
-                                    <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">42</span>
+                                    <span class="bg-white/10 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">{{ $sidebarPetCount }}</span>
                                 </a>
                              </li>
                              <li>
@@ -291,7 +301,7 @@
                                         <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Health Records</span>
                                     </div>
-                                    <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">8</span>
+                                    <span class="bg-white/5 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">{{ $sidebarHealthCount }}</span>
                                 </a>
                              </li>
                              <li>
@@ -301,7 +311,7 @@
                                          <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                          <span>Rescue Cases</span>
                                      </div>
-                                     <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">5</span>
+                                     <span class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded-full text-[10px] font-bold">{{ $sidebarRescueCount }}</span>
                                  </a>
                               </li>
                          </ul>

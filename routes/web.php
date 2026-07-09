@@ -87,7 +87,7 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
     Route::post('/pets/{pet}/suspend', [AdminPetController::class, 'suspend'])->name('pets.suspend');
     Route::post('/pets/{pet}/reactivate', [AdminPetController::class, 'reactivate'])->name('pets.reactivate');
 
-
+ 
     Route::resource('vets', AdminVetController::class);
 
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
@@ -101,6 +101,7 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     // Donations Management
+    Route::get('/donation/export', [AdminDonationController::class, 'export'])->name('donations.export');
     Route::get('/donation', [AdminDonationController::class, 'index'])->name('donations.index');
     Route::post('/donation/{donation}/appreciation', [AdminDonationController::class, 'sendAppreciation'])->name('donations.appreciation');
 });

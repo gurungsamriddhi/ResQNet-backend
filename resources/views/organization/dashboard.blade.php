@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-admin-textPrimary font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
-                Welcome back, Shelter Manager 🐾
+                Welcome back, {{ auth()->user()->name }} 🐾
             </h1>
             <p class="text-admin-textSecondary text-sm mt-1">
                 Here's a real-time summary of your shelter's activities, rescues, and adoptions today.

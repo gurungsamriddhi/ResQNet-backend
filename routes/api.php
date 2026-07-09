@@ -93,7 +93,7 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
                 Route::get('/', [RescueController::class, 'index'])->name('index');
                 Route::post('/', [RescueController::class, 'store'])->name('store');
                 Route::get('/{report}', [RescueController::class, 'show'])->name('show');
-                Route::delete('/{rescue}', [RescueController::class, 'destroy'])->name('destroy'); // Add this line
+                Route::delete('/{rescue}', [RescueController::class, 'destroy'])->name('destroy'); // Add this line 
             });
 
             // Donations

@@ -7,6 +7,12 @@
                 <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Donations</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">Monitor and manage all incoming donations</p>
             </div>
+            <div>
+                <button type="button" @click="exportModalOpen = true" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                    Export to Excel
+                </button>
+            </div>
         </div>
 
         @if(session('success'))
@@ -175,6 +181,63 @@
                     </form>
                 </div>
             </div>
+        <!-- Export Modal -->
+        <div x-show="exportModalOpen"
+             class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+             style="display: none;">
+            <div @click.away="exportModalOpen = false"
+                 class="bg-white dark:bg-[#111c2a] rounded-2xl max-w-md w-full mx-4 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700/40">
+                <form action="{{ route('admin.donations.export') }}" method="GET" @submit="exportModalOpen = false">
+                    <div class="p-6 pb-4 border-b border-slate-200 dark:border-slate-700/40">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-600/10 flex items-center justify-center text-emerald-600">
+                                    <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-extrabold text-slate-900 dark:text-slate-100">Export Donations</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Download data as an Excel file</p>
+                                </div>
+                            </div>
+                            <button type="button" @click="exportModalOpen = false"
+                                    class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-400 transition-colors">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Date Range</label>
+                            <select x-model="exportRange" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+                                <option value="all">All Time</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+
+                        <div x-show="exportRange === 'custom'" x-collapse class="space-y-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">Start Date</label>
+                                <input type="date" name="start_date" x-model="exportStartDate" :required="exportRange === 'custom'"
+                                       class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">End Date</label>
+                                <input type="date" name="end_date" x-model="exportEndDate" :required="exportRange === 'custom'"
+                                       class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-[#0b0f19] p-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700/40">
+                        <button type="button" @click="exportModalOpen = false"
+                                class="px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors">Cancel</button>
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-md shadow-emerald-600/20 active:scale-95">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Download Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -187,6 +250,11 @@
                 previewDate: '',
                 previewAmount: '',
                 previewAction: '',
+
+                exportModalOpen: false,
+                exportRange: 'all',
+                exportStartDate: '',
+                exportEndDate: '',
 
                 openPreview(btn) {
                     this.previewEmail = btn.dataset.email;

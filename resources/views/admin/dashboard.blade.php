@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-slate-900 dark:text-slate-100 font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-2">
-                Welcome back, Asmita 🐾
+                Welcome back, {{ auth()->user()->name }} 🐾
             </h1>
             <p class="text-slate-500 dark:text-slate-300 text-sm mt-1">
                 Here's a real-time summary of ResQNet's shelter activities, emergency rescues, and active adoptions today.

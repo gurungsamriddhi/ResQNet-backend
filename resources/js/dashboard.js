@@ -23,6 +23,10 @@ window.subscribeOrganization = (orgId) => {
     channel.listen('.NewRescueReportEvent', (e) => {
         window.dispatchEvent(new CustomEvent('new-rescue-report', { detail: e }));
     });
+
+    channel.listen('.PetSuspendedEvent', (e) => {
+        window.dispatchEvent(new CustomEvent('pet-suspended', { detail: e }));
+    });
 };
 
 window.Echo = echo;

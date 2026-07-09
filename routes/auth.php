@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\OrganizationLoginController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\ForgotPasswordOtpController;
+use App\Http\Controllers\Auth\ForgotPasswordOtpController; 
 use Illuminate\Support\Facades\Route;
 
 // =========================================================================

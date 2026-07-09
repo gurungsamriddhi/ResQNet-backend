@@ -11,7 +11,7 @@ class NewAdoptionRequestNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(protected AdoptionRequest $adoption) {}
+    public function __construct(public AdoptionRequest $adoption) {}
 
     public function via($notifiable)
     {

@@ -9,6 +9,7 @@ use App\Models\RescueReport;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 
 class RescueController extends Controller
 {
@@ -60,16 +61,20 @@ class RescueController extends Controller
     {
         $user = $request->user();
 
-        // Spam Prevention: Check if user has a 'reported' case already
-        $hasActiveReport = RescueReport::where('user_id', $user->id)
-            ->where('status', 'reported')
-            ->exists();
+        // Rate Limiting: Max 3 rescue reports per 15 minutes per user
+        $key = 'rescue-report:' . $user->id;
+        $maxAttempts = 3;
+        $decaySeconds = 15 * 60; // 15 minutes
 
-        if ($hasActiveReport) {
+        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
+            $seconds = RateLimiter::availableIn($key);
             return response()->json([
-                'message' => 'You already have an active rescue report pending. Please wait for an organization to claim it.'
-            ], 422);
+                'message' => "Too many reports submitted. Please wait before submitting another.",
+                'retry_after' => $seconds,
+            ], 429);
         }
+
+        RateLimiter::hit($key, $decaySeconds);
 
         // Create the report
         $report = RescueReport::create([
@@ -91,7 +96,7 @@ class RescueController extends Controller
             $report->update(['image_path' => $path]);
         }
 
-        // Broadcast real-time event so Organization Dashboard updates immediately
+        // Broadcast real-time event so Organization Dashboard updates immediately without refreshing
         broadcast(new \App\Events\NewRescueReportEvent($report));
 
         // Send database notification to all active organizations

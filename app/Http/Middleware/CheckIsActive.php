@@ -18,7 +18,11 @@ class CheckIsActive
     {
         if (Auth::check() && !Auth::user()->is_active) {
             // Log out the inactive user immediately so they don't hold a session
-            Auth::logout();
+            if (method_exists(Auth::guard(), 'logout')) {
+                Auth::logout();
+            } else if (method_exists(Auth::user(), 'currentAccessToken') && Auth::user()->currentAccessToken()) {
+                Auth::user()->currentAccessToken()->delete();
+            }
 
             if ($request->expectsJson()) {
                 return response()->json([

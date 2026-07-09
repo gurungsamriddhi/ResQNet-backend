@@ -17,7 +17,7 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
     use Queueable;
     use DatabaseNotificationTrait;
 
-    protected $adoption;
+    public $adoption;
 
     public function __construct(AdoptionRequest $adoption)
     {

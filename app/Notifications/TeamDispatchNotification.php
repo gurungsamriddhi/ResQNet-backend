@@ -13,7 +13,10 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public RescueReport $rescue, public string $role = 'team member') {}
+    public function __construct(public RescueReport $rescue, public string $role = 'team member')
+    {
+        $this->rescue->loadMissing(['user', 'organization']);
+    }
 
     public function via(object $notifiable): array
     {
@@ -50,10 +53,10 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
         $mail->line("**Description:** {$this->rescue->description}");
 
         if ($this->rescue->image_path) {
-            // Generates a full URL to storage directory
-            $imageUrl = url('storage/' . $this->rescue->image_path);
+            // Generates an absolute URL using the configured APP_URL
+            $imageUrl = rtrim(config('app.url'), '/') . '/storage/' . ltrim($this->rescue->image_path, '/');
             $mail->line('**Reported Image:**');
-            $mail->line("![Rescue Image]({$imageUrl})");
+            $mail->line("[View Reported Image]({$imageUrl})");
         }
 
         $signedUrl = URL::signedRoute('rescue.access', ['report' => $this->rescue, 'teamMember' => $notifiable]);

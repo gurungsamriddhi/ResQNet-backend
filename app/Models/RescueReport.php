@@ -33,8 +33,8 @@ class RescueReport extends Model
     protected function casts(): array
     {
         return [
-            'latitude' => 'decimal:8',
-            'longitude' => 'decimal:8',
+            'latitude' => 'float',
+            'longitude' => 'float',
             'resolved_at' => 'datetime',
             'assigned_at' => 'datetime',
             'in_progress_at' => 'datetime',

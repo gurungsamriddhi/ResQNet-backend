@@ -67,6 +67,11 @@ class PetController extends Controller
             'suspension_reason' => $request->suspension_reason,
         ]);
 
+        if ($pet->organization) {
+            $pet->organization->notify(new \App\Notifications\PetSuspendedNotification($pet));
+            event(new \App\Events\PetSuspendedEvent($pet));
+        }
+
         return back()->with('success', "{$pet->name} has been suspended.");
     }
 

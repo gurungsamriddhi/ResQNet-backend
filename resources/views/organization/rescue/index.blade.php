@@ -1,5 +1,6 @@
 <x-layouts.admin>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
      <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
           x-data="rescuesApp()"
           x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
@@ -233,7 +234,7 @@
                                                  x-cloak class="mt-2 flex items-center gap-2">
                                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-500/20 border border-blue-100 dark:border-blue-500/30 text-[10px] font-bold text-blue-700 dark:text-blue-400">
                                                     <i data-lucide="users" class="w-3 h-3"></i>
-                                                    <span x-text="rescue.assignments?.map(a => a.name || a.teamMember?.name).filter(Boolean).join(', ')"></span>
+                                                    <span x-text="rescue.assignments?.map(a => a.name || a.team_member?.name).filter(Boolean).join(', ')"></span>
                                                 </span>
                                                 <span class="text-[10px] text-admin-textSecondary" x-text="rescue.status === 'resolved' ? 'completed' : 'dispatched'"></span>
                                             </div>
@@ -347,10 +348,10 @@
                                                     <template x-for="member in (rescue.assignments || [])" :key="member.id">
                                                         <div class="flex items-center gap-3 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
                                                             <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                                                                <span x-text="(member.name || member.teamMember?.name || '?').charAt(0)"></span>
+                                                                <span x-text="(member.name || member.team_member?.name || '?').charAt(0)"></span>
                                                             </div>
                                                             <div class="min-w-0">
-                                                                <p class="text-xs font-bold text-admin-textPrimary" x-text="member.name || member.teamMember?.name || 'Unknown'"></p>
+                                                                <p class="text-xs font-bold text-admin-textPrimary" x-text="member.name || member.team_member?.name || 'Unknown'"></p>
                                                                 <p class="text-[10px] text-admin-textSecondary" x-text="member.role || 'Rescuer'"></p>
                                                             </div>
                                                         </div>
@@ -511,7 +512,8 @@
         }
     </style>
 
-    <script>
+    
+<script>
         function rescuesApp() {
             return {
                 rescues: @json($rescues->toArray() ?? []).map(r => ({
@@ -529,6 +531,9 @@
                 isAccepting: false,
                 activeFilter: 'all',
                 orgId: {{ auth()->user()->organization_id ?? 'null' }},
+                
+                // NEW: Store the Leaflet map instance here so we can add markers to it later
+                mapInstance: null, 
 
                 get filteredRescues() {
                     if (this.activeFilter === 'claimed') {
@@ -722,11 +727,26 @@
                     });
 
                     if (typeof Echo !== 'undefined') {
+
+                        // IMPROVEMENT 1: Handle WebSocket connection errors
+                        if (Echo.connector && Echo.connector.pusher) {
+                            Echo.connector.pusher.connection.bind('error', (err) => {
+                                console.error('WebSocket Error:', err);
+                                this.showToast('Live connection error. Realtime updates may be delayed.');
+                            });
+                        }
+
+                        // IMPROVEMENT 2: Leave channel cleanly on page unload
+                        window.addEventListener('beforeunload', () => {
+                            Echo.leave('rescue-updates');
+                        });
+
                         Echo.join('rescue-updates')
                             .here(() => {})
                             .listen('.NewRescueReportEvent', (e) => {
                                 if (!this.rescues.some(r => r.id === e.rescue_id)) {
-                                    this.rescues = [{
+                                    // Create the new rescue object first
+                                    const newRescue = {
                                         id: e.rescue_id,
                                         case_code: e.case_code,
                                         title: e.title,
@@ -739,9 +759,14 @@
                                         user: null,
                                         assignments: [],
                                         organization_id: null,
-                                    }, ...this.rescues];
+                                    };
+                                    
+                                    // Add to Alpine state
+                                    this.rescues = [newRescue, ...this.rescues];
                                     this.showToast('New rescue case reported: ' + e.title);
-                                    setTimeout(() => this.initMap(), 300);
+                                    
+                                    // IMPROVEMENT 3: Add marker dynamically instead of re-running initMap
+                                    this.addMarkerToMap(newRescue);
                                 }
                             })
                             .listen('.CaseClaimedEvent', (e) => {
@@ -780,12 +805,55 @@
                     this.$nextTick(() => this.initMap());
                 },
 
+                // NEW FUNCTION: Extracted marker creation logic so it can be reused
+                addMarkerToMap(r) {
+                    if (!this.mapInstance || !r.latitude || !r.longitude) return;
+                    
+                    const lat = parseFloat(r.latitude);
+                    const lng = parseFloat(r.longitude);
+                    if (isNaN(lat) || isNaN(lng)) return;
+
+                    let icon, popupContent;
+                    const isCritical = r.urgency === 'critical' && r.status === 'reported';
+
+                    if (isCritical) {
+                        icon = L.divIcon({
+                            html: '<div class="leaflet-marker-critical" style="width:28px;height:28px;position:relative"><div class="pulse-ring"></div><div style="position:absolute;inset:3px;border-radius:50%;background:#DC2626;border:3px solid #991B1B"></div></div>',
+                            className: '',
+                            iconSize: [28, 28],
+                            iconAnchor: [14, 14],
+                        });
+                        popupContent = `<div style="background:#0F1A2E;padding:12px 16px;border-radius:8px;min-width:200px;"><p style="color:#fff;font-size:14px;font-weight:700;margin:0;">&#9888;&#65039; ${r.title}</p><p style="color:#94A3B8;font-size:12px;margin:6px 0 0;">${r.address || ''}</p></div>`;
+                    } else {
+                        const color = r.urgency === 'high' ? '#EA7235' : '#FCD34D';
+                        icon = L.divIcon({
+                            html: `<div style="width:20px;height:20px;border-radius:50%;background:${color};border:3px solid #C2410C"></div>`,
+                            className: '',
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10],
+                        });
+                        popupContent = `<div style="padding:8px 12px;"><p style="font-size:13px;font-weight:600;margin:0;">${r.title}</p></div>`;
+                    }
+
+                    const marker = L.marker([lat, lng], { icon });
+                    marker.bindPopup(popupContent);
+                    marker.addTo(this.mapInstance); // Add to the tracked map instance
+                },
+
                 initMap() {
+
+                    // --- ADD THESE 4 LINES ---
+                    if (typeof L === 'undefined') {
+                        setTimeout(() => this.initMap(), 100); // Check again in 100ms
+                        return;
+                    }
+                    //
                     const mapElement = document.getElementById('rescue-map');
                     if (!mapElement || this._mapInitialized) return;
                     this._mapInitialized = true;
 
-                    const map = L.map(mapElement, {
+                    // Assign to this.mapInstance instead of a local const 'map'
+                    this.mapInstance = L.map(mapElement, {
                         center: [28.2096, 83.9856],
                         zoom: 13,
                         zoomControl: false,
@@ -794,47 +862,16 @@
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; OpenStreetMap',
                         maxZoom: 19,
-                    }).addTo(map);
+                    }).addTo(this.mapInstance);
 
+                    // Loop through initial rescues and use our new function
                     this.rescues.forEach(r => {
-                        if (!r.latitude || !r.longitude) return;
-                        const lat = parseFloat(r.latitude);
-                        const lng = parseFloat(r.longitude);
-                        if (isNaN(lat) || isNaN(lng)) return;
-
-                        let icon, popupContent;
-                        const isCritical = r.urgency === 'critical' && r.status === 'reported';
-
-                        if (isCritical) {
-                            icon = L.divIcon({
-                                html: '<div class="leaflet-marker-critical" style="width:28px;height:28px;position:relative"><div class="pulse-ring"></div><div style="position:absolute;inset:3px;border-radius:50%;background:#DC2626;border:3px solid #991B1B"></div></div>',
-                                className: '',
-                                iconSize: [28, 28],
-                                iconAnchor: [14, 14],
-                            });
-                            popupContent = `<div style="background:#0F1A2E;padding:12px 16px;border-radius:8px;min-width:200px;"><p style="color:#fff;font-size:14px;font-weight:700;margin:0;">&#9888;&#65039; ${r.title}</p><p style="color:#94A3B8;font-size:12px;margin:6px 0 0;">${r.address || ''}</p></div>`;
-                        } else {
-                            const color = r.urgency === 'high' ? '#EA7235' : '#FCD34D';
-                            icon = L.divIcon({
-                                html: `<div style="width:20px;height:20px;border-radius:50%;background:${color};border:3px solid #C2410C"></div>`,
-                                className: '',
-                                iconSize: [20, 20],
-                                iconAnchor: [10, 10],
-                            });
-                            popupContent = `<div style="padding:8px 12px;"><p style="font-size:13px;font-weight:600;margin:0;">${r.title}</p></div>`;
-                        }
-
-                        const marker = L.marker([lat, lng], { icon });
-                        marker.bindPopup(popupContent);
-                        marker.addTo(map);
+                        this.addMarkerToMap(r);
                     });
 
-                    setTimeout(() => map.invalidateSize(), 300);
+                    setTimeout(() => this.mapInstance.invalidateSize(), 300);
                 },
             }
         }
-
-
     </script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </x-layouts.admin>

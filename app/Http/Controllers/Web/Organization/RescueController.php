@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Web\Organization;
 use App\Events\CaseClaimedEvent;
 use App\Events\CaseStatusUpdatedEvent;
 use App\Events\CaseTeamAssignedEvent;
+use App\Events\RescueCompletedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalRecord;
 use App\Models\Pet;
 use App\Models\RescueAssignment;
 use App\Models\RescueCaseHistory;
 use App\Models\RescueReport;
+use App\Notifications\RescueCompletedNotification;
 use App\Notifications\RescueTeamAssignedNotification;
 use App\Notifications\TeamDispatchNotification;
 use Illuminate\Http\Request;
@@ -227,6 +229,7 @@ class RescueController extends Controller
                     'is_vaccinated' => false,
                     'is_neutered' => false,
                     'status' => 'in_care',
+                    'qr_code_id' => \Illuminate\Support\Str::random(10),
                 ]);
 
                 MedicalRecord::create([
@@ -257,6 +260,13 @@ class RescueController extends Controller
         });
 
         broadcast(new CaseStatusUpdatedEvent($report, $current));
+
+        // Notify the reporting user when rescue is completed
+        if ($validated['status'] === 'resolved' && $report->user) {
+            $report->loadMissing('organization');
+            $report->user->notify(new RescueCompletedNotification($report));
+            broadcast(new RescueCompletedEvent($report));
+        }
 
         $message = match ($validated['status']) {
             'resolved' => 'Case marked as resolved. Pet profile created and moved to In Care.',

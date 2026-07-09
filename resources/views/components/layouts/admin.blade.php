@@ -414,6 +414,20 @@
                             setTimeout(() => lucide.createIcons(), 50);
                         }
                     });
+                    
+                    window.addEventListener('pet-suspended', (e) => {
+                        this.addNotification({
+                            id: Date.now(),
+                            type: 'alert',
+                            title: 'Pet Profile Suspended',
+                            message: e.detail.message,
+                            action_url: `/organization/pets/${e.detail.pet_id}`,
+                            time: 'Just now'
+                        });
+                        if(window.lucide) {
+                            setTimeout(() => lucide.createIcons(), 50);
+                        }
+                    });
                 },
                 
                 toggle() {
