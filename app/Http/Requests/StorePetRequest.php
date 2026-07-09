@@ -25,7 +25,7 @@ class StorePetRequest extends FormRequest
             'health_status' => 'nullable|string',
             'is_vaccinated' => 'boolean',
             'is_neutered' => 'boolean',
-            'status' => 'required|in:available,adopted,unavailable,inactive',
+            'status' => 'required|in:available,adopted,unavailable,inactive,in_care,suspended',
             'primary_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',

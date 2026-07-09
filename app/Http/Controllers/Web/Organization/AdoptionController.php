@@ -20,7 +20,7 @@ class AdoptionController extends Controller
     {
         $orgId = auth()->user()?->organization?->id;
 
-        $liveListings = Pet::with('media')
+        $liveListings = Pet::with(['media', 'organization'])
             ->where('organization_id', $orgId)
             ->where('status', 'available')
             ->orderByDesc('created_at')
@@ -28,7 +28,7 @@ class AdoptionController extends Controller
             ->map(fn ($pet) => $this->transformListing($pet));
 
         // Fix: eager-load user.profile to prevent N+1 queries in transformApplication()
-        $applications = AdoptionRequest::with(['pet.media', 'user.profile'])
+        $applications = AdoptionRequest::with(['pet.media', 'user.profile', 'pet.organization'])
             ->whereHas('pet', fn ($q) => $q->where('organization_id', $orgId))
             ->where('status', 'pending')
             ->orderByDesc('created_at')
@@ -149,10 +149,10 @@ class AdoptionController extends Controller
             'breed' => $pet->breed ?? '',
             'color' => $speciesColors[$pet->species] ?? 'bg-slate-600',
             'age' => $ageLabel,
-            'weight' => '-',
             'bio' => $pet->description ?? '',
             'traits' => array_filter([$pet->species, $pet->size, $pet->gender]),
             'primary_image' => $pet->getFirstMediaUrl('images') ?: null,
+            'org_name' => $pet->organization?->name ?? 'ResQNet Animal Shelter',
             'healthChecklist' => [
                 ['label' => 'Fully Vaccinated', 'done' => $pet->is_vaccinated],
                 ['label' => 'Neutered', 'done' => $pet->is_neutered],
@@ -171,6 +171,10 @@ class AdoptionController extends Controller
             'reason' => $req->message ?? '',
             'pet' => $req->pet->name,
             'pet_id' => $req->pet->id,
+            'pet_age' => $req->pet->age_months === null ? '-' : ($req->pet->age_months < 12 ? "{$req->pet->age_months} months" : floor($req->pet->age_months / 12) . ' years'),
+            'pet_breed' => $req->pet->breed ?? 'Unknown',
+            'pet_image' => $req->pet->getFirstMediaUrl('images'),
+            'pet_traits' => array_filter([$req->pet->species, $req->pet->size, $req->pet->gender]),
             'date' => $req->created_at?->format('Y-m-d'),
             'status' => ucfirst($req->status),
             'has_other_pets' => $req->user?->profile?->has_other_pets,
@@ -178,6 +182,10 @@ class AdoptionController extends Controller
             'employment_status' => $req->user?->profile?->employment_status,
             'family_members_count' => $req->user?->profile?->family_members_count,
             'experience_with_pets' => $req->user?->profile?->experience_with_pets,
+            'bio' => $req->user?->profile?->bio,
+            'preferred_pet_type' => $req->user?->profile?->preferred_pet_type,
+            'has_yard' => $req->user?->profile?->has_yard,
+            'is_allergic' => $req->user?->profile?->is_allergic,
         ];
     }
 }

@@ -726,7 +726,8 @@
                                     class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
                                 <option value="available">Available</option>
                                 <option value="adopted">Adopted</option>
-                                <option value="unavailable">In Care</option>
+                                <option value="in_care">In Care</option>
+                                <option value="unavailable">Unavailable</option>
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>

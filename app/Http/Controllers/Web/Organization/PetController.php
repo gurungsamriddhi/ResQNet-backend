@@ -171,7 +171,9 @@ class PetController extends Controller
         if ($orgId && $pet->organization_id !== $orgId) {
             abort(403);
         }
-        $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive']);
+        
+        $request->merge(['status' => strtolower(trim($request->input('status', '')))]);
+        $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive,in_care,suspended']);
         $data = ['status' => $request->status];
         if ($request->status === 'adopted') {
             $data['adopted_at'] = $pet->adopted_at ?? now();

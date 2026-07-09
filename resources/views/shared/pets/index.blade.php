@@ -86,7 +86,8 @@
                     <option value="">All Statuses</option>
                     <option value="available">Available</option>
                     <option value="adopted">Adopted</option>
-                    <option value="unavailable">In Care</option>
+                    <option value="in_care">In Care</option>
+                    <option value="unavailable">Unavailable</option>
                     <option value="inactive">Inactive</option>
                 </select>
                 <div
@@ -168,7 +169,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold uppercase tracking-wider text-admin-textSecondary/60">In Care</p>
-                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="pets.filter(p => p.status === 'unavailable').length"></p>
+                    <p class="text-xl font-extrabold text-admin-textPrimary" x-text="pets.filter(p => p.status === 'in_care' || p.status === 'unavailable').length"></p>
                 </div>
             </div>
         </div>
@@ -190,7 +191,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-admin-border/60">
-                        <template x-for="pet in filteredPets" :key="pet.qr_code_id">
+                        <template x-for="pet in filteredPets" :key="pet.id">
                             <tr class="hover:bg-admin-bg/30 transition-colors duration-200 group relative">
                                 <!-- Name + Avatar -->
                                 <td class="py-5 px-6">
@@ -237,16 +238,30 @@
                                 </td>
                                 <!-- Status -->
                                 <td class="py-5 px-6">
-                                    <span
-                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm border"
-                                        :class="statusClass(pet.status)">
-                                        <template x-if="pet.status === 'available'"><span
-                                                class="w-1.5 h-1.5 rounded-full bg-admin-btnGreen animate-pulse"></span></template>
-                                        <template x-if="pet.status !== 'available'"><i
-                                                :data-lucide="statusIcon(pet.status)"
-                                                class="w-3.5 h-3.5"></i></template>
-                                        <span x-text="statusLabel(pet.status)"></span>
-                                    </span>
+                                    <template x-if="canEdit">
+                                        <select :value="pet.status"
+                                                @change="changePetStatus(pet, $event.target.value)"
+                                                :disabled="statusUpdatingId === pet.id"
+                                                class="min-w-[8.5rem] px-2.5 py-1.5 rounded-lg border border-admin-border bg-admin-surface text-xs font-bold text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary disabled:opacity-60">
+                                            <option value="available">Available</option>
+                                            <option value="adopted">Adopted</option>
+                                            <option value="in_care">In Care</option>
+                                            <option value="unavailable">Unavailable</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </template>
+                                    <template x-if="!canEdit">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm border"
+                                            :class="statusClass(pet.status)">
+                                            <template x-if="pet.status === 'available'"><span
+                                                    class="w-1.5 h-1.5 rounded-full bg-admin-btnGreen animate-pulse"></span></template>
+                                            <template x-if="pet.status !== 'available'"><i
+                                                    :data-lucide="statusIcon(pet.status)"
+                                                    class="w-3.5 h-3.5"></i></template>
+                                            <span x-text="statusLabel(pet.status)"></span>
+                                        </span>
+                                    </template>
                                 </td>
                                 <!-- Actions -->
                                 <td class="py-5 px-6 text-right">
@@ -634,7 +649,8 @@
                                 class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
                                 <option value="available">Available</option>
                                 <option value="adopted">Adopted</option>
-                                <option value="unavailable">In Care</option>
+                                <option value="in_care">In Care</option>
+                                <option value="unavailable">Unavailable</option>
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>
@@ -878,7 +894,8 @@
                                 class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
                                 <option value="available">Available</option>
                                 <option value="adopted">Adopted</option>
-                                <option value="unavailable">In Care</option>
+                                <option value="in_care">In Care</option>
+                                <option value="unavailable">Unavailable</option>
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>
@@ -1067,6 +1084,7 @@
                 toastMessage: '',
                 toastVisible: false,
                 toastTimeout: null,
+                statusUpdatingId: null,
                 csrfToken: document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute(
                     'content') ?? '',
                 petsBase: petsBase,
@@ -1201,6 +1219,52 @@
                         this.toastVisible = false;
                         this.toastMessage = '';
                     }, 4000);
+                },
+
+                async changePetStatus(pet, newStatus) {
+                    if (!newStatus || newStatus === pet.status) return;
+                    const previousStatus = pet.status;
+                    this.statusUpdatingId = pet.id;
+                    try {
+                        const res = await fetch(this.petsBase + '/' + pet.id + '/status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': this.csrfToken,
+                            },
+                            body: JSON.stringify({ status: newStatus }),
+                        });
+                        const json = await res.json().catch(() => ({}));
+                        if (!res.ok) {
+                            const message = json.message
+                                || json.errors?.status?.[0]
+                                || 'Failed to update status.';
+                            this.showToastMessage(message);
+                            return;
+                        }
+                        if (json.pet) {
+                            const idx = this.pets.findIndex(p => p.id === pet.id);
+                            if (idx !== -1) {
+                                this.pets.splice(idx, 1, json.pet);
+                            }
+                            if (this.selectedPet?.id === pet.id) {
+                                this.selectedPet = json.pet;
+                            }
+                        } else {
+                            pet.status = newStatus;
+                        }
+                        this.showToastMessage(json.message || 'Status updated.');
+                    } catch (e) {
+                        console.error('Status update failed', e);
+                        pet.status = previousStatus;
+                        this.showToastMessage('Network error. Please try again.');
+                    } finally {
+                        this.statusUpdatingId = null;
+                        this.$nextTick(() => {
+                            if (typeof lucide !== 'undefined') lucide.createIcons();
+                        });
+                    }
                 },
 
                 async executeDelete() {
@@ -1389,7 +1453,8 @@
                     const map = {
                         available: 'Available',
                         adopted: 'Adopted',
-                        unavailable: 'In Care',
+                        in_care: 'In Care',
+                        unavailable: 'Unavailable',
                         inactive: 'Pending'
                     };
                     return map[status] || status;
@@ -1399,6 +1464,7 @@
                     const map = {
                         available: 'bg-admin-successBg text-admin-successText border-admin-successText/10',
                         adopted: 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]/30',
+                        in_care: 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]/30',
                         unavailable: 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]/30',
                         inactive: 'bg-[#FFFBEB] text-[#D97706] border-[#FCD34D]/30',
                     };
@@ -1408,6 +1474,7 @@
                 statusIcon(status) {
                     const map = {
                         adopted: 'check',
+                        in_care: 'heart',
                         unavailable: 'heart',
                         inactive: 'hourglass'
                     };

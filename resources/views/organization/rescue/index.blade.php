@@ -591,12 +591,16 @@
                     if (this.selectedMembers.length === 0 || !this.assignTarget) return;
                     const targetId = this.assignTarget.id;
                     try {
-                        const response = await fetch('{{ route("organization.rescues.assign-team", ["report" => "__ID__"]) }}'.replace('__ID__', targetId), {
+                        const response = await fetch('{{ route("organization.rescues.assign-team", ["report" => "__ID__"], false) }}'.replace('__ID__', targetId), {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
                             body: JSON.stringify({ team_members: this.selectedMembers }),
                         });
-                        const data = await response.json();
+                        const data = await response.json().catch(() => ({}));
                         if (response.ok) {
                             const teamData = data.data?.assignments || this.selectedMembers.map(m => ({
                                 id: m.team_member_id,
@@ -628,11 +632,14 @@
                     if (this.isAccepting) return;
                     this.isAccepting = true;
                     try {
-                        const response = await fetch('{{ route("organization.rescues.accept", ["report" => "__ID__"]) }}'.replace('__ID__', cardId), {
+                        const response = await fetch('{{ route("organization.rescues.accept", ["report" => "__ID__"], false) }}'.replace('__ID__', cardId), {
                             method: 'POST',
-                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
                         });
-                        const data = await response.json();
+                        const data = await response.json().catch(() => ({}));
                         if (response.ok) {
                             this.rescues = this.rescues.map(r => {
                                 if (r.id !== cardId) return r;
@@ -700,12 +707,16 @@
 
                 async updateCaseStatus(reportId, newStatus) {
                     try {
-                        const response = await fetch('{{ route("organization.rescues.update", ["report" => "__ID__"]) }}'.replace('__ID__', reportId), {
+                        const response = await fetch('{{ route("organization.rescues.update", ["report" => "__ID__"], false) }}'.replace('__ID__', reportId), {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
                             body: JSON.stringify({ status: newStatus }),
                         });
-                        const data = await response.json();
+                        const data = await response.json().catch(() => ({}));
                         if (response.ok) {
                             this.rescues = this.rescues.map(r => {
                                 if (r.id !== reportId) return r;

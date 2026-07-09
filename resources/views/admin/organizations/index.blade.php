@@ -416,50 +416,77 @@
         </div>
 
         <!-- Document Viewer Modal -->
-        <div x-show="docModalOpen" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div x-show="docModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 transition-opacity" aria-hidden="true" @click="docModalOpen = false">
-                    <div class="absolute inset-0 bg-slate-900 opacity-80 backdrop-blur-sm"></div>
-                </div>
+        <div x-show="docModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" style="display: none;">
+            <!-- Glassy Backdrop -->
+            <div x-show="docModalOpen" 
+                 x-transition:enter="ease-out duration-300" 
+                 x-transition:enter-start="opacity-0" 
+                 x-transition:enter-end="opacity-100" 
+                 x-transition:leave="ease-in duration-200" 
+                 x-transition:leave-start="opacity-100" 
+                 x-transition:leave-end="opacity-0" 
+                 class="absolute inset-0 bg-slate-900/80 backdrop-blur-md" 
+                 @click="docModalOpen = false"></div>
 
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                <div x-show="docModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white dark:bg-[#1a2333] rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full">
-                    
-                    <div class="bg-white dark:bg-[#1a2333] px-4 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="text-lg leading-6 font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                            <i data-lucide="file-text" class="w-5 h-5 text-admin-primary"></i>
-                            <span x-text="`Registration Document: ${currentDocName}`"></span>
-                        </h3>
-                        <button @click="docModalOpen = false" class="text-slate-400 dark:text-slate-300 hover:text-slate-500 dark:text-slate-300 hover:bg-slate-100 rounded-full p-1 transition-colors">
-                            <i data-lucide="x" class="w-5 h-5"></i>
-                        </button>
+            <!-- Modal Content -->
+            <div x-show="docModalOpen" 
+                 x-transition:enter="ease-out duration-300" 
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-4" 
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
+                 x-transition:leave="ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0" 
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-4" 
+                 class="relative w-full max-w-5xl h-[85vh] bg-white dark:bg-[#0b0f19] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/50 dark:border-slate-800/80">
+                
+                <!-- Premium Header -->
+                <div class="flex-none bg-white dark:bg-[#111c2a] border-b border-slate-100 dark:border-slate-800/80 px-6 py-4 flex items-center justify-between z-10 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center border border-indigo-100 dark:border-indigo-500/20 shadow-inner">
+                            <i data-lucide="file-check-2" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 leading-tight">Registration Document</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" x-text="currentDocName"></p>
+                        </div>
                     </div>
                     
-                    <div class="bg-slate-100 dark:bg-[#111c2a] p-0 relative" style="height: 70vh;">
+                    <div class="flex items-center gap-3">
                         <template x-if="currentDocUrl">
-                            <iframe :src="currentDocUrl" class="w-full h-full border-0" title="Document Viewer"></iframe>
-                        </template>
-                        <template x-if="!currentDocUrl">
-                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-300">
-                                <i data-lucide="file-warning" class="w-12 h-12 mb-3 text-slate-300 dark:text-slate-300"></i>
-                                <p class="text-lg font-medium">No document available</p>
-                                <p class="text-sm mt-1">This organization has not uploaded a registration document.</p>
-                            </div>
-                        </template>
-                    </div>
-                    
-                    <div class="bg-slate-50 dark:bg-[#0b0f19] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200">
-                        <template x-if="currentDocUrl">
-                            <a :href="currentDocUrl" target="_blank" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-admin-primary text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary sm:ml-3 sm:w-auto sm:text-sm items-center gap-2">
+                            <a :href="currentDocUrl" target="_blank" 
+                               class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1a2333] hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
                                 <i data-lucide="external-link" class="w-4 h-4"></i>
-                                Open in new tab
+                                Open Tab
                             </a>
                         </template>
-                        <button type="button" @click="docModalOpen = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 shadow-sm px-4 py-2 bg-white dark:bg-[#1a2333] text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#0b0f19] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Close
+                        <button @click="docModalOpen = false" 
+                                class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-[#1a2333] text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-colors">
+                            <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
+                </div>
+                
+                <!-- Document Viewer Area -->
+                <div class="flex-1 bg-slate-100/50 dark:bg-[#080b12] relative overflow-hidden flex items-center justify-center p-4">
+                    <template x-if="currentDocUrl">
+                        <div class="w-full h-full rounded-xl overflow-hidden shadow-inner bg-white dark:bg-[#111c2a] border border-slate-200/50 dark:border-slate-800/80 flex items-center justify-center">
+                            <template x-if="isImage(currentDocUrl)">
+                                <img :src="currentDocUrl" class="max-w-full max-h-full object-contain p-2" alt="Document">
+                            </template>
+                            <template x-if="!isImage(currentDocUrl)">
+                                <iframe :src="currentDocUrl" class="w-full h-full border-0 rounded-xl bg-white" title="Document Viewer"></iframe>
+                            </template>
+                        </div>
+                    </template>
+                    
+                    <template x-if="!currentDocUrl">
+                        <div class="w-full max-w-md bg-white dark:bg-[#111c2a] rounded-2xl border border-slate-200 dark:border-slate-800/80 p-8 flex flex-col items-center justify-center text-center shadow-sm">
+                            <div class="w-16 h-16 rounded-2xl bg-slate-50 dark:bg-[#1a2333] border border-slate-100 dark:border-slate-800 flex items-center justify-center mb-4">
+                                <i data-lucide="file-x-2" class="w-8 h-8 text-slate-400 dark:text-slate-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">No Document Available</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">This organization has not uploaded a valid registration certificate for review.</p>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -560,6 +587,11 @@
 
                 inviteOrganization() {
                     window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'An invitation link will be sent to the organization admin\'s email address.' } }));
+                },
+
+                isImage(url) {
+                    if (!url) return false;
+                    return url.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/i) !== null;
                 }
             }));
         });

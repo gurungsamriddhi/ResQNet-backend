@@ -23,6 +23,7 @@ class OrganizationTeamController extends Controller
                     'status' => $member->status === 'active' ? 'Active' : 'Inactive',
                     'availability' => $member->status === 'active' ? 'Available' : 'Unavailable',
                     'appliedAt' => $member->created_at->diffForHumans(),
+                    'joinedAt' => $member->created_at->format('M d, Y H:i:s'),
                     'skills' => ['Available for Dispatch'],
                     'sector' => 'Main Sector',
                     'emergencyContact' => 'N/A',
@@ -38,9 +39,9 @@ class OrganizationTeamController extends Controller
     public function invite(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:organization_teams,email',
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10', 'max:20'],
             'role' => 'required|string',
         ]);
 
@@ -65,6 +66,7 @@ class OrganizationTeamController extends Controller
                 'status' => 'Active',
                 'availability' => 'Available',
                 'appliedAt' => $member->created_at->diffForHumans(),
+                'joinedAt' => $member->created_at->format('M d, Y H:i:s'),
                 'skills' => ['Available for Dispatch'],
                 'sector' => 'Main Sector',
                 'emergencyContact' => 'N/A',

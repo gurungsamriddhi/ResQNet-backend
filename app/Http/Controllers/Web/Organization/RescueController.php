@@ -20,6 +20,15 @@ use Illuminate\Support\Facades\DB;
 
 class RescueController extends Controller
 {
+    private function safeBroadcast(object $event): void
+    {
+        try {
+            broadcast($event);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
     public function index()
     {
         $orgId = auth()->user()->organization_id;
@@ -88,7 +97,7 @@ class RescueController extends Controller
             'notes' => 'Case accepted by organization',
         ]);
 
-        broadcast(new CaseClaimedEvent($report));
+        $this->safeBroadcast(new CaseClaimedEvent($report));
 
         // Notify other organizations that this case has been claimed
         $otherOrgs = \App\Models\Organization::where('status', 'active')
@@ -162,7 +171,7 @@ class RescueController extends Controller
             'role' => $a->role,
         ])->toArray();
 
-        broadcast(new CaseTeamAssignedEvent($report, $teamData));
+        $this->safeBroadcast(new CaseTeamAssignedEvent($report, $teamData));
 
         foreach ($report->assignments as $assignment) {
             if ($assignment->teamMember) {
@@ -259,13 +268,13 @@ class RescueController extends Controller
             ]);
         });
 
-        broadcast(new CaseStatusUpdatedEvent($report, $current));
+        $this->safeBroadcast(new CaseStatusUpdatedEvent($report, $current));
 
         // Notify the reporting user when rescue is completed
         if ($validated['status'] === 'resolved' && $report->user) {
             $report->loadMissing('organization');
             $report->user->notify(new RescueCompletedNotification($report));
-            broadcast(new RescueCompletedEvent($report));
+            $this->safeBroadcast(new RescueCompletedEvent($report));
         }
 
         $message = match ($validated['status']) {

@@ -152,10 +152,6 @@
                                             <span class="text-slate-500 dark:text-slate-300">Age</span>
                                             <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="pet.age"></span>
                                         </div>
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-slate-500 dark:text-slate-300">Weight</span>
-                                            <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="pet.weight"></span>
-                                        </div>
                                         <div class="pt-2 border-t border-admin-border/50">
                                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-2">Health Checklist</span>
                                             <div class="flex flex-wrap gap-1.5">
@@ -178,23 +174,19 @@
                                         <i data-lucide="building" class="w-3.5 h-3.5"></i>
                                         Mobile App Org Data Footer
                                     </span>
-                                    <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-3.5 space-y-2 shadow-sm">
+                                    <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-3.5 space-y-2 shadow-sm mt-1">
                                         <div class="flex items-center gap-2.5">
-                                            <div class="w-7 h-7 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0">
-                                                <i data-lucide="paw-print" class="w-3.5 h-3.5"></i>
+                                            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="building-2" class="w-4 h-4"></i>
                                             </div>
                                             <div>
-                                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">ResQNet Animal Shelter</span>
-                                                <span class="block text-[10px] text-slate-400 dark:text-slate-300">Verified Organization</span>
+                                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200" x-text="pet.org_name || 'Animal Shelter'"></span>
+                                                <span class="block text-[10px] text-slate-400 dark:text-slate-300">Listed by Partner</span>
                                             </div>
                                         </div>
-                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"></i>
-                                            <span>+977-1-4XXXXXX</span>
-                                        </div>
-                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"></i>
-                                            <span>Pokhara Metropolitan-9, Kaski</span>
+                                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-2 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-100 dark:border-slate-700">
+                                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                                            <span>Platform Verified Organization</span>
                                         </div>
                                     </div>
                                 </div>
@@ -326,7 +318,54 @@
                                             </div>
                                             <div class="pt-2 border-t border-admin-border/50">
                                                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-1.5">Adoption Reason</span>
-                                                <p class="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed" x-text="app.reason"></p>
+                                                <p class="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed" x-text="app.reason || 'No reason provided.'"></p>
+                                            </div>
+                                            
+                                            <!-- Eligibility & Home Environment -->
+                                            <div class="pt-3 border-t border-admin-border/50 mt-3">
+                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-2.5">Eligibility & Home Environment</span>
+                                                <div class="grid grid-cols-2 gap-y-3 gap-x-4">
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Housing Type</span>
+                                                        <span class="font-semibold text-slate-700 dark:text-slate-300 capitalize" x-text="app.housing_type || 'Unknown'"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Employment</span>
+                                                        <span class="font-semibold text-slate-700 dark:text-slate-300 capitalize" x-text="app.employment_status || 'Unknown'"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Family Members</span>
+                                                        <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="app.family_members_count || 'Unknown'"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Experience</span>
+                                                        <span class="font-semibold text-slate-700 dark:text-slate-300 capitalize" x-text="app.experience_with_pets ? app.experience_with_pets.replace('_', ' ') : 'Unknown'"></span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex flex-wrap gap-2 mt-3">
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border"
+                                                          :class="app.has_yard ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-200/50' : 'bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200/50'">
+                                                        <i data-lucide="trees" class="w-3 h-3"></i>
+                                                        <span x-text="app.has_yard ? 'Has Yard' : 'No Yard'"></span>
+                                                    </span>
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border"
+                                                          :class="app.has_other_pets ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 border-indigo-200/50' : 'bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200/50'">
+                                                        <i data-lucide="paw-print" class="w-3 h-3"></i>
+                                                        <span x-text="app.has_other_pets ? 'Has Other Pets' : 'No Other Pets'"></span>
+                                                    </span>
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border"
+                                                          :class="app.is_allergic ? 'bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-200/50' : 'bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200/50'">
+                                                        <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                                                        <span x-text="app.is_allergic ? 'Has Allergies' : 'No Allergies'"></span>
+                                                    </span>
+                                                </div>
+                                                <template x-if="app.bio">
+                                                    <div class="mt-3 p-3 bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/50 shadow-sm">
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block mb-1">Adopter Bio</span>
+                                                        <p class="text-xs text-slate-700 dark:text-slate-300 italic" x-text="app.bio"></p>
+                                                    </div>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
@@ -336,37 +375,43 @@
                                             <i data-lucide="dog" class="w-3.5 h-3.5"></i>
                                             Target Pet Details
                                         </span>
-                                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 p-3.5 space-y-2.5 shadow-sm">
-                                            <div class="flex items-center gap-3 pb-2 border-b border-admin-border/40">
-                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white uppercase shadow-sm"
-                                                     :class="getPetColor(app.pet)">
-                                                    <span x-text="app.pet.charAt(0)"></span>
+                                        <div class="bg-white dark:bg-[#1a2333] rounded-xl border border-admin-border/60 overflow-hidden shadow-sm">
+                                            <!-- Pet Image / Banner -->
+                                            <div class="h-32 w-full bg-slate-100 dark:bg-slate-800 relative">
+                                                <template x-if="app.pet_image">
+                                                    <img :src="app.pet_image" class="w-full h-full object-cover">
+                                                </template>
+                                                <template x-if="!app.pet_image">
+                                                    <div class="w-full h-full flex items-center justify-center text-4xl font-bold text-white uppercase shadow-sm" :class="getPetColor(app.pet)">
+                                                        <span x-text="app.pet.charAt(0)"></span>
+                                                    </div>
+                                                </template>
+                                                <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
+                                                    <span class="text-sm font-bold text-white block leading-none" x-text="app.pet"></span>
+                                                    <span class="text-[10px] text-white/70 block mt-0.5" x-text="app.pet_breed || getPetBreed(app.pet) || 'Mixed Breed'"></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-4 space-y-2.5">
+                                                <div class="grid grid-cols-2 gap-4 pb-2 border-b border-admin-border/40">
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Age</span>
+                                                        <span class="font-semibold text-xs text-slate-700 dark:text-slate-300" x-text="app.pet_age || getPetAge(app.pet)"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 dark:text-slate-300 block">Breed</span>
+                                                        <span class="font-semibold text-xs text-slate-700 dark:text-slate-300 truncate block" x-text="app.pet_breed || getPetBreed(app.pet)"></span>
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <span class="text-sm font-bold text-slate-800 dark:text-slate-200" x-text="app.pet"></span>
-                                                    <span class="block text-[10px] text-slate-400 dark:text-slate-300" x-text="getPetBreed(app.pet)"></span>
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500 dark:text-slate-300">Age</span>
-                                                <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetAge(app.pet)"></span>
-                                            </div>
-                                            <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500 dark:text-slate-300">Weight</span>
-                                                <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetWeight(app.pet)"></span>
-                                            </div>
-                                            <div class="flex justify-between text-xs">
-                                                <span class="text-slate-500 dark:text-slate-300">Breed</span>
-                                                <span class="font-semibold text-slate-700 dark:text-slate-300" x-text="getPetBreed(app.pet)"></span>
-                                            </div>
-                                            <div class="pt-2 border-t border-admin-border/40">
-                                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-1.5">Traits</span>
-                                                <div class="flex flex-wrap gap-1">
-                                                    <template x-for="trait in getPetTraits(app.pet)" :key="trait">
-                                                        <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#111c2a] px-2 py-0.5 rounded-full border border-slate-200/50">
-                                                            <span x-text="trait"></span>
-                                                        </span>
-                                                    </template>
+                                                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 block mb-2">Traits</span>
+                                                    <div class="flex flex-wrap gap-1.5">
+                                                        <template x-for="trait in (app.pet_traits || getPetTraits(app.pet))" :key="trait">
+                                                            <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-[#111c2a] px-2 py-0.5 rounded-full border border-slate-200/50">
+                                                                <span x-text="trait"></span>
+                                                            </span>
+                                                        </template>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

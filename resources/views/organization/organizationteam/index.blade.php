@@ -87,6 +87,10 @@
                                 <span x-text="member.availability"></span>
                             </span>
                             <span class="text-xs text-slate-400 dark:text-slate-300" x-text="member.contact"></span>
+                            <button @click="showInfo(member)"
+                                    class="p-1.5 rounded-lg text-slate-400 hover:text-brand-orange hover:bg-brand-orange/10 dark:hover:bg-brand-orange/20 transition-colors">
+                                <i data-lucide="info" class="w-4 h-4"></i>
+                            </button>
                             <button @click="confirmRemove(member)"
                                     class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -219,6 +223,63 @@
                 </div>
             </div>
         </div>
+        <!-- Info Modal -->
+        <div x-cloak x-show="showInfoModal" style="display: none;"
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showInfoModal = false"></div>
+            <div class="relative bg-white dark:bg-[#0f1a28] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700/40 w-full max-w-sm p-6"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+                 @click.outside="showInfoModal = false">
+                <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100 dark:border-slate-700/50">
+                    <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i data-lucide="info" class="w-5 h-5 text-brand-orange"></i>
+                        Team Member Info
+                    </h3>
+                    <button @click="showInfoModal = false" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <template x-if="infoTarget">
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-50 dark:border-slate-800/50">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px]">Name</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="infoTarget.name"></span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-50 dark:border-slate-800/50">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px]">Email</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="infoTarget.email"></span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-50 dark:border-slate-800/50">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px]">Contact</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="infoTarget.contact"></span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-50 dark:border-slate-800/50">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px]">Joined Date</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="infoTarget.joinedAt || infoTarget.appliedAt"></span>
+                        </div>
+                    </div>
+                </template>
+                
+                <div class="mt-6 flex justify-end">
+                    <button @click="showInfoModal = false"
+                            class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold rounded-xl transition-all duration-200 shadow-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -233,6 +294,9 @@
                 showRemoveModal: false,
                 removeTarget: null,
                 removeSubmitting: false,
+
+                showInfoModal: false,
+                infoTarget: null,
 
                 get stats() {
                     return {
@@ -268,6 +332,11 @@
                 confirmRemove(member) {
                     this.removeTarget = member;
                     this.showRemoveModal = true;
+                },
+
+                showInfo(member) {
+                    this.infoTarget = member;
+                    this.showInfoModal = true;
                 },
 
                 async submitRemove() {

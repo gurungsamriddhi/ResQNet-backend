@@ -181,13 +181,15 @@
                     </form>
                 </div>
             </div>
+        </div>
+
         <!-- Export Modal -->
         <div x-show="exportModalOpen"
              class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
              style="display: none;">
             <div @click.away="exportModalOpen = false"
                  class="bg-white dark:bg-[#111c2a] rounded-2xl max-w-md w-full mx-4 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700/40">
-                <form action="{{ route('admin.donations.export') }}" method="GET" @submit="exportModalOpen = false">
+                <form action="{{ route('admin.donations.export', [], false) }}" method="GET" @submit="setTimeout(() => { exportModalOpen = false }, 200)">
                     <div class="p-6 pb-4 border-b border-slate-200 dark:border-slate-700/40">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">

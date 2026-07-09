@@ -20,7 +20,7 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'current_password' => ['nullable', 'required_with:password', 'current_password'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed', 'different:current_password'],
         ]);
 
         $user->name = $request->name;
