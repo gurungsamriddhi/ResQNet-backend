@@ -723,6 +723,21 @@
             }));
         });
     </script>
+
+    <!-- Global Echo Organization Channel Subscription -->
+    @if(!$isSuperAdmin && auth()->user()?->organization?->id)
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orgId = {{ auth()->user()->organization->id }};
+            if (window.subscribeOrganization) {
+                window.subscribeOrganization(orgId);
+            }
+        });
+    </script>
+    @endif
+
+    <!-- Render child view @push('scripts') stacks -->
+    @stack('scripts')
 </body>
 
 </html>

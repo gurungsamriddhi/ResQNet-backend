@@ -452,6 +452,29 @@
                     delistReason: '',
                     delistLoading: false,
 
+                    init() {
+                        // Listen for real-time new adoption request events from Echo
+                        window.addEventListener('new-adoption-request', (e) => {
+                            const app = e.detail?.application;
+                            if (!app) return;
+
+                            // Prevent duplicate entries
+                            const exists = this.applications.some(a => a.id === app.id);
+                            if (exists) return;
+
+                            // Inject the new application at the top of the list
+                            this.applications.unshift(app);
+
+                            // Auto-switch to the applications tab
+                            this.activeTab = 'applications';
+
+                            // Re-render Lucide icons for the new DOM elements
+                            if (typeof lucide !== 'undefined') {
+                                this.$nextTick(() => lucide.createIcons());
+                            }
+                        });
+                    },
+
                     togglePetDetails(name) {
                         this.expandedPet = this.expandedPet === name ? null : name;
                     },
@@ -676,18 +699,4 @@
         </div>
     </div>
 
-    @push('scripts')
-    <script>
-        // Subscribe to real-time adoption request events on this page
-        if (window.subscribeOrganization && {{ $orgId ?? 'null' }}) {
-            window.subscribeOrganization({{ $orgId }});
-        }
-
-        // When a new adoption request arrives via WebSocket, reload the page
-        // to pull fresh data (simpler and more reliable than client-side state sync)
-        window.addEventListener('new-adoption-request', () => {
-            window.location.reload();
-        });
-    </script>
-    @endpush
 </x-layouts.admin>

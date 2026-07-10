@@ -90,6 +90,7 @@ class AdoptionRequestController extends Controller
         ));
 
         // Broadcast real-time event to the organization dashboard
+        $adoption->load(['pet.media', 'user.profile']);
         broadcast(new NewAdoptionRequestEvent($adoption));
 
         $adoption->load(['pet.media', 'pet.organization']);

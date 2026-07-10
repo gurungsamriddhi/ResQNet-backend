@@ -55,14 +55,13 @@ class AdoptionController extends Controller
             return response()->json(['message' => 'This application has already been reviewed.'], 422);
         }
 
-        // Collect auto-rejected application IDs so we can notify those users after commit
-        $autoRejectedIds = collect();
+        $autoRejectedApplications = collect();
 
-        DB::transaction(function () use ($request, $adoption, &$autoRejectedIds) {
+        DB::transaction(function () use ($request, $adoption, &$autoRejectedApplications) {
             $adoption->update([
                 'status' => $request->status,
                 'organization_response' => $request->organization_response,
-                'reviewed_by' => $request->user()->id,
+                'reviewed_by' => auth()->id(),
                 'reviewed_at' => now(),
             ]);
 
@@ -72,12 +71,14 @@ class AdoptionController extends Controller
                     'adopted_at' => now(),
                 ]);
 
-                // Capture IDs of other pending applications before auto-rejecting
-                $autoRejectedIds = AdoptionRequest::where('pet_id', $adoption->pet_id)
+                // Get other pending applications for auto-rejection
+                $autoRejectedApplications = AdoptionRequest::with(['pet', 'user'])
+                    ->where('pet_id', $adoption->pet_id)
                     ->where('id', '!=', $adoption->id)
                     ->where('status', 'pending')
-                    ->pluck('id');
+                    ->get();
 
+                // Auto reject them
                 AdoptionRequest::where('pet_id', $adoption->pet_id)
                     ->where('id', '!=', $adoption->id)
                     ->where('status', 'pending')
@@ -85,36 +86,35 @@ class AdoptionController extends Controller
                         'status' => 'rejected',
                         'organization_response' => 'Another application was approved.',
                         'reviewed_at' => now(),
+                        'reviewed_by' => auth()->id(),
                     ]);
             }
         });
 
-        // Reload with all relationships needed for notification + resource
+        // === After Transaction ===
+
+        // Refresh the main adoption with relationships
         $adoption->load(['pet.media', 'user']);
 
-        // FCM push + email notification to the primary applicant
+        // Notify primary applicant
         $adoption->user->notify(new AdoptionStatusUpdatedNotification($adoption));
-
-        // WebSocket broadcast for real-time mobile UI update
         broadcast(new AdoptionStatusUpdatedEvent($adoption));
 
-        // Notify auto-rejected users (when another applicant was approved)
-        if ($autoRejectedIds->isNotEmpty()) {
-            $rejectedApplications = AdoptionRequest::with(['pet', 'user'])
-                ->whereIn('id', $autoRejectedIds)
-                ->get();
+        // Notify auto-rejected users
+        foreach ($autoRejectedApplications as $rejected) {
+            // Important: Refresh each one because status was updated in bulk
+            $rejected->refresh();
+            $rejected->load(['pet', 'user']);
 
-            foreach ($rejectedApplications as $rejected) {
-                $rejected->user->notify(new AdoptionStatusUpdatedNotification($rejected));
-                broadcast(new AdoptionStatusUpdatedEvent($rejected));
-            }
+            $rejected->user->notify(new AdoptionStatusUpdatedNotification($rejected));
+            broadcast(new AdoptionStatusUpdatedEvent($rejected));
         }
 
         return response()->json([
             'message' => match ($request->status) {
-                'approved' => 'Adoption application approved.',
-                'rejected' => 'Adoption application rejected.',
-                default => 'Application moved to ' . str_replace('_', ' ', $request->status) . '.',
+                'approved' => 'Adoption application approved successfully.',
+                'rejected' => 'Application rejected.',
+                default => 'Application status updated.',
             },
             'application' => new AdoptionRequestResource($adoption),
         ]);

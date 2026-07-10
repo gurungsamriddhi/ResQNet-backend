@@ -3,7 +3,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
      <div class="px-4 sm:px-6 md:px-8 py-8 space-y-6"
           x-data="rescuesApp()"
-          x-effect="if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
+          x-effect="const _f = filteredRescues; const _a = activeFilter; if (typeof lucide !== 'undefined') $nextTick(() => lucide.createIcons())">
 
         <!-- Toast Notification -->
         <div x-show="toastVisible" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4" class="fixed top-5 right-5 z-[10000] max-w-sm bg-white dark:bg-[#111c2a] border border-admin-border rounded-xl shadow-2xl p-4 flex items-start gap-3">
@@ -172,8 +172,8 @@
                                         <div class="flex-shrink-0 mt-0.5 relative">
                                             <template x-if="rescue.urgency === 'critical'">
                                                 <div class="relative">
-                                                    <span class="absolute inset-0 rounded-full bg-red-500 opacity-25 animate-ping"></span>
-                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 flex items-center justify-center shadow-sm animate-pulse">
+                                                    <span class="absolute inset-0 rounded-full bg-red-500 opacity-25" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-ping' : ''"></span>
+                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 flex items-center justify-center shadow-sm" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-pulse' : ''">
                                                         <i data-lucide="bell-ring" class="w-4 h-4 sm:w-5 sm:h-5 text-red-600 fill-red-200"></i>
                                                     </div>
                                                     <template x-if="rescue.status === 'resolved'">
@@ -185,8 +185,8 @@
                                             </template>
                                             <template x-if="rescue.urgency === 'high'">
                                                 <div class="relative">
-                                                    <span class="absolute inset-0 rounded-full bg-orange-500 opacity-25 animate-ping"></span>
-                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-100 dark:bg-orange-500/20 text-brand-orange dark:text-orange-400 border border-orange-200 dark:border-orange-500/30 flex items-center justify-center shadow-sm animate-pulse">
+                                                    <span class="absolute inset-0 rounded-full bg-orange-500 opacity-25" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-ping' : ''"></span>
+                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-100 dark:bg-orange-500/20 text-brand-orange dark:text-orange-400 border border-orange-200 dark:border-orange-500/30 flex items-center justify-center shadow-sm" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-pulse' : ''">
                                                         <i data-lucide="alert-triangle" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-orange"></i>
                                                     </div>
                                                     <template x-if="rescue.status === 'resolved'">
@@ -198,8 +198,8 @@
                                             </template>
                                             <template x-if="rescue.urgency !== 'critical' && rescue.urgency !== 'high'">
                                                 <div class="relative">
-                                                    <span class="absolute inset-0 rounded-full bg-yellow-500 opacity-25 animate-ping"></span>
-                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30 flex items-center justify-center shadow-sm animate-pulse">
+                                                    <span class="absolute inset-0 rounded-full bg-yellow-500 opacity-25" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-ping' : ''"></span>
+                                                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30 flex items-center justify-center shadow-sm" :class="rescue.status === 'reported' && !rescue.claimedByOther ? 'animate-pulse' : ''">
                                                         <i data-lucide="bell" class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500"></i>
                                                     </div>
                                                     <template x-if="rescue.status === 'resolved'">
@@ -247,7 +247,7 @@
                                              x-cloak class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                                             <button @click="acceptCaseFromCard(rescue.id)" :disabled="isAccepting"
                                                     class="flex-1 sm:flex-none bg-brand-orange hover:bg-[#E25338] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5 disabled:opacity-50">
-                                                <i data-lucide="zap" class="w-3.5 h-3.5 shrink-0"></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 shrink-0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                                                 <span x-text="isAccepting ? 'Claiming...' : 'Help Now'"></span>
                                             </button>
                                         </div>
@@ -255,7 +255,7 @@
                                         <div x-show="rescue.status === 'assigned' && !rescue.claimedByOther"
                                              x-cloak class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                                             <button @click="openAssignModal({id: rescue.id, case_code: rescue.case_code, title: rescue.title})" class="flex-1 sm:flex-none bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
-                                                <i data-lucide="users" class="w-3.5 h-3.5 shrink-0"></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 shrink-0"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                                                 Assign Team
                                             </button>
                                         </div>
@@ -263,25 +263,25 @@
                                         <div x-show="rescue.status === 'in_progress' && !rescue.claimedByOther"
                                              x-cloak class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                                             <button @click="updateCaseStatus(rescue.id, 'resolved')" class="flex-1 sm:flex-none bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-1.5">
-                                                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                                 Mark Complete
                                             </button>
                                         </div>
 
                                         <span x-show="rescue.status === 'resolved'"
                                               x-cloak class="w-full sm:w-auto bg-[#5BA44C] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm inline-flex items-center justify-center gap-1.5 cursor-default">
-                                            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                             Resolved
                                         </span>
 
                                         <span x-show="rescue.claimedByOther"
                                               x-cloak class="w-full sm:w-auto border border-slate-200 text-slate-400 dark:text-slate-300 font-medium px-4 py-2 rounded-lg text-xs inline-flex items-center justify-center gap-1.5 cursor-default">
-                                            <i data-lucide="shield-off" class="w-3.5 h-3.5 shrink-0"></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 shrink-0"><path d="M19.69 14a6.9 6.9 0 0 0 .31-2V5l-8-3-3.16 1.18"></path><path d="m4.73 4.73-1.42-1.42"></path><path d="M2 2l20 20"></path><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path></svg>
                                             Claimed by another org
                                         </span>
 
                                         <button @click="expanded = !expanded" class="text-xs text-slate-400 dark:text-slate-300 hover:text-brand-orange transition-colors cursor-pointer flex items-center justify-center gap-1 whitespace-nowrap flex-shrink-0 py-2 sm:py-0">
-                                            <i data-lucide="eye" class="w-3.5 h-3.5 shrink-0"></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 shrink-0"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span x-text="expanded ? 'Hide Info' : 'View Info'"></span>
                                         </button>
                                     </div>

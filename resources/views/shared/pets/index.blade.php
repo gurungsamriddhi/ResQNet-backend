@@ -236,32 +236,19 @@
                                     <span class="text-sm font-semibold text-admin-textSecondary"
                                         x-text="formatAge(pet.age_months)"></span>
                                 </td>
-                                <!-- Status -->
+                               
+                                 <!-- Status -->
                                 <td class="py-5 px-6">
-                                    <template x-if="canEdit">
-                                        <select :value="pet.status"
-                                                @change="changePetStatus(pet, $event.target.value)"
-                                                :disabled="statusUpdatingId === pet.id"
-                                                class="min-w-[8.5rem] px-2.5 py-1.5 rounded-lg border border-admin-border bg-admin-surface text-xs font-bold text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary disabled:opacity-60">
-                                            <option value="available">Available</option>
-                                            <option value="adopted">Adopted</option>
-                                            <option value="in_care">In Care</option>
-                                            <option value="unavailable">Unavailable</option>
-                                            <option value="inactive">Inactive</option>
-                                        </select>
-                                    </template>
-                                    <template x-if="!canEdit">
-                                        <span
-                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm border"
-                                            :class="statusClass(pet.status)">
-                                            <template x-if="pet.status === 'available'"><span
-                                                    class="w-1.5 h-1.5 rounded-full bg-admin-btnGreen animate-pulse"></span></template>
-                                            <template x-if="pet.status !== 'available'"><i
-                                                    :data-lucide="statusIcon(pet.status)"
-                                                    class="w-3.5 h-3.5"></i></template>
-                                            <span x-text="statusLabel(pet.status)"></span>
-                                        </span>
-                                    </template>
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm border"
+                                        :class="statusClass(pet.status)">
+                                        <template x-if="pet.status === 'available'"><span
+                                                class="w-1.5 h-1.5 rounded-full bg-admin-btnGreen animate-pulse"></span></template>
+                                        <template x-if="pet.status !== 'available'"><i
+                                                :data-lucide="statusIcon(pet.status)"
+                                                class="w-3.5 h-3.5"></i></template>
+                                        <span x-text="statusLabel(pet.status)"></span>
+                                    </span>
                                 </td>
                                 <!-- Actions -->
                                 <td class="py-5 px-6 text-right">

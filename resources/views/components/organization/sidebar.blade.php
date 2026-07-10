@@ -53,7 +53,7 @@
                 <ul class="space-y-1.5">
                     <!-- Dashboard -->
                     <li>
-                        <a href="{{ $dashboardUrl }}" 
+                        <a wire:navigate href="{{ $dashboardUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDashboardActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -65,7 +65,7 @@
 
                     <!-- Pets -->
                     <li>
-                        <a href="{{ $petsUrl }}" 
+                        <a wire:navigate href="{{ $petsUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isPetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -77,7 +77,7 @@
 
                     <!-- Health Records -->
                     <li>
-                        <a href="{{ $healthUrl }}"
+                        <a wire:navigate href="{{ $healthUrl }}"
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -89,7 +89,7 @@
 
                     <!-- Rescues -->
                     <li>
-                        <a href="{{ $rescueUrl }}" 
+                        <a wire:navigate href="{{ $rescueUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -107,7 +107,7 @@
                 <ul class="space-y-1.5">
                     <!-- Adoptions -->
                     <li>
-                        <a href="{{ $adoptionsUrl }}" 
+                        <a wire:navigate href="{{ $adoptionsUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -118,7 +118,7 @@
 
                     <!-- Team Members -->
                     <li>
-                        <a href="{{ $volunteersUrl }}" 
+                        <a wire:navigate href="{{ $volunteersUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -129,7 +129,7 @@
 
                     <!-- Veterinarians -->
                     <li>
-                        <a href="{{ $vetsUrl }}" 
+                        <a wire:navigate href="{{ $vetsUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -146,7 +146,7 @@
                 <ul class="space-y-1.5">
                     <!-- Profile -->
                     <li>
-                        <a href="{{ $profileUrl }}" 
+                        <a wire:navigate href="{{ $profileUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isProfileActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="user-circle" class="w-4 h-4 {{ $isProfileActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -157,7 +157,7 @@
 
                     <!-- Settings -->
                     <li>
-                        <a href="{{ $settingsUrl }}" 
+                        <a wire:navigate href="{{ $settingsUrl }}" 
                            class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                             <div class="flex items-center gap-3">
                                 <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
@@ -275,7 +275,7 @@
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Operations</span>
                         <ul class="space-y-1">
                              <li>
-                                <a href="{{ $dashboardUrl }}" 
+                                <a wire:navigate href="{{ $dashboardUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDashboardActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -285,7 +285,7 @@
                                 </a>
                              </li>
                              <li>
-                                <a href="{{ $petsUrl }}" 
+                                <a wire:navigate href="{{ $petsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isPetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="dog" class="w-4 h-4 {{ $isPetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -295,7 +295,7 @@
                                 </a>
                              </li>
                              <li>
-                                <a href="{{ $healthUrl }}" 
+                                <a wire:navigate href="{{ $healthUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isHealthActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="heart-pulse" class="w-4 h-4 {{ $isHealthActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -305,7 +305,7 @@
                                 </a>
                              </li>
                              <li>
-                                 <a href="{{ $rescueUrl }}" 
+                                 <a wire:navigate href="{{ $rescueUrl }}" 
                                     class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isRescueActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
                                      <div class="flex items-center gap-3">
                                          <i data-lucide="shield-alert" class="w-4 h-4 {{ $isRescueActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -322,7 +322,7 @@
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Manage</span>
                         <ul class="space-y-1">
                             <li>
-                                <a href="{{ $adoptionsUrl }}" 
+                                <a wire:navigate href="{{ $adoptionsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isAdoptionsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="heart-handshake" class="w-4 h-4 {{ $isAdoptionsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -332,7 +332,7 @@
                             </li>
 
                             <li>
-                                <a href="{{ $volunteersUrl }}" 
+                                <a wire:navigate href="{{ $volunteersUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVolunteersActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="users" class="w-4 h-4 {{ $isVolunteersActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -341,7 +341,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ $vetsUrl }}" 
+                                <a wire:navigate href="{{ $vetsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isVetsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="stethoscope" class="w-4 h-4 {{ $isVetsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -357,7 +357,7 @@
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Account</span>
                         <ul class="space-y-1">
                             <li>
-                                <a href="{{ $profileUrl }}" 
+                                <a wire:navigate href="{{ $profileUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isProfileActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="user-circle" class="w-4 h-4 {{ $isProfileActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
@@ -366,7 +366,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ $settingsUrl }}" 
+                                <a wire:navigate href="{{ $settingsUrl }}" 
                                    class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
