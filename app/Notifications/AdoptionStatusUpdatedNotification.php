@@ -38,23 +38,21 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
             'pending' => (new MailMessage)
                 ->subject("Application Received for {$petName}! 🐾")
                 ->greeting("Hi {$notifiable->name},")
-                ->line("Your application to adopt {$petName} has been successfully submitted.")
-                ->action('Track Application', url("/requests/{$this->adoption->id}")),
+                ->line("Your application to adopt {$petName} has been successfully submitted."),
 
             'approved' => (new MailMessage)
                 ->subject("Application Approved for {$petName}! 🎉")
                 ->greeting("Congratulations {$notifiable->name}!")
                 ->line("Great news! Your application to adopt **{$petName}** has been formally approved.")
-                ->line("Our organization team will reach out to you within 1 to 2 working days.")
-                ->action('View Next Steps', url("/requests/{$this->adoption->id}")),
+                ->line("Our organization team will reach out to you within 1 to 2 working days."),
+                
 
             'rejected' => (new MailMessage)
                 ->subject("Update regarding your application for {$petName}")
                 ->greeting("Hello {$notifiable->name},")
                 ->line("Thank you for your interest in adopting {$petName}.")
                 ->line("Unfortunately, the organization decided to move forward with another applicant.")
-                ->line($this->adoption->organization_response ? "Reason: {$this->adoption->organization_response}" : '')
-                ->action('Browse Other Pets', url("/pets")),
+                ->line($this->adoption->organization_response ? "Reason: {$this->adoption->organization_response}" : ''),
 
             default => (new MailMessage)
                 ->subject("Adoption Update")

@@ -31,7 +31,6 @@ class PetSuspendedNotification extends Notification implements ShouldQueue
             ->line("The profile for the pet '{$this->pet->name}' has been suspended by an administrator.")
             ->line("Suspension Reason: " . $this->pet->suspension_reason)
             ->line('While suspended, this pet profile will not be visible to the public or available for adoption requests.')
-            ->action('View Pet Profile', url("/organization/pets/{$this->pet->id}"))
             ->line('If you believe this was in error, please contact support.');
     }
 

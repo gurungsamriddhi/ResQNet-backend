@@ -31,8 +31,8 @@ class RescueCompletedNotification extends Notification implements ShouldQueue
             ->greeting("Hello {$notifiable->name},")
             ->line("The rescue for **{$title}** has been successfully completed!")
             ->line("The animal is now safe and in care at {$orgName}.")
-            ->line("Thank you again for reporting this to ResQNet and saving a life.")
-            ->action('View Rescue Details', url("/rescues/{$this->rescue->id}"));
+            ->line("Thank you again for reporting this to ResQNet and saving a life.");
+            
     }
 
     public function toBroadcast(object $notifiable): BroadcastMessage

@@ -22,7 +22,6 @@ class NewAdoptionRequestNotification extends Notification implements ShouldQueue
     {
         return (new \Illuminate\Notifications\Messages\MailMessage)
             ->subject('New Adoption Request')
-            ->line("{$this->adoption->user->name} applied to adopt {$this->adoption->pet->name}.")
-            ->action('View Request', url('/organization/adoptions/' . $this->adoption->id));
+            ->line("{$this->adoption->user->name} applied to adopt {$this->adoption->pet->name}.");
     }
 }

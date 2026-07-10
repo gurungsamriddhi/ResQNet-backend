@@ -875,8 +875,18 @@
                 },
 
                 removeMarkerFromMap(id) {
-                    if (this.markers[id] && this.mapInstance) {
-                        this.mapInstance.removeLayer(this.markers[id]);
+                    let marker = this.markers[id];
+                    let map = this.mapInstance;
+                    
+                    if (marker && typeof Alpine !== 'undefined' && Alpine.raw) {
+                        marker = Alpine.raw(marker);
+                    }
+                    if (map && typeof Alpine !== 'undefined' && Alpine.raw) {
+                        map = Alpine.raw(map);
+                    }
+
+                    if (marker && map) {
+                        map.removeLayer(marker);
                         delete this.markers[id];
                     }
                 },
