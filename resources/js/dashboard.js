@@ -20,13 +20,16 @@ window.subscribeOrganization = (orgId) => {
         window.dispatchEvent(new CustomEvent('new-adoption-request', { detail: e }));
     });
 
-    channel.listen('.NewRescueReportEvent', (e) => {
-        window.dispatchEvent(new CustomEvent('new-rescue-report', { detail: e }));
-    });
-
     channel.listen('.PetSuspendedEvent', (e) => {
         window.dispatchEvent(new CustomEvent('pet-suspended', { detail: e }));
     });
+
+    // Join rescue-updates globally for organization users to receive new unassigned rescue report alerts in real-time
+    echo.join('rescue-updates')
+        .here(() => {})
+        .listen('.NewRescueReportEvent', (e) => {
+            window.dispatchEvent(new CustomEvent('new-rescue-report', { detail: e }));
+        });
 };
 
 window.Echo = echo;

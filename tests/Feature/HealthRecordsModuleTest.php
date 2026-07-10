@@ -32,6 +32,7 @@ class HealthRecordsModuleTest extends TestCase
         $user = User::factory()->create(['is_active' => true]);
         $user->assignRole('organization');
         $org = Organization::factory()->create(['user_id' => $user->id]);
+        $user->update(['organization_id' => $org->id]);
         return [$user, $org];
     }
 

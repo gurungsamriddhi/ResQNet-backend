@@ -53,7 +53,10 @@ class OrganizationController extends Controller
                 'is_verified' => true,
             ]);
 
-            $organization->user->update(['is_active' => true]);
+            $organization->user->update([
+                'is_active' => true,
+                'organization_id' => $organization->id,
+            ]);
         });
 
         OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);

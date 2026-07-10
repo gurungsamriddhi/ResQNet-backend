@@ -72,12 +72,11 @@ class User extends Authenticatable
 
      // ─── Relationships ─────────────────────────────────
     /**
-     * The organization this user owns/manages.
-     * A user can own at most ONE org (user_id is unique on organizations table).
+     * The organization this user belongs to.
      */
     public function organization()
     {
-        return $this->hasOne(Organization::class);
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function adoptionRequests()

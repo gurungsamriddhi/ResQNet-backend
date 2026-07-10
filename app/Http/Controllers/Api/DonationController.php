@@ -14,51 +14,57 @@ use RuntimeException;
 
 class DonationController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $donations = Donation::query()
-            ->with(['user', 'organization'])
+        $donations = $request->user()
+            ->donations()
+            ->with(['organization'])
             ->latest()
             ->paginate(20);
 
         return response()->json([
+            'success' => true,
+            'message' => $donations->isEmpty()
+                ? "You haven't made any donations yet."
+                : "Donations retrieved successfully.",
             'data' => DonationResource::collection($donations),
             'meta' => [
                 'current_page' => $donations->currentPage(),
                 'last_page' => $donations->lastPage(),
                 'total' => $donations->total(),
+                'per_page' => $donations->perPage(),
             ],
         ]);
     }
 
-    public function store(StoreDonationRequest $request): JsonResponse
-    {
-        $validated = $request->validated();
-        $isAnonymous = $request->boolean('is_anonymous');
+    //not being used currently
+    // public function store(StoreDonationRequest $request): JsonResponse
+    // {
+    //     $validated = $request->validated();
+    //     $isAnonymous = $request->boolean('is_anonymous');
 
-        $donation = Donation::create([
-            'user_id' => auth()->id(),
-            'organization_id' => $validated['organization_id'] ?? null,
-            'donor_name' => $isAnonymous ? null : ($validated['donor_name'] ?? null),
-            'donor_email' => $isAnonymous ? null : ($validated['donor_email'] ?? null),
-            'donor_phone' => $isAnonymous ? null : ($validated['donor_phone'] ?? null),
-            'is_anonymous' => $isAnonymous,
-            'frequency' => $validated['frequency'],
-            'amount' => $validated['amount'],
-            'payment_method' => $validated['payment_method'],
-            'status' => 'pending',
-            'remarks' => $validated['remarks'] ?? null,
-        ]);
+    //     $donation = Donation::create([
+    //         'user_id' => $request,
+    //         'organization_id' => $validated['organization_id'] ?? null,
+    //         'donor_name' => $isAnonymous ? null : ($validated['donor_name'] ?? null),
+    //         'donor_email' => $isAnonymous ? null : ($validated['donor_email'] ?? null),
+    //         'donor_phone' => $isAnonymous ? null : ($validated['donor_phone'] ?? null),
+    //         'is_anonymous' => $isAnonymous,
+    //         'frequency' => $validated['frequency'],
+    //         'amount' => $validated['amount'],
+    //         'payment_method' => $validated['payment_method'],
+    //         'status' => 'pending',
+    //         'remarks' => $validated['remarks'] ?? null,
+    //     ]);
 
-        return response()->json([
-            'message' => 'Donation recorded successfully.',
-            'donation' => new DonationResource($donation),
-        ], 201);
-    }
+    //     return response()->json([
+    //         'message' => 'Donation recorded successfully.',
+    //         'donation' => new DonationResource($donation),
+    //     ], 201);
+    // }
 
     /**
-     * Step 1: Mobile app calls this to initiate Khalti payment.
-     * Returns the Khalti payment URL the mobile app should open in a WebView.
+     *Initiate KHalti Payment (Main endpoint for mobile app)
      */
     public function khaltiInitiate(Request $request, KhaltiService $khalti): JsonResponse
     {
@@ -74,10 +80,10 @@ class DonationController extends Controller
         ]);
 
         $isAnonymous = $request->boolean('is_anonymous');
-        $purchaseOrderId = 'DON-'.strtoupper(uniqid());
+        $purchaseOrderId = 'DON-' . strtoupper(uniqid());
 
         $donation = Donation::create([
-            'user_id' => auth()->id(),
+            'user_id' => $request->user()->id,
             'organization_id' => $request->organization_id,
             'purchase_order_id' => $purchaseOrderId,
             'donor_name' => $isAnonymous ? null : $request->donor_name,
@@ -93,14 +99,10 @@ class DonationController extends Controller
 
         try {
             $customerInfo = [];
-            if (! $isAnonymous && $request->donor_name) {
-                $customerInfo['name'] = $request->donor_name;
-            }
-            if (! $isAnonymous && $request->donor_email) {
-                $customerInfo['email'] = $request->donor_email;
-            }
-            if (! $isAnonymous && $request->donor_phone) {
-                $customerInfo['phone'] = $request->donor_phone;
+            if (!$isAnonymous) {
+                if ($request->donor_name)  $customerInfo['name'] = $request->donor_name;
+                if ($request->donor_email) $customerInfo['email'] = $request->donor_email;
+                if ($request->donor_phone) $customerInfo['phone'] = $request->donor_phone;
             }
 
             $result = $khalti->initiatePayment([
@@ -136,26 +138,20 @@ class DonationController extends Controller
     }
 
     /**
-     * Khalti return URL callback — mobile WebView redirects here after payment.
-     * Verifies the payment and marks donation completed.
+     * Khalti Callback (called after payment from browser/WebView).
      */
     public function khaltiCallback(Request $request, KhaltiService $khalti): JsonResponse
     {
         $pidx = $request->query('pidx');
 
-        if (! $pidx) {
+        if (!$pidx) {
             return response()->json(['message' => 'Invalid payment response.'], 400);
         }
 
-        $donation = Donation::where('pidx', $pidx)->first();
-
-        if (! $donation) {
-            return response()->json(['message' => 'Donation record not found.'], 404);
-        }
+        $donation = Donation::where('pidx', $pidx)->firstOrFail();
 
         try {
             $lookup = $khalti->lookupPayment($pidx);
-
             $donation->update(['payment_payload' => $lookup]);
 
             if ($khalti->isCompleted($lookup)) {
@@ -167,7 +163,7 @@ class DonationController extends Controller
                 DonationCompletedEvent::dispatch($donation);
 
                 return response()->json([
-                    'message' => 'Donation completed successfully.',
+                    'message' => 'Thank you! Donation completed successfully.',
                     'donation' => new DonationResource($donation->fresh()),
                 ]);
             }
@@ -175,7 +171,7 @@ class DonationController extends Controller
             $donation->update(['status' => 'failed']);
 
             return response()->json([
-                'message' => 'Payment was not completed.',
+                'message' => 'Payment was not successful.',
                 'donation' => new DonationResource($donation->fresh()),
             ], 422);
         } catch (RuntimeException $e) {
@@ -187,31 +183,22 @@ class DonationController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Could not verify payment status.',
+                'message' => 'Could not verify payment.',
                 'error' => $e->getMessage(),
             ], 422);
         }
     }
 
     /**
-     * Step 2: Mobile app calls this after Khalti WebView closes to verify payment.
-     * This is the primary verification path for mobile apps.
+    *Verify Payment (Mobile app calls this after webview)
      */
     public function khaltiVerify(Request $request, KhaltiService $khalti): JsonResponse
     {
-        $request->validate([
-            'pidx' => 'required|string',
-        ]);
-
+        $request->validate(['pidx' => 'required|string', ]);
         $donation = Donation::where('pidx', $request->pidx)->first();
-
-        if (! $donation) {
-            return response()->json(['message' => 'Donation not found.'], 404);
-        }
 
         try {
             $lookup = $khalti->lookupPayment($request->pidx);
-
             $donation->update(['payment_payload' => $lookup]);
 
             if ($khalti->isCompleted($lookup)) {
@@ -241,11 +228,11 @@ class DonationController extends Controller
     }
 
     /**
-     * Check donation status by donation ID.
+     *Get single doantion status
      */
-    public function status(Donation $donation): JsonResponse
+    public function status(Request $request,Donation $donation): JsonResponse
     {
-        if ($donation->user_id !== auth()->id()) {
+        if ($donation->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized.'], 403);
         }
 

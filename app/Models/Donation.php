@@ -15,7 +15,7 @@ class Donation extends Model
         'user_id',
         'organization_id',
         'purchase_order_id',
-        'pidx',
+        'pidx', 
         'donor_name',
         'donor_email',
         'donor_phone',

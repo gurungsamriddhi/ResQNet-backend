@@ -93,12 +93,13 @@ class RegisterOrganizationController extends Controller
                 'is_verified' => false,
             ]);
 
-            
-
             // 3. Assign Role safely after records are drafted
             if (method_exists($user, 'assignRole')) {
                 $user->assignRole('organization');
             }
+
+            // Set organization_id on the owner user
+            $user->update(['organization_id' => $org->id]);
 
             DB::commit();
 

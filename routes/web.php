@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterOrganizationController;
 use App\Http\Controllers\Web\PublicPetController;

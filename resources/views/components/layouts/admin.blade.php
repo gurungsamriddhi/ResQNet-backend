@@ -725,10 +725,10 @@
     </script>
 
     <!-- Global Echo Organization Channel Subscription -->
-    @if(!$isSuperAdmin && auth()->user()?->organization?->id)
+    @if(!$isSuperAdmin && auth()->user()?->organization_id)
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const orgId = {{ auth()->user()->organization->id }};
+            const orgId = {{ auth()->user()->organization_id }};
             if (window.subscribeOrganization) {
                 window.subscribeOrganization(orgId);
             }
