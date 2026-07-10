@@ -534,6 +534,7 @@
                 
                 // NEW: Store the Leaflet map instance here so we can add markers to it later
                 mapInstance: null, 
+                markers: {},
 
                 get filteredRescues() {
                     if (this.activeFilter === 'claimed') {
@@ -616,6 +617,11 @@
                                     assignments: teamData,
                                 };
                             });
+                            
+                            if (data.data?.status === 'resolved') {
+                                this.removeMarkerFromMap(targetId);
+                            }
+                            
                             this.assignModalOpen = false;
                             this.assignTarget = null;
                             this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
@@ -722,6 +728,11 @@
                                 if (r.id !== reportId) return r;
                                 return { ...r, status: newStatus };
                             });
+                            
+                            if (newStatus === 'resolved') {
+                                this.removeMarkerFromMap(reportId);
+                            }
+                            
                             this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
                             this.showToast(data.message);
                         } else {
@@ -767,7 +778,7 @@
                                         longitude: e.longitude,
                                         status: e.status,
                                         created_at: e.created_at,
-                                        user: null,
+                                        user: e.user || null,
                                         assignments: [],
                                         organization_id: null,
                                     };
@@ -803,6 +814,10 @@
                                         assignments: e.team_members || [],
                                     };
                                 });
+                                
+                                if (e.status === 'resolved') {
+                                    this.removeMarkerFromMap(e.rescue_id);
+                                }
                             })
                             .listen('.CaseStatusUpdatedEvent', (e) => {
                                 const orgId = {{ auth()->user()->organization_id ?? 'null' }};
@@ -810,6 +825,10 @@
                                     if (r.id !== e.rescue_id || r.organization_id !== orgId) return r;
                                     return { ...r, status: e.new_status };
                                 });
+                                
+                                if (e.new_status === 'resolved') {
+                                    this.removeMarkerFromMap(e.rescue_id);
+                                }
                             });
                     }
 
@@ -819,6 +838,8 @@
                 // NEW FUNCTION: Extracted marker creation logic so it can be reused
                 addMarkerToMap(r) {
                     if (!this.mapInstance || !r.latitude || !r.longitude) return;
+                    if (r.status === 'resolved') return; // Don't show resolved cases on the map
+                    if (this.markers[r.id]) return; // Marker already exists
                     
                     const lat = parseFloat(r.latitude);
                     const lng = parseFloat(r.longitude);
@@ -849,6 +870,15 @@
                     const marker = L.marker([lat, lng], { icon });
                     marker.bindPopup(popupContent);
                     marker.addTo(this.mapInstance); // Add to the tracked map instance
+                    
+                    this.markers[r.id] = marker; // Track it in our state
+                },
+
+                removeMarkerFromMap(id) {
+                    if (this.markers[id] && this.mapInstance) {
+                        this.mapInstance.removeLayer(this.markers[id]);
+                        delete this.markers[id];
+                    }
                 },
 
                 initMap() {

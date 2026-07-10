@@ -42,6 +42,7 @@ class NewRescueReportEvent implements ShouldBroadcastNow
             'longitude' => $this->rescue->longitude,
             'status' => $this->rescue->status,
             'created_at' => $this->rescue->created_at->toISOString(),
+            'user' => $this->rescue->user ? ['name' => $this->rescue->user->name] : null,
         ];
     }
 

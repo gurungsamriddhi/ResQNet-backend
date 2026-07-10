@@ -7,8 +7,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\MailMessage;
 
-class RescueCompletedNotification extends Notification
+class RescueCompletedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
     use \App\Traits\DatabaseNotificationTrait;
@@ -17,7 +18,21 @@ class RescueCompletedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database', 'broadcast', 'mail'];
+    }
+
+    public function toMail($notifiable): MailMessage
+    {
+        $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'the rescue organization';
+        $title = $this->rescue->title ?? 'Unknown Rescue';
+
+        return (new MailMessage)
+            ->subject('Great news! 🎉 Rescue Completed')
+            ->greeting("Hello {$notifiable->name},")
+            ->line("The rescue for **{$title}** has been successfully completed!")
+            ->line("The animal is now safe and in care at {$orgName}.")
+            ->line("Thank you again for reporting this to ResQNet and saving a life.")
+            ->action('View Rescue Details', url("/rescues/{$this->rescue->id}"));
     }
 
     public function toBroadcast(object $notifiable): BroadcastMessage

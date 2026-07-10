@@ -180,7 +180,7 @@ class RescueController extends Controller
         }
 
         // Notify the citizen who submitted the report
-        if ($report->user && $report->user->fcm_token) {
+        if ($report->user) {
             $report->user->notify(new RescueTeamAssignedNotification($report));
         }
 
