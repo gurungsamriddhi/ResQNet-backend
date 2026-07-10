@@ -36,11 +36,12 @@ class DashboardController extends Controller
             ->get();
 
         $dailyDonations = Donation::where('status', 'completed')
-            ->selectRaw("strftime('%Y-%m-%d', created_at) as date, SUM(amount) as total")
+            // Replaced strftime with MySQL's DATE() function
+            ->selectRaw("DATE(created_at) as date, SUM(amount) as total")
             ->groupBy('date')
             ->orderBy('date')
             ->get()
-            ->map(fn ($d) => [
+            ->map(fn($d) => [
                 'date' => $d->date,
                 'total' => (float) $d->total,
             ])
