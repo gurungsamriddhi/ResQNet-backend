@@ -22,11 +22,20 @@ class DonationCompletedEvent implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $donor = $this->donation->is_anonymous || empty($this->donation->donor_name)
+            ? 'Anonymous'
+            : $this->donation->donor_name;
+
         return [
             'donation_id' => $this->donation->id,
-            'amount'      => (float) $this->donation->amount,
+            'amount' => number_format((float) $this->donation->amount, 2),
+            'donor_name' => $donor,
+            'timestamp' => now()->toIso8601String(),
         ];
     }
 
-    public function broadcastAs(): string { return 'DonationCompletedEvent'; }
+    public function broadcastAs(): string
+    {
+        return 'DonationCompletedEvent';
+    }
 }

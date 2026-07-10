@@ -66,6 +66,7 @@ Route::get('/donation/callback', [DonationController::class, 'khaltiCallback'])-
 Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/refresh', [AdminDashboardController::class, 'refresh'])->name('dashboard.refresh');
     Route::get('/donation-stats', [AdminDashboardController::class, 'donationStats'])->name('donation-stats');
 
     //Organization Management by Admin

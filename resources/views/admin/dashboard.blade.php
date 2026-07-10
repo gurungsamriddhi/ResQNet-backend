@@ -513,6 +513,7 @@
                 pendingOrganizations: @json($pendingOrganizations),
                 streamActivities: @json($recentActivities),
                 echoConnected: false,
+                echoStatus: 'disconnected',
 
                 get currentRescue() {
                     if (!this.selectedRescueId) return {};
@@ -554,7 +555,51 @@
                 init() {
                     this.$nextTick(() => {
                         this.initEcho();
+                        this.startPolling();
                     });
+                },
+
+                startPolling() {
+                    var self = this;
+                    setInterval(function () {
+                        self.refreshDashboard();
+                    }, 15000);
+                },
+
+                refreshDashboard() {
+                    var self = this;
+                    var prevDonations = self.totalDonations;
+                    fetch('/admin/dashboard/refresh', {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        self.petsListedThisMonth = data.stats.pets_this_month;
+                        self.activeOrgs = data.stats.active_orgs;
+                        self.pendingOrgs = data.stats.pending_orgs;
+                        self.totalDonations = data.stats.total_donations;
+                        self.liveRescues = data.liveRescues;
+                        self.pendingOrganizations = data.pendingOrganizations;
+                        self.streamActivities = data.recentActivities;
+
+                        if (data.stats.total_donations > prevDonations && prevDonations > 0) {
+                            var diff = data.stats.total_donations - prevDonations;
+                            if (typeof window.showDonationToast === 'function') {
+                                window.showDonationToast(
+                                    'A donor',
+                                    Number(diff).toLocaleString(),
+                                    'just now'
+                                );
+                            }
+                            self.prependActivity(
+                                'Donation of NPR ' + Number(diff).toLocaleString() + ' completed'
+                            );
+                        }
+                    })
+                    .catch(function () {});
                 },
 
                 initEcho() {
@@ -564,6 +609,7 @@
                             setTimeout(tryConnect, 300);
                             return;
                         }
+                        self.echoStatus = 'connecting';
                         self.setupEchoListeners();
                     };
                     tryConnect();
@@ -634,15 +680,28 @@
                     });
 
                     channel.listen('.DonationCompletedEvent', function (e) {
-                        self.totalDonations += e.amount;
+                        self.totalDonations += parseFloat(e.amount);
                         self.prependActivity(
                             'Donation of NPR ' + Number(e.amount).toLocaleString() + ' completed'
                         );
+
+                        if (typeof window.showDonationToast === 'function') {
+                            window.showDonationToast(
+                                e.donor_name || 'Anonymous',
+                                Number(e.amount).toLocaleString(),
+                                e.timestamp ? new Date(e.timestamp).toLocaleTimeString() : 'just now'
+                            );
+                        }
+                    });
+
+                    channel.subscribed(function () {
+                        self.echoStatus = 'connected';
                     });
 
                     channel.error(function (error) {
                         self.echoConnected = false;
-                        console.warn('WebSocket connection dropped, falling back to page data.');
+                        self.echoStatus = 'disconnected';
+                        console.warn('WebSocket connection dropped, falling back to polling.');
                     });
                 },
 
