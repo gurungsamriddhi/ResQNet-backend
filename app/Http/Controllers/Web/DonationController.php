@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Events\DonationCompletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDonationRequest;
 use App\Models\Donation;
@@ -144,6 +145,8 @@ class DonationController extends Controller
                     'status' => 'completed',
                     'transaction_id' => $lookup['transaction_id'] ?? null,
                 ]);
+
+                DonationCompletedEvent::dispatch($donation);
 
                 return redirect()
                     ->route('donate')

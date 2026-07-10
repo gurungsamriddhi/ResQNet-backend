@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\OrganizationRegisteredEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
@@ -101,17 +102,16 @@ class RegisterOrganizationController extends Controller
 
             DB::commit();
 
-            // Fix: Handle media AFTER DB commit. If the upload fails, 
-            // the user is created, but we don't risk leaving junk files if DB rolls back.
             if ($request->hasFile('document')) {
                 try {
                     $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
                 } catch (\Exception $mediaException) {
-                    // Log this error but don't delete the user's account registration over a file glitch
                     Log::error('Media upload failed for Org ID ' . $org->id . ': ' . $mediaException->getMessage());
                     return redirect()->route('registration.pending')->with('warning', 'Registration saved, but document upload failed. Please re-upload in dashboard.');
                 }
             }
+
+            OrganizationRegisteredEvent::dispatch($org);
 
             return redirect()->route('registration.pending');
         } catch (\Illuminate\Database\QueryException $e) {

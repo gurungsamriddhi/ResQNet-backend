@@ -375,6 +375,92 @@
         });
     </script>
 
+    <!-- Global Donation Toast Container (body-level, above all scrollable content) -->
+    <div id="donation-toast-container"
+         class="fixed top-20 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"
+         x-data="donationToast()"
+         @donation-toast.window="addToast($event.detail)">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-show="toast.visible"
+                 x-transition:enter="transition ease-out duration-400"
+                 x-transition:enter-start="opacity-0 translate-x-8 scale-95"
+                 x-transition:enter-end="opacity-100 translate-x-0 scale-100"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100 translate-x-0 scale-100"
+                 x-transition:leave-end="opacity-0 translate-x-8 scale-95"
+                 class="pointer-events-auto max-w-sm w-full bg-white dark:bg-[#111c2a] border border-emerald-200 dark:border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-500/10 p-4 flex items-start gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900 dark:text-slate-100">New Donation Received</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                        <span class="font-semibold" x-text="toast.donor"></span> donated
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400" x-text="'NPR ' + toast.amount"></span>
+                    </p>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1" x-text="toast.time"></p>
+                </div>
+                <button @click="removeToast(toast.id)"
+                        class="flex-shrink-0 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </template>
+    </div>
+
+    <!-- Donation Toast Alpine Component + Global Helper -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('donationToast', () => ({
+                toasts: [],
+                counter: 0,
+
+                addToast(detail) {
+                    var id = ++this.counter;
+                    this.toasts.push({
+                        id: id,
+                        donor: detail.donor || 'Anonymous',
+                        amount: detail.amount || '0',
+                        time: detail.time || 'just now',
+                        visible: true,
+                    });
+
+                    if (this.toasts.length > 3) {
+                        this.toasts.shift();
+                    }
+
+                    var self = this;
+                    setTimeout(function () { self.removeToast(id); }, 6000);
+                },
+
+                removeToast(id) {
+                    var idx = this.toasts.findIndex(function (t) { return t.id === id; });
+                    if (idx !== -1) {
+                        this.toasts[idx].visible = false;
+                        var self = this;
+                        setTimeout(function () {
+                            self.toasts = self.toasts.filter(function (t) { return t.id !== id; });
+                        }, 350);
+                    }
+                },
+            }));
+        });
+
+        window.showDonationToast = function (donor, amount, time) {
+            window.dispatchEvent(new CustomEvent('donation-toast', {
+                detail: {
+                    donor: donor || 'Anonymous',
+                    amount: amount || '0',
+                    time: time || 'just now',
+                }
+            }));
+        };
+    </script>
+
     <!-- Notification Manager Alpine Component -->
     <script>
         document.addEventListener('alpine:init', () => {

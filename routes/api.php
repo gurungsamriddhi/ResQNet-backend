@@ -1,15 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\AdoptionRequestController;
-use App\Http\Controllers\Api\RescueController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DonationController;
-use App\Http\Controllers\Api\UserDashboardController;
+use App\Http\Controllers\Api\PetController;
+use App\Http\Controllers\Api\RescueController;
 use App\Http\Controllers\Api\SavedPetController;
+use App\Http\Controllers\Api\UserDashboardController;
 use App\Http\Controllers\Api\UserProfileController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ Route::post('/broadcasting/auth', function (Request $request) {
         'socket_id' => 'required|string',
     ]);
 
-    return Illuminate\Support\Facades\Broadcast::auth($request);
+    return Broadcast::auth($request);
 })->middleware(['auth:sanctum']);
 
 Route::prefix('v1')->group(function () {   // Optional but recommended: versioning
@@ -93,13 +94,19 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
                 Route::get('/', [RescueController::class, 'index'])->name('index');
                 Route::post('/', [RescueController::class, 'store'])->name('store');
                 Route::get('/{report}', [RescueController::class, 'show'])->name('show');
-                Route::delete('/{rescue}', [RescueController::class, 'destroy'])->name('destroy'); // Add this line 
+                Route::delete('/{rescue}', [RescueController::class, 'destroy'])->name('destroy'); // Add this line
             });
 
             // Donations
             Route::prefix('donations')->name('api.donations.')->group(function () {
                 Route::get('/', [DonationController::class, 'index'])->name('index');
                 Route::post('/', [DonationController::class, 'store'])->name('store');
+
+                // Mobile Khalti payment flow
+                Route::post('/khalti/initiate', [DonationController::class, 'khaltiInitiate'])->name('khalti.initiate');
+                Route::get('/khalti/callback', [DonationController::class, 'khaltiCallback'])->name('khalti.callback');
+                Route::post('/khalti/verify', [DonationController::class, 'khaltiVerify'])->name('khalti.verify');
+                Route::get('/{donation}/status', [DonationController::class, 'status'])->name('status');
             });
         });
     });

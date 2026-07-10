@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ResQNet Mobile API",
-    "description": "Complete API collection for the ResQNet mobile application.",
+    "description": "Complete API collection for the ResQNet mobile app. Includes auth, donations with Khalti, rescues, pets, adoptions, and user profile.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -9,67 +9,185 @@
       "name": "Auth",
       "item": [
         {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "verify-otp"]
+            }
+          }
+        },
+        {
           "name": "Login",
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" }
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "email", "value": "user@example.com", "type": "text" },
-                { "key": "password", "value": "password", "type": "text" }
-              ]
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/auth/login",
+              "raw": "{{base_url}}/api/v1/auth/login",
               "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var json = pm.response.json();",
+                    "if (json.token) {",
+                    "    pm.environment.set('token', json.token);",
+                    "    console.log('Token saved:', json.token);",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user"]
             }
           }
         }
       ]
     },
     {
-      "name": "Pets (Browse & Search)",
+      "name": "Donations",
       "item": [
         {
-          "name": "Get All Pets",
+          "name": "Initiate Khalti Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.pidx) {",
+                  "    pm.environment.set('pidx', json.pidx);",
+                  "    pm.environment.set('donation_id', json.donation_id);",
+                  "    console.log('pidx saved:', json.pidx);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" }
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"donor_name\": \"Asmita Karki\",\n  \"donor_email\": \"asmita@example.com\",\n  \"donor_phone\": \"9800000000\",\n  \"is_anonymous\": false,\n  \"frequency\": \"one_time\",\n  \"organization_id\": null,\n  \"remarks\": \"For dog food\"\n}"
+            },
             "url": {
-              "raw": "{{base_url}}/api/pets",
+              "raw": "{{base_url}}/api/v1/donations/khalti/initiate",
               "host": ["{{base_url}}"],
-              "path": ["api", "pets"]
+              "path": ["api", "v1", "donations", "khalti", "initiate"]
             }
           }
         },
         {
-          "name": "Search & Filter Pets",
+          "name": "Verify Khalti Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pidx\": \"{{pidx}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/donations/khalti/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "donations", "khalti", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Khalti Callback (GET)",
           "request": {
             "method": "GET",
             "header": [
               { "key": "Accept", "value": "application/json" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/pets?species=dog&size=medium&search=buddy",
+              "raw": "{{base_url}}/api/v1/donations/khalti/callback?pidx={{pidx}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "pets"],
+              "path": ["api", "v1", "donations", "khalti", "callback"],
               "query": [
-                { "key": "species", "value": "dog" },
-                { "key": "size", "value": "medium" },
-                { "key": "gender", "value": "male" },
-                { "key": "search", "value": "buddy" }
+                { "key": "pidx", "value": "{{pidx}}" }
               ]
             }
           }
         },
         {
-          "name": "Get Pet By ID",
+          "name": "Check Donation Status",
           "request": {
             "method": "GET",
             "header": [
@@ -77,47 +195,104 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/pets/1",
+              "raw": "{{base_url}}/api/v1/donations/{{donation_id}}/status",
               "host": ["{{base_url}}"],
-              "path": ["api", "pets", "1"]
+              "path": ["api", "v1", "donations", "{{donation_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "List My Donations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/donations?page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "donations"],
+              "query": [
+                { "key": "page", "value": "1" }
+              ]
             }
           }
         }
       ]
     },
     {
-      "name": "Adoption",
+      "name": "Pets",
       "item": [
         {
-          "name": "Submit Adoption Application",
+          "name": "List Pets",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "pets"]
+            }
+          }
+        },
+        {
+          "name": "Get Pet by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "pets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Pet by QR Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/pets/qr/SOME_QR_ID",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "pets", "qr", "SOME_QR_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Adoptions",
+      "item": [
+        {
+          "name": "Submit Adoption Request",
           "request": {
             "method": "POST",
             "header": [
               { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "pet_id", "value": "1", "type": "text" },
-                { "key": "message", "value": "I would love to adopt this pet! I have a big backyard.", "type": "text" },
-                { "key": "living_situation", "value": "House with fenced yard", "type": "text" },
-                { "key": "has_other_pets", "value": "1", "type": "text" },
-                { "key": "experience_with_pets", "value": "1", "type": "text" },
-                { "key": "family_members_count", "value": "3", "type": "text" },
-                { "key": "housing_type", "value": "own", "type": "text" },
-                { "key": "employment_status", "value": "Full-time", "type": "text" }
-              ]
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"message\": \"I would love to adopt this pet!\",\n  \"living_situation\": \"House with fenced yard\",\n  \"has_other_pets\": true,\n  \"experience_with_pets\": true,\n  \"family_members_count\": 3,\n  \"housing_type\": \"own\",\n  \"employment_status\": \"Full-time\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/adoptions",
+              "raw": "{{base_url}}/api/v1/adoptions",
               "host": ["{{base_url}}"],
-              "path": ["api", "adoptions"]
+              "path": ["api", "v1", "adoptions"]
             }
           }
         },
         {
-          "name": "My Adoption Applications",
+          "name": "List My Adoption Requests",
           "request": {
             "method": "GET",
             "header": [
@@ -125,19 +300,104 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/adoptions",
+              "raw": "{{base_url}}/api/v1/adoptions",
               "host": ["{{base_url}}"],
-              "path": ["api", "adoptions"]
+              "path": ["api", "v1", "adoptions"]
+            }
+          }
+        },
+        {
+          "name": "Get Adoption Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/adoptions/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "adoptions", "1"]
             }
           }
         }
       ]
     },
     {
-      "name": "Saved Pets (Favorites)",
+      "name": "Rescues",
       "item": [
         {
-          "name": "Save / Unsave Pet",
+          "name": "List Rescue Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rescues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rescues"]
+            }
+          }
+        },
+        {
+          "name": "Submit Rescue Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"animal_type\": \"dog\",\n  \"condition\": \"injured\",\n  \"location\": \"Balaju Park\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.2936,\n  \"description\": \"Dog with injured leg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/rescues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rescues"]
+            }
+          }
+        },
+        {
+          "name": "Get Rescue Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rescues/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rescues", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Rescue Report",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rescues/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rescues", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saved Pets",
+      "item": [
+        {
+          "name": "Toggle Save/Unsave Pet",
           "request": {
             "method": "POST",
             "header": [
@@ -145,14 +405,14 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/pets/1/save",
+              "raw": "{{base_url}}/api/v1/saved-pets/1",
               "host": ["{{base_url}}"],
-              "path": ["api", "pets", "1", "save"]
+              "path": ["api", "v1", "saved-pets", "1"]
             }
           }
         },
         {
-          "name": "My Saved Pets",
+          "name": "List Saved Pets",
           "request": {
             "method": "GET",
             "header": [
@@ -160,33 +420,113 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/user/saved-pets",
+              "raw": "{{base_url}}/api/v1/saved-pets",
               "host": ["{{base_url}}"],
-              "path": ["api", "user", "saved-pets"]
+              "path": ["api", "v1", "saved-pets"]
             }
           }
         }
       ]
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
     },
     {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Adoption Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Create/Update Adoption Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"living_situation\": \"House with yard\",\n  \"has_other_pets\": true,\n  \"experience_with_pets\": true,\n  \"family_members_count\": 4,\n  \"housing_type\": \"own\",\n  \"employment_status\": \"Full-time\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Account",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Asmita Karki\",\n  \"phone\": \"9800000000\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"oldpassword\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Update FCM Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fcm_token\": \"Firebase token here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/fcm-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "fcm-token"]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
@@ -196,7 +536,15 @@
     },
     {
       "key": "token",
-      "value": "YOUR_SANCTUM_TOKEN_HERE"
+      "value": "YOUR_TOKEN_HERE"
+    },
+    {
+      "key": "pidx",
+      "value": ""
+    },
+    {
+      "key": "donation_id",
+      "value": ""
     }
   ]
 }

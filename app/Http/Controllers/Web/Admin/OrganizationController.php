@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App\Events\OrganizationStatusChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
@@ -44,6 +45,8 @@ class OrganizationController extends Controller
 
     public function approve(Organization $organization)
     {
+        $oldStatus = $organization->status;
+
         DB::transaction(function () use ($organization) {
             $organization->update([
                 'status' => 'active',
@@ -52,6 +55,8 @@ class OrganizationController extends Controller
 
             $organization->user->update(['is_active' => true]);
         });
+
+        OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
 
         if ($organization->user && $organization->user->email) {
             Mail::to($organization->user->email)->queue(new StatusMail($organization, 'approved'));
@@ -63,6 +68,8 @@ class OrganizationController extends Controller
 
     public function reject(Organization $organization, Request $request)
     {
+        $oldStatus = $organization->status;
+
         $request->validate([
             'reasons' => 'required|array',
             'reasons.*' => 'string',
@@ -70,14 +77,13 @@ class OrganizationController extends Controller
         ]);
 
         $reasonParts = $request->reasons;
-        // If "Other" was checked and text provided, append it
         if (in_array('Other', $reasonParts) && $request->filled('other_reason')) {
             $reasonParts = array_filter($reasonParts, fn($val) => $val !== 'Other');
             $reasonParts[] = $request->other_reason;
         }
 
         $reasonString = implode("\n- ", $reasonParts);
-        $reasonString = "- " . $reasonString; // Add bullet to first item
+        $reasonString = "- " . $reasonString;
 
         DB::transaction(function () use ($organization, $reasonString) {
             $organization->update([
@@ -85,11 +91,12 @@ class OrganizationController extends Controller
                 'rejection_reason' => $reasonString,
             ]);
 
-            // Deactivate user
             if ($organization->user) {
                 $organization->user->update(['is_active' => false]);
             }
         });
+
+        OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
 
         if ($organization->user && $organization->user->email) {
             Mail::to($organization->user->email)->queue(new StatusMail($organization, 'rejected', $reasonString));
@@ -101,6 +108,8 @@ class OrganizationController extends Controller
 
     public function suspend(Organization $organization, Request $request)
     {
+        $oldStatus = $organization->status;
+
         $request->validate([
             'reasons' => 'required|array',
             'reasons.*' => 'string',
@@ -124,6 +133,8 @@ class OrganizationController extends Controller
         if ($organization->user) {
             $organization->user->update(['is_active' => false]);
         }
+
+        OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
 
         if ($organization->user && $organization->user->email) {
             Mail::to($organization->user->email)->queue(new StatusMail($organization, 'suspended', $reasonString));

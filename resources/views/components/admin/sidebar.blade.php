@@ -53,7 +53,6 @@
                                 <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Dashboard</span>
                             </div>
-                            <span class="bg-secondary-50 text-secondary-500 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider uppercase">Live</span>
                         </a>
                     </li>
 
@@ -254,7 +253,6 @@
                                         <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
                                         <span>Dashboard</span>
                                     </div>
-                                    <span class="bg-secondary-50 text-secondary-500 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider uppercase">Live</span>
                                 </a>
                              </li>
                              <li>
