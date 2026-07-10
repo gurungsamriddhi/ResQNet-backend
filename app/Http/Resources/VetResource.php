@@ -16,7 +16,7 @@ class VetResource extends JsonResource
             'email' => $this->email,
             'specialization' => $this->specialization,
             'license_number' => $this->license_number,
-            'is_active' => $this->is_active,
+            'status' => $this->status,
         ];
     }
 }

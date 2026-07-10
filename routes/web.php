@@ -6,7 +6,6 @@ use App\Http\Controllers\Web\DonationController;
 use App\Http\Controllers\Web\Admin\AnalyticsController;
 use App\Http\Controllers\Web\Admin\OrganizationController;
 use App\Http\Controllers\Web\Admin\UserController;
-use App\Http\Controllers\Web\Admin\VolunteerController as AdminVolunteerController;
 use App\Http\Controllers\Web\Admin\VetController as AdminVetController;
 use App\Http\Controllers\Web\Admin\PetController as AdminPetController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
@@ -93,10 +92,6 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
 
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
 
-
-    Route::get('/volunteers', [AdminVolunteerController::class, 'index'])->name('volunteers.index');
-
-
     Route::get('/medical-records', [AdminHealthController::class, 'index'])->name('medical-records.index');
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
@@ -118,6 +113,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
 
     //Organization Dashboard
     Route::get('/dashboard', [OrgDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/chart-stats', [OrgDashboardController::class, 'chartStats'])->name('dashboard.chart-stats');
 
     //Organization Pet Management routes
     Route::resource('pets', OrgPetController::class);

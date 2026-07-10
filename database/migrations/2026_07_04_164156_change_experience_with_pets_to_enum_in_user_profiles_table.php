@@ -7,11 +7,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE user_profiles MODIFY COLUMN experience_with_pets ENUM('none','beginner','intermediate','experienced') NULL");
+        $driver = DB::getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement("ALTER TABLE user_profiles MODIFY COLUMN experience_with_pets ENUM('none','beginner','intermediate','experienced') NULL");
+        }
     }
 
     public function down(): void
     {
-        DB::statement('ALTER TABLE user_profiles MODIFY COLUMN experience_with_pets TINYINT(1) NULL');
+        $driver = DB::getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement('ALTER TABLE user_profiles MODIFY COLUMN experience_with_pets TINYINT(1) NULL');
+        }
     }
 };
