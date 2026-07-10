@@ -7,9 +7,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class PetSuspendedNotification extends Notification implements ShouldQueue
 {
@@ -23,13 +20,7 @@ class PetSuspendedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['database', 'mail'];
-
-        if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
-            $channels[] = FcmChannel::class;
-        }
-
-        return $channels;
+        return ['database', 'mail', 'broadcast'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -44,17 +35,16 @@ class PetSuspendedNotification extends Notification implements ShouldQueue
             ->line('If you believe this was in error, please contact support.');
     }
 
-    public function toFcm(object $notifiable): FcmMessage
+    public function toBroadcast(object $notifiable): \Illuminate\Notifications\Messages\BroadcastMessage
     {
-        return (new FcmMessage())
-            ->setNotification(FcmNotification::create(
-                "Pet Profile Suspended",
-                "The profile for '{$this->pet->name}' has been suspended."
-            ))
-            ->setData([
-                'type' => 'pet_suspended',
-                'pet_id' => (string) $this->pet->id,
-            ]);
+        $petName = $this->pet->name ?? 'Unknown Pet';
+
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'title' => "Pet Profile Suspended",
+            'body' => "The profile for '{$petName}' has been suspended.",
+            'type' => 'pet_suspended',
+            'pet_id' => (string) $this->pet->id,
+        ]);
     }
 
     public function getTitle()

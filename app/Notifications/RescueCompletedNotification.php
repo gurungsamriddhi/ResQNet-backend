@@ -6,11 +6,9 @@ use App\Models\RescueReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class RescueCompletedNotification extends Notification implements ShouldQueue
+class RescueCompletedNotification extends Notification
 {
     use Queueable;
     use \App\Traits\DatabaseNotificationTrait;
@@ -19,29 +17,22 @@ class RescueCompletedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['database'];
-
-        if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
-            $channels[] = FcmChannel::class;
-        }
-
-        return $channels;
+        return ['database', 'broadcast'];
     }
 
-    public function toFcm(object $notifiable): FcmMessage
+    public function toBroadcast(object $notifiable): BroadcastMessage
     {
         $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'the rescue organization';
+        $title = $this->rescue->title ?? 'Unknown Rescue';
+        $caseCode = $this->rescue->case_code ?? '';
 
-        return (new FcmMessage())
-            ->setNotification(FcmNotification::create(
-                "Great news! 🎉 Rescue Completed",
-                "The rescue for '{$this->rescue->title}' has been completed. The animal is now safe and in care at {$orgName}."
-            ))
-            ->setData([
-                'type' => 'rescue_completed',
-                'rescue_id' => (string) $this->rescue->id,
-                'case_code' => $this->rescue->case_code,
-            ]);
+        return new BroadcastMessage([
+            'title' => "Great news! 🎉 Rescue Completed",
+            'body' => "The rescue for '{$title}' has been completed. The animal is now safe and in care at {$orgName}.",
+            'type' => 'rescue_completed',
+            'rescue_id' => (string) $this->rescue->id,
+            'case_code' => $caseCode,
+        ]);
     }
 
     public function getTitle()

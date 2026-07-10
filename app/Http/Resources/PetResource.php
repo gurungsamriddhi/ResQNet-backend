@@ -30,6 +30,10 @@ class PetResource extends JsonResource
                 'id' => $this->organization->id,
                 'name' => $this->organization->name,
                 'slug' => $this->organization->slug,
+                'email' => $this->organization->email,
+                'phone' => $this->organization->phone,
+                'address' => $this->organization->address,
+                'logo' => AppUrl::absolute($this->organization->getFirstMediaUrl('logo') ?: null),
             ]),
             'primary_image' => $this->whenLoaded('media', fn () => AppUrl::absolute($this->getFirstMediaUrl('images') ?: null)),
             'images' => $this->whenLoaded('media', fn () => $this->getMedia('images')

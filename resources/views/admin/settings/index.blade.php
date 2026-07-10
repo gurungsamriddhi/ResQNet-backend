@@ -255,11 +255,11 @@
         <!-- Bottom Page Control Bar Footer -->
         <div class="flex items-center justify-end gap-3 pt-5 border-t border-admin-border mt-8">
             <button @click="cancelChanges()"
-                    class="bg-white border border-slate-200 dark:bg-[#111c2a] dark:border-slate-700/40 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
+                    class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                 Cancel
             </button>
             <button @click="saveChanges()"
-                    class="bg-[#5BA44C] hover:bg-[#5BA44C]/90 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all duration-200 active:scale-95 shadow-md shadow-[#5BA44C]/10">
+                    class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                 <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
                 <span>Save Changes</span>
             </button>

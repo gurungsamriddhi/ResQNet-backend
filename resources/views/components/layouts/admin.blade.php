@@ -424,7 +424,7 @@
                                 <div
                                     class="w-full h-full rounded-[10px] bg-white dark:bg-[#1a2333] flex items-center justify-center overflow-hidden relative">
                                     @if ($org && $org->logo)
-                                        <img src="{{ Storage::url($org->logo) }}" alt="Org Logo"
+                                        <img src="{{ $org->getFirstMediaUrl('logo') ?: asset('images/default-avatar.png') }}" alt="Org Logo"
                                             class="w-full h-full object-cover">
                                     @else
                                         <span

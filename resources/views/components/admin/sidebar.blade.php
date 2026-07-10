@@ -131,16 +131,7 @@
                         </a>
                     </li> --}}
 
-                    <!-- Settings -->
-                    <li>
-                        <a wire:navigate href="{{ $settingsUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Settings</span>
-                            </div>
-                        </a>
-                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -320,15 +311,7 @@
                                     </div>
                                 </a>
                             </li> --}}
-                            <li>
-                                <a wire:navigate href="{{ $settingsUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Settings</span>
-                                    </div>
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                 </div>

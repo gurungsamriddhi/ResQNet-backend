@@ -8,9 +8,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class AdoptionStatusUpdatedNotification extends Notification implements ShouldQueue
 {
@@ -23,11 +20,7 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
 
     public function via($notifiable): array
     {
-        $channels = ['database']; // Always send to database
-
-        if ($notifiable->routeNotificationForFcm()) {
-            $channels[] = FcmChannel::class;
-        }
+        $channels = ['database', 'broadcast']; // Always send to database and broadcast
 
         // Only send email for specific statuses
         if (in_array($this->adoption->status, ['pending', 'approved', 'rejected'])) {
@@ -69,7 +62,7 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
         };
     }
 
-    public function toFcm($notifiable): FcmMessage
+    public function toBroadcast($notifiable): \Illuminate\Notifications\Messages\BroadcastMessage
     {
         $petName = $this->adoption->pet?->name ?? 'the pet';
 
@@ -87,14 +80,13 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
             default => ['Adoption Update', "Your application status has changed."],
         };
 
-        return (new FcmMessage())
-            ->setNotification(FcmNotification::create($title, $body))
-            ->setData([
-                'click_action' => 'NOTIFICATION_CLICK',
-                'adoption_request_id' => (string) $this->adoption->id,
-                'status' => $this->adoption->status,
-                'type' => 'lifecycle_update',
-            ]);
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'title' => $title,
+            'body' => $body,
+            'adoption_request_id' => (string) $this->adoption->id,
+            'status' => $this->adoption->status,
+            'type' => 'lifecycle_update',
+        ]);
     }
 
     // Database Notification Trait Methods

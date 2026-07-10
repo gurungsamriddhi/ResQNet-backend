@@ -42,8 +42,8 @@
             
             <!-- Prominent action button "+ Add New Record" -->
             <button @click="isAddModalOpen = true; openAddModal()"
-                    class="w-full sm:w-auto bg-brand-orange text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brand-orange/90 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 shadow-md shadow-brand-orange/10">
-                <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+                    class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 self-start md:self-auto w-full sm:w-auto">
+                <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[2.5]"></i>
                 <span>+ Add New Record</span>
             </button>
         </div>
@@ -315,11 +315,11 @@
                 <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
                     <button @click="isAddModalOpen = false"
-                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Cancel
                     </button>
                     <button @click="saveNewRecord()"
-                            class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all duration-200 font-semibold">
+                            class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Create Record
                     </button>
                 </div>
@@ -426,11 +426,11 @@
                 <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
                     <button @click="isEditModalOpen = false"
-                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textSecondary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Cancel
                     </button>
                     <button @click="saveEditRecord()"
-                            class="px-4 py-2 rounded-xl bg-brand-orange text-white font-semibold text-xs hover:bg-brand-orange/90 transition-all duration-200 font-semibold">
+                            class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Save Changes
                     </button>
                 </div>
@@ -502,7 +502,7 @@
                 <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end rounded-b-2xl">
                     <button @click="isViewHistoryOpen = false"
-                            class="px-5 py-2.5 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Close History
                     </button>
                 </div>
@@ -574,7 +574,7 @@
                         Scan this QR code with a mobile device to instantly fetch and display this pet's live vaccination and checkup tracking history.
                     </p>
                     <button @click="isQrModalOpen = false"
-                            class="w-full py-2.5 bg-brand-navy text-white hover:bg-brand-navy/90 text-xs font-bold rounded-xl transition-all duration-200 shadow-md">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 w-full">
                         Close
                     </button>
                 </div>

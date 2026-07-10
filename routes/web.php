@@ -179,7 +179,8 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
 
     //Organization profile include changing their email, passsword, name, phone number, address basically information that they were asked to put during registration
     Route::get('/profile', [OrgProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [OrgProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [OrgProfileController::class, 'changePassword'])->name('password.update');
 });
 
 //magic link for access to case details for team members do not require login

@@ -69,6 +69,13 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
                 Route::post('/fcm-token', [UserDashboardController::class, 'updateFcmToken'])->name('fcm-token');
             });
 
+            // Notification
+            Route::prefix('notifications')->name('api.notifications.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Api\NotificationController::class, 'index'])->name('index');
+                Route::post('/read-all', [\App\Http\Controllers\Api\NotificationController::class, 'markAllAsRead'])->name('read-all');
+                Route::post('/{id}/read', [\App\Http\Controllers\Api\NotificationController::class, 'markAsRead'])->name('read');
+            });
+
             // Adoption Profile (screening details — separate from account)
             Route::prefix('user/profile')->name('api.user-profile.')->group(function () {
                 Route::get('/', [UserProfileController::class, 'show'])->name('show');

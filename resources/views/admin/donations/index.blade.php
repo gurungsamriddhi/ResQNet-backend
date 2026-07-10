@@ -8,7 +8,7 @@
                 <p class="text-xs text-slate-500 dark:text-slate-300 mt-1">Monitor and manage all incoming donations</p>
             </div>
             <div>
-                <button type="button" @click="exportModalOpen = true" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
+                <button type="button" @click="exportModalOpen = true" class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                     <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                     Export to Excel
                 </button>
@@ -49,6 +49,7 @@
                             <th class="px-6 py-4">Name</th>
                             <th class="px-6 py-4">Phone Number</th>
                             <th class="px-6 py-4">Email</th>
+                            <th class="px-6 py-4">Amount</th>
                             <th class="px-6 py-4">Date</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
@@ -62,10 +63,10 @@
                             @endphp
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                                 <td class="px-6 py-4">
-                                    @if($donation->is_anonymous)
+                                    @if($donation->is_anonymous || blank($donation->donor_name))
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wide uppercase bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600/50 shadow-sm">Anonymous</span>
                                     @else
-                                        <span class="font-bold text-slate-800 dark:text-slate-100">{{ $donation->donor_name ?? '—' }}</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-100">{{ $donation->donor_name }}</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-300">
@@ -76,6 +77,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-300">{{ $donation->donor_email ?? '—' }}</td>
+                                <td class="px-6 py-4 text-xs font-bold text-brand-orange">Rs. {{ number_format($donation->amount, 2) }}</td>
                                 <td class="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-300">{{ $donation->created_at->format('M j, Y') }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <button type="button"
@@ -92,7 +94,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="px-6 py-12 text-center text-sm text-slate-400">No completed donations yet.</td></tr>
+                            <tr><td colspan="6" class="px-6 py-12 text-center text-sm text-slate-400">No completed donations yet.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -170,11 +172,11 @@
                 </div>
                 <div class="bg-slate-50 dark:bg-[#0b0f19] p-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700/40">
                     <button type="button" @click="previewOpen = false"
-                            class="px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors">Cancel</button>
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">Cancel</button>
                     <form method="POST" x-bind:action="previewAction" class="inline">
                         @csrf
                         <button type="submit"
-                                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-brand-orange hover:bg-brand-orange/90 rounded-xl transition-all shadow-md shadow-brand-orange/20 active:scale-95">
+                                class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Send Email
                         </button>
@@ -231,9 +233,9 @@
                     </div>
                     <div class="bg-slate-50 dark:bg-[#0b0f19] p-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700/40">
                         <button type="button" @click="exportModalOpen = false"
-                                class="px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors">Cancel</button>
+                                class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">Cancel</button>
                         <button type="submit"
-                                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-md shadow-emerald-600/20 active:scale-95">
+                                class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             <i data-lucide="download" class="w-4 h-4"></i>
                             Download Excel
                         </button>

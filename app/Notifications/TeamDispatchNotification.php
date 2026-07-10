@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\URL;
 class TeamDispatchNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+    use \App\Traits\DatabaseNotificationTrait;
 
     public function __construct(public RescueReport $rescue, public string $role = 'team member')
     {
@@ -20,13 +21,7 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['mail'];
-
-        if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
-            $channels[] = 'fcm';
-        }
-
-        return $channels;
+        return ['mail', 'database', 'broadcast'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -67,16 +62,39 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
             ->line('Thank you for your service.');
     }
 
-    public function toFcm(object $notifiable): array
+    public function toBroadcast(object $notifiable): \Illuminate\Notifications\Messages\BroadcastMessage
     {
-        return [
-            'title' => "🚨 Rescue Dispatch: {$this->rescue->case_code}",
-            'body' => "You've been dispatched as {$this->role} for: {$this->rescue->title}",
-            'data' => [
-                'type' => 'rescue_dispatch',
-                'rescue_id' => (string) $this->rescue->id,
-                'case_code' => $this->rescue->case_code,
-            ],
-        ];
+        $caseCode = $this->rescue->case_code ?? 'Unknown Case';
+        $title = $this->rescue->title ?? 'Unknown Title';
+
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'title' => "🚨 Rescue Dispatch: {$caseCode}",
+            'body' => "You've been dispatched as {$this->role} for: {$title}",
+            'type' => 'rescue_dispatch',
+            'rescue_id' => (string) $this->rescue->id,
+            'case_code' => $caseCode,
+        ]);
+    }
+
+    public function getTitle()
+    {
+        $caseCode = $this->rescue->case_code ?? 'Unknown Case';
+        return "🚨 Rescue Dispatch: {$caseCode}";
+    }
+
+    public function getMessage()
+    {
+        $title = $this->rescue->title ?? 'Unknown Title';
+        return "You've been dispatched as {$this->role} for: {$title}";
+    }
+
+    public function getType()
+    {
+        return "rescue_dispatch";
+    }
+
+    public function getLink()
+    {
+        return "/organization/rescues/{$this->rescue->id}";
     }
 }

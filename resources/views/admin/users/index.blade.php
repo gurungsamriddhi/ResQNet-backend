@@ -24,7 +24,7 @@
                            class="w-full pl-9 pr-4 py-2 bg-admin-bg border border-admin-border rounded-xl text-xs text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all">
                 </div>
                 <!-- Filter Button -->
-                <button class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#111c2a] border border-slate-200 dark:border-slate-750 text-slate-600 dark:text-slate-300 font-semibold text-xs transition-all flex items-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700">
+                <button class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                     <i data-lucide="filter" class="w-3.5 h-3.5"></i>
                     <span>Filter</span>
                 </button>
@@ -32,7 +32,7 @@
 
             <!-- Add User button -->
             <button @click="openAddModal()"
-                    class="bg-[#5BA44C] text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all duration-200 hover:bg-[#5BA44C]/95 active:scale-95 shadow-md shadow-[#5BA44C]/10 self-start md:self-auto">
+                    class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 self-start md:self-auto">
                 <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
                 <span>+ Add User</span>
             </button>
@@ -303,11 +303,11 @@
                 <!-- Footer -->
                 <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
                     <button @click="isAddUserModalOpen = false"
-                            class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-admin-textPrimary hover:bg-admin-bg font-semibold text-xs transition-all duration-200">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Cancel
                     </button>
                     <button type="submit" form="addUserForm"
-                            class="px-4 py-2 rounded-xl bg-[#5BA44C] hover:bg-[#5BA44C]/90 text-white font-semibold text-xs transition-all duration-200 shadow-md">
+                            class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Save User
                     </button>
                 </div>
@@ -342,11 +342,11 @@
                     </div>
                     <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
                         <button type="button" @click="isSuspendModalOpen = false"
-                                class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-all duration-200">
+                                class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs transition-all duration-200 shadow-md">
+                                class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             Suspend User
                         </button>
                     </div>
@@ -383,11 +383,11 @@
                     </div>
                     <div class="px-6 py-4 border-t border-admin-border bg-admin-bg/20 flex items-center justify-end gap-3 rounded-b-2xl">
                         <button type="button" @click="isDeleteModalOpen = false"
-                                class="px-4 py-2 rounded-xl bg-admin-surface border border-admin-border text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-all duration-200">
+                                class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition-all duration-200 shadow-md">
+                                class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                             Delete User
                         </button>
                     </div>

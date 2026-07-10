@@ -155,16 +155,7 @@
                         </a>
                     </li>
 
-                    <!-- Settings -->
-                    <li>
-                        <a wire:navigate href="{{ $settingsUrl }}" 
-                           class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2 shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
-                                <span>Settings</span>
-                            </div>
-                        </a>
-                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -174,7 +165,7 @@
             <div class="flex items-center gap-3 overflow-hidden">
                 <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0 overflow-hidden">
                     @if (auth()->user()?->avatar)
-                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                        <img src="{{ auth()->user()->organization?->getFirstMediaUrl('logo') ?: asset('images/default-avatar.png') }}" alt="Org Logo" class="w-full h-full object-cover">
                     @else
                         <span class="text-sm font-bold text-brand-orange">{{ substr(auth()->user()?->name ?? 'U', 0, 1) }}</span>
                     @endif
@@ -365,15 +356,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a wire:navigate href="{{ $settingsUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] {{ $isSettingsActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }} transition-all duration-200 group">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="settings" class="w-4 h-4 {{ $isSettingsActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Settings</span>
-                                    </div>
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -383,7 +366,7 @@
                     <div class="flex items-center gap-3 overflow-hidden">
                         <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm font-bold text-brand-orange flex-shrink-0 overflow-hidden">
                             @if (auth()->user()?->avatar)
-                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                                <img src="{{ auth()->user()->organization?->getFirstMediaUrl('logo') ?: asset('images/default-avatar.png') }}" alt="Org Logo" class="w-full h-full object-cover">
                             @else
                                 <span class="text-sm font-bold text-brand-orange">{{ substr(auth()->user()?->name ?? 'U', 0, 1) }}</span>
                             @endif

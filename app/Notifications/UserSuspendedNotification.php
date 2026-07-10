@@ -6,13 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class UserSuspendedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+    use \App\Traits\DatabaseNotificationTrait;
 
     protected $reason;
 
@@ -23,11 +21,7 @@ class UserSuspendedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['mail'];
-        if ($notifiable->routeNotificationForFcm()) {
-            $channels[] = FcmChannel::class;
-        }
-        return $channels;
+        return ['mail', 'database', 'broadcast'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -40,13 +34,32 @@ class UserSuspendedNotification extends Notification implements ShouldQueue
                     ->line('If you believe this is an error, please contact support.');
     }
 
-    public function toFcm($notifiable): FcmMessage
+    public function toBroadcast(object $notifiable): \Illuminate\Notifications\Messages\BroadcastMessage
     {
-        return (new FcmMessage())
-            ->setNotification(FcmNotification::create('Account Suspended', 'Your account has been suspended. Please check your email for details.'))
-            ->setData([
-                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                'type' => 'account_suspended'
-            ]);
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'title' => 'Account Suspended',
+            'body' => 'Your account has been suspended. Please check your email for details.',
+            'type' => 'account_suspended',
+        ]);
+    }
+
+    public function getTitle()
+    {
+        return 'Account Suspended';
+    }
+
+    public function getMessage()
+    {
+        return 'Your account has been suspended. Reason: ' . $this->reason;
+    }
+
+    public function getType()
+    {
+        return 'account_suspended';
+    }
+
+    public function getLink()
+    {
+        return null;
     }
 }

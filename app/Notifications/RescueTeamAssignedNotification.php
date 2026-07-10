@@ -6,11 +6,9 @@ use App\Models\RescueReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class RescueTeamAssignedNotification extends Notification implements ShouldQueue
+class RescueTeamAssignedNotification extends Notification
 {
     use Queueable;
     use \App\Traits\DatabaseNotificationTrait;
@@ -19,29 +17,21 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['database'];
-
-        if (isset($notifiable->fcm_token) && $notifiable->fcm_token) {
-            $channels[] = FcmChannel::class;
-        }
-
-        return $channels;
+        return ['database', 'broadcast'];
     }
 
-    public function toFcm(object $notifiable): FcmMessage
+    public function toBroadcast(object $notifiable): BroadcastMessage
     {
         $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'a rescue organization';
+        $caseCode = $this->rescue->case_code ?? '';
 
-        return (new FcmMessage())
-            ->setNotification(FcmNotification::create(
-                "Help is on the way! 🚨",
-                "A rescue team from {$orgName} has been assigned to your report."
-            ))
-            ->setData([
-                'type' => 'rescue_assigned',
-                'rescue_id' => (string) $this->rescue->id,
-                'case_code' => $this->rescue->case_code,
-            ]);
+        return new BroadcastMessage([
+            'title' => "Help is on the way! 🚨",
+            'body' => "A rescue team from {$orgName} has been assigned to your report.",
+            'type' => 'rescue_assigned',
+            'rescue_id' => (string) $this->rescue->id,
+            'case_code' => $caseCode,
+        ]);
     }
 
     public function getTitle()

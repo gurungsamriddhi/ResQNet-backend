@@ -259,12 +259,12 @@
                                         <span class="hidden sm:inline">View Details</span>
                                     </button>
                                     <button @click="approveApplication(app.email)"
-                                            class="bg-[#5BA44C] text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all duration-200 hover:bg-[#5BA44C]/90 active:scale-95 shadow-sm">
+                                            class="bg-[#5BA44C] hover:bg-[#4A8A3E] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                                         <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                         <span class="hidden sm:inline">Approve</span>
                                     </button>
                                     <button @click="declineApplication(app.email)"
-                                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all duration-200">
+                                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                         <span class="hidden sm:inline">Decline</span>
                                     </button>
@@ -614,12 +614,12 @@
                           placeholder="Enter the reason for declining..."></textarea>
                 <div class="flex justify-end gap-3 mt-4">
                     <button @click="isDeclineModalOpen = false; decliningApp = null"
-                            class="px-4 py-2 text-sm font-semibold text-admin-textSecondary bg-admin-bg border border-admin-border rounded-xl hover:bg-admin-surface transition-all">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Cancel
                     </button>
                     <button @click="confirmDecline()"
                             :disabled="!declineReason.trim()"
-                            class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm">
+                            class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                         Confirm Decline
                     </button>
                 </div>
@@ -679,12 +679,12 @@
                 <!-- Modal Footer -->
                 <div class="flex items-center justify-end gap-3 px-6 py-4 bg-admin-bg border-t border-admin-border">
                     <button @click="isDelistModalOpen = false; delistingPet = null"
-                            class="px-4 py-2 text-sm font-semibold text-admin-textSecondary bg-admin-surface border border-admin-border rounded-xl hover:bg-admin-bg transition-all">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Cancel
                     </button>
                     <button @click="confirmDelist()"
                             :disabled="delistLoading"
-                            class="px-5 py-2 text-sm font-bold text-white bg-amber-500 rounded-xl hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-2">
+                            class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed">
                         <template x-if="delistLoading">
                             <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

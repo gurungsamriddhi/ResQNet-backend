@@ -432,7 +432,7 @@
 
                 <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700/40 flex justify-end">
                     <button @click="selectedRescueId = null"
-                            class="px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                            class="border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5">
                         Close
                     </button>
                 </div>

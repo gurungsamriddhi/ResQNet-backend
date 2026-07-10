@@ -141,4 +141,12 @@ class User extends Authenticatable
 
         return false;
     }
+
+    /**
+     * Get the channels that the user should receive broadcast notifications on.
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'user.'.$this->id;
+    }
 }
