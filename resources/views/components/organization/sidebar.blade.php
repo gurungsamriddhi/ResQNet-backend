@@ -59,7 +59,6 @@
                                 <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }} transition-colors"></i>
                                 <span>Dashboard</span>
                             </div>
-                            <span class="bg-secondary-50 text-secondary-500 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider uppercase">Live</span>
                         </a>
                     </li>
 
@@ -266,14 +265,13 @@
                         <span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3">Operations</span>
                         <ul class="space-y-1">
                              <li>
-                                <a wire:navigate href="{{ $dashboardUrl }}" 
-                                   class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDashboardActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
-                                    <div class="flex items-center gap-3">
-                                        <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
-                                        <span>Dashboard</span>
-                                    </div>
-                                    <span class="bg-secondary-50 text-secondary-500 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider uppercase">Live</span>
-                                </a>
+                                 <a wire:navigate href="{{ $dashboardUrl }}" 
+                                    class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 group text-[13px] {{ $isDashboardActive ? 'bg-white/10 text-white font-semibold border-l-4 border-brand-orange rounded-l-none pl-2' : 'text-slate-400 hover:bg-white/5 hover:text-white font-medium' }}">
+                                     <div class="flex items-center gap-3">
+                                         <i data-lucide="layout-dashboard" class="w-4 h-4 {{ $isDashboardActive ? 'text-brand-orange' : 'text-slate-500 group-hover:text-slate-300' }}"></i>
+                                         <span>Dashboard</span>
+                                     </div>
+                                 </a>
                              </li>
                              <li>
                                 <a wire:navigate href="{{ $petsUrl }}" 

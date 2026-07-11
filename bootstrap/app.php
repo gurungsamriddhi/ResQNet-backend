@@ -43,5 +43,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (\Illuminate\Broadcasting\BroadcastException $e) {
+            \Log::warning('Broadcast failed (non-fatal): ' . $e->getMessage());
+            return response()->json([], 200);
+        });
     })->create();

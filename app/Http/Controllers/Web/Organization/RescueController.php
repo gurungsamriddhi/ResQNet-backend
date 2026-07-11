@@ -29,6 +29,15 @@ class RescueController extends Controller
         }
     }
 
+    private function safeNotify($notifiable, $notification): void
+    {
+        try {
+            $notifiable->notify($notification);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
     public function index()
     {
         $orgId = auth()->user()->organization_id;
@@ -105,12 +114,16 @@ class RescueController extends Controller
             ->get();
 
         if ($otherOrgs->isNotEmpty()) {
-            \Illuminate\Support\Facades\Notification::send($otherOrgs, new \App\Notifications\OrganizationAlertNotification(
-                'info',
-                'Case Claimed',
-                "Another organization has claimed rescue case {$report->case_code}. You can ignore it.",
-                "#"
-            ));
+            try {
+                \Illuminate\Support\Facades\Notification::send($otherOrgs, new \App\Notifications\OrganizationAlertNotification(
+                    'info',
+                    'Case Claimed',
+                    "Another organization has claimed rescue case {$report->case_code}. You can ignore it.",
+                    "#"
+                ));
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         return response()->json([
@@ -175,7 +188,7 @@ class RescueController extends Controller
 
         foreach ($report->assignments as $assignment) {
             if ($assignment->teamMember) {
-                $assignment->teamMember->notify(new TeamDispatchNotification($report, $assignment->role));
+                $this->safeNotify($assignment->teamMember, new TeamDispatchNotification($report, $assignment->role));
             }
         }
 
@@ -273,7 +286,7 @@ class RescueController extends Controller
         // Notify the reporting user when rescue is completed
         if ($validated['status'] === 'resolved' && $report->user) {
             $report->loadMissing('organization');
-            $report->user->notify(new RescueCompletedNotification($report));
+            $this->safeNotify($report->user, new RescueCompletedNotification($report));
             $this->safeBroadcast(new RescueCompletedEvent($report));
         }
 

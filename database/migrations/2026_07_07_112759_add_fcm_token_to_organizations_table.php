@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,7 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->string('fcm_token')->nullable()->after('email');
+            if (DB::getDriverName() === 'mysql') {
+                $table->string('fcm_token')->nullable()->after('email');
+            } else {
+                $table->string('fcm_token')->nullable();
+            }
         });
     }
 

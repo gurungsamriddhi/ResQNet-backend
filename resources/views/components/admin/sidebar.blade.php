@@ -8,7 +8,6 @@
     $usersUrl = route('admin.users.index');
     $organizationsUrl = route('admin.organizations.index');
     $adoptionsUrl = '#'; // No admin adoptions route yet
-    $volunteersUrl = route('admin.volunteers.index');
     $donationsUrl = route('admin.donations.index');
     $analyticsUrl = route('admin.analytics.index');
     $settingsUrl = route('admin.settings.index');
@@ -20,7 +19,6 @@
     $isUsersActive = request()->routeIs('admin.users.*');
     $isOrganizationsActive = request()->routeIs('admin.organizations.*');
     $isAdoptionsActive = request()->routeIs('admin.adoptions.*');
-    $isVolunteersActive = request()->routeIs('admin.volunteers.*');
     $isAnalyticsActive = request()->routeIs('admin.analytics.*');
     $isDonationsActive = request()->routeIs('admin.donations.*');
     $isSettingsActive = request()->routeIs('admin.settings.*');
