@@ -9,7 +9,16 @@ class PublicPetController extends Controller
 {
     public function showByQr(string $qrCodeId)
     {
-        $pet = Pet::with(['media', 'organization'])
+        //with used for eager loading when accessing the related model data in the same query . Avoids N+1 query problem 
+        //otherwise it will make multiple queries to fetch the related model data 
+        //For example, if we want to fetch the pet and its organization and vet data, we can use with([]) to fetch all the data in the same query 
+        $pet = Pet::with([
+            'media',
+            'organization.user',
+            'medicalRecords.vet',
+            'vaccinations.vet',
+            'medications.vet',
+        ])
             ->where('qr_code_id', $qrCodeId)
             ->firstOrFail();
 
