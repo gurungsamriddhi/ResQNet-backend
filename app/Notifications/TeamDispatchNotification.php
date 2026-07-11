@@ -27,7 +27,7 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)
-            ->subject("🚨 Rescue Dispatch: {$this->rescue->case_code} - {$this->rescue->title}")
+            ->subject("Rescue Dispatch: {$this->rescue->case_code} - {$this->rescue->title}")
             ->greeting("Hello {$notifiable->name},")
             ->line("You have been dispatched as a **{$this->role}** for a rescue operation.")
             ->line("**Case:** {$this->rescue->case_code}")
@@ -68,7 +68,7 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
         $title = $this->rescue->title ?? 'Unknown Title';
 
         return new \Illuminate\Notifications\Messages\BroadcastMessage([
-            'title' => "🚨 Rescue Dispatch: {$caseCode}",
+            'title' => "Rescue Dispatch: {$caseCode}",
             'body' => "You've been dispatched as {$this->role} for: {$title}",
             'type' => 'rescue_dispatch',
             'rescue_id' => (string) $this->rescue->id,
@@ -79,7 +79,7 @@ class TeamDispatchNotification extends Notification implements ShouldQueue
     public function getTitle()
     {
         $caseCode = $this->rescue->case_code ?? 'Unknown Case';
-        return "🚨 Rescue Dispatch: {$caseCode}";
+        return "Rescue Dispatch: {$caseCode}";
     }
 
     public function getMessage()

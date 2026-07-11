@@ -27,7 +27,7 @@ class RescueCompletedNotification extends Notification implements ShouldQueue
         $title = $this->rescue->title ?? 'Unknown Rescue';
 
         return (new MailMessage)
-            ->subject('Great news! 🎉 Rescue Completed')
+            ->subject('Great news!Rescue Completed')
             ->greeting("Hello {$notifiable->name},")
             ->line("The rescue for **{$title}** has been successfully completed!")
             ->line("The animal is now safe and in care at {$orgName}.")
@@ -42,7 +42,7 @@ class RescueCompletedNotification extends Notification implements ShouldQueue
         $caseCode = $this->rescue->case_code ?? '';
 
         return new BroadcastMessage([
-            'title' => "Great news! 🎉 Rescue Completed",
+            'title' => "Great news! Rescue Completed",
             'body' => "The rescue for '{$title}' has been completed. The animal is now safe and in care at {$orgName}.",
             'type' => 'rescue_completed',
             'rescue_id' => (string) $this->rescue->id,
@@ -52,7 +52,7 @@ class RescueCompletedNotification extends Notification implements ShouldQueue
 
     public function getTitle()
     {
-        return "Great news! 🎉 Rescue Completed";
+        return "Great news! Rescue Completed";
     }
 
     public function getMessage()

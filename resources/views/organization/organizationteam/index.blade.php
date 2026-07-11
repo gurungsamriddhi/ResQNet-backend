@@ -103,7 +103,7 @@
                     <div class="text-center py-10">
                         <i data-lucide="users" class="w-10 h-10 mx-auto text-slate-300 mb-3"></i>
                         <h3 class="text-sm font-bold text-slate-500">No team members yet</h3>
-                        <p class="text-xs text-slate-400 mt-1">Click "Add Team Member" to build your volunteer team.</p>
+                        <p class="text-xs text-slate-400 mt-1">Click "Add Team Member" to build your team.</p>
                     </div>
                 </template>
             </div>
@@ -130,7 +130,7 @@
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                         <i data-lucide="user-plus" class="w-5 h-5 text-brand-orange"></i>
-                        Add Volunteer
+                        Add Team Member
                     </h3>
                     <button @click="showInviteModal = false" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
@@ -162,6 +162,7 @@
                                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#111c2a] text-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange outline-none transition-all">
                             <option value="staff">Staff</option>
                             <option value="vet">Veterinarian</option>
+                            <option value="volunteer">Volunteer</option>
                         </select>
                     </div>
                     <div class="flex items-center gap-3 pt-2">
@@ -203,7 +204,7 @@
                 <div class="w-12 h-12 mx-auto rounded-full bg-red-50 dark:bg-red-950/30 text-red-500 flex items-center justify-center mb-4">
                     <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mb-2">Remove Volunteer?</h3>
+                <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mb-2">Remove Team Member?</h3>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
                     Are you sure you want to remove <span class="font-bold text-slate-700 dark:text-slate-300" x-text="removeTarget?.name"></span>?
                 </p>
@@ -308,7 +309,7 @@
                 async submitInvite() {
                     this.inviteSubmitting = true;
                     try {
-                        const res = await fetch('{{ route('organization.orgteams.invite') }}', {
+                        const res = await fetch('{{ route('organization.orgteams.store') }}', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                             body: JSON.stringify(this.inviteForm),
@@ -319,7 +320,7 @@
                             this.showInviteModal = false;
                             this.inviteForm = { name: '', email: '', phone: '', role: 'staff' };
                         } else {
-                            alert(data.message || 'Failed to add volunteer.');
+                            alert(data.message || 'Failed to add team member.');
                         }
                     } catch {
                         alert('Network error. Please try again.');
@@ -353,7 +354,7 @@
                             this.removeTarget = null;
                         } else {
                             const data = await res.json();
-                            alert(data.message || 'Failed to remove volunteer.');
+                            alert(data.message || 'Failed to remove team member.');
                         }
                     } catch {
                         alert('Network error. Please try again.');

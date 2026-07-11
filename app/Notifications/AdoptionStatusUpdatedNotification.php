@@ -41,7 +41,7 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
                 ->line("Your application to adopt {$petName} has been successfully submitted."),
 
             'approved' => (new MailMessage)
-                ->subject("Application Approved for {$petName}! 🎉")
+                ->subject("Application Approved for {$petName}!")
                 ->greeting("Congratulations {$notifiable->name}!")
                 ->line("Great news! Your application to adopt **{$petName}** has been formally approved.")
                 ->line("Our organization team will reach out to you within 1 to 2 working days."),
@@ -65,16 +65,16 @@ class AdoptionStatusUpdatedNotification extends Notification implements ShouldQu
         $petName = $this->adoption->pet?->name ?? 'the pet';
 
         [$title, $body] = match ($this->adoption->status) {
-            'pending' => ['Application Received! 📨', "Your application for {$petName} has been submitted successfully."],
+            'pending' => ['Application Received!', "Your application for {$petName} has been submitted successfully."],
             'under_review' => ['Application Under Review 🔍', "The organization is actively reviewing your request for {$petName}."],
-            'approved' => ['Adoption Approved! 🎉', "You are approved to adopt {$petName}! Expect a reach out within 1-2 working days."],
+            'approved' => ['Adoption Approved!', "You are approved to adopt {$petName}! Expect a reach out within 1-2 working days."],
             'rejected' => [
                 'Application Update 📋',
                 $this->adoption->organization_response
                     ? "Your application for {$petName} was declined: {$this->adoption->organization_response}"
                     : "A decision has been made on your application for {$petName}."
             ],
-            'completed' => ['Welcome Home! 🏡❤️', "The adoption process for {$petName} is officially complete!"],
+            'completed' => ['Welcome Home!', "The adoption process for {$petName} is officially complete!"],
             default => ['Adoption Update', "Your application status has changed."],
         };
 

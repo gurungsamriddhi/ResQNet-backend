@@ -167,7 +167,7 @@ Route::middleware(['auth', 'is_active', 'role:organization'])->prefix('organizat
 
     //Organization creates a team member they can assign for rescues 
     Route::get('/OrgTeam', [OrgTeamController::class, 'index'])->name('orgteams.index');
-    Route::post('/OrgTeam/invite', [OrgTeamController::class, 'invite'])->name('orgteams.invite');
+    Route::post('/OrgTeam/store', [OrgTeamController::class, 'store'])->name('orgteams.store');
     Route::delete('/OrgTeam/{user}', [OrgTeamController::class, 'remove'])->name('orgteams.remove');
 
     //Rather than finance we will have donation index that shows the donations made by musers using payment method and keep a button that sends the email saying thank you for their contribution

@@ -23,7 +23,10 @@ class TeamAccessController extends Controller
         // Load the report with all necessary relationships
         $report->load(['user', 'organization', 'assignments.teamMember', 'histories']);
 
-        return view('organization.rescue.show', compact('report'));
+        return view('organization.rescue.show', [
+            'report' => $report,
+            'isTeamAccess' => true,
+        ]);
     }
 
     public function markArrived(RescueReport $report, OrganizationTeam $teamMember)

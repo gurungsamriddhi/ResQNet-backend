@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Organization;
 use App\Http\Controllers\Controller;
 use App\Models\OrganizationTeam;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OrganizationTeamController extends Controller
 {
@@ -36,16 +37,22 @@ class OrganizationTeamController extends Controller
         return view('organization.organizationteam.index', compact('teamMembers'));
     }
 
-    public function invite(Request $request)
+    public function store(Request $request)
     {
+        $organizationId = auth()->user()->organization_id;
+
         $request->validate([
             'name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:organization_teams,email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('organization_teams')->where(function ($query) use ($organizationId) {
+                    return $query->where('organization_id', $organizationId);
+                })
+            ],
             'phone' => ['nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10', 'max:20'],
             'role' => 'required|string',
         ]);
-
-        $organizationId = auth()->user()->organization_id;
 
         $member = OrganizationTeam::create([
             'name' => $request->name,
@@ -57,7 +64,7 @@ class OrganizationTeamController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Volunteer added successfully!',
+            'message' => 'Team member added successfully!',
             'user' => [
                 'id' => $member->id,
                 'name' => $member->name,

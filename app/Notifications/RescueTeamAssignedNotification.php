@@ -26,11 +26,10 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
         $orgName = $this->rescue->organization ? $this->rescue->organization->name : 'a rescue organization';
 
         return (new MailMessage)
-            ->subject('Help is on the way! 🚨')
+            ->subject('Help is on the way!')
             ->greeting("Hello {$notifiable->name},")
             ->line("A rescue team from **{$orgName}** has just been assigned to the rescue case you reported.")
-            ->line("Thank you for looking out for them. We will notify you once the rescue is completed.")
-            ->action('View Case Details', url("/rescues/{$this->rescue->id}"));
+            ->line("Thank you for looking out for them. We will notify you once the rescue is completed.");
     }
 
     public function toBroadcast(object $notifiable): BroadcastMessage
@@ -39,7 +38,7 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
         $caseCode = $this->rescue->case_code ?? '';
 
         return new BroadcastMessage([
-            'title' => "Help is on the way! 🚨",
+            'title' => "Help is on the way!",
             'body' => "A rescue team from {$orgName} has been assigned to your report.",
             'type' => 'rescue_assigned',
             'rescue_id' => (string) $this->rescue->id,
@@ -49,7 +48,7 @@ class RescueTeamAssignedNotification extends Notification implements ShouldQueue
 
     public function getTitle()
     {
-        return "Help is on the way! 🚨";
+        return "Help is on the way!";
     }
 
     public function getMessage()
