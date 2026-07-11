@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class RescueReport extends Model
 {
@@ -40,6 +41,13 @@ class RescueReport extends Model
             'in_progress_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    protected function imagePath(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/' . $value) : null,
+        );
     }
 
     protected static function booted(): void
