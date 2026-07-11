@@ -319,55 +319,32 @@
     <section id="download" class="py-24 bg-gray-900 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Phone Mockup -->
-                <div class="relative mx-auto w-full max-w-sm lg:max-w-md fade-in-up">
-                    <div class="relative rounded-[2.5rem] border-[14px] border-gray-800 bg-gray-800 shadow-2xl overflow-hidden aspect-[9/19.5]">
-                        <!-- App Screen Placeholder -->
-                        <div class="absolute inset-0 bg-gray-100 flex flex-col">
-                            <!-- App Header -->
-                            <div class="bg-primary-500 text-white p-6 pt-12 pb-4">
-                                <h3 class="font-bold text-xl mb-1">Hi, Samriddhi! 👋</h3>
-                                <p class="text-primary-100 text-sm">Ready to help some animals today?</p>
-                            </div>
-                            <!-- App Content -->
-                            <div class="p-4 space-y-4">
-                                <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border border-gray-100">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-red-100 text-red-500 rounded-full flex items-center justify-center">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                        </div>
-                                        <span class="font-bold text-gray-800">Report Emergency</span>
-                                    </div>
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                                </div>
-                                <h4 class="font-bold text-gray-800 pt-2">Adoptable Pets near you</h4>
-                                <div class="flex gap-4 overflow-x-auto pb-4">
-                                    <div class="min-w-[140px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                                        <div class="h-24 bg-gray-200">
-                                            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
-                                        </div>
-                                        <div class="p-3">
-                                            <p class="font-bold text-sm">Max</p>
-                                            <p class="text-xs text-gray-500">2 months • Dog</p>
-                                        </div>
-                                    </div>
-                                    <div class="min-w-[140px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                                        <div class="h-24 bg-gray-200">
-                                            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
-                                        </div>
-                                        <div class="p-3">
-                                            <p class="font-bold text-sm">Luna</p>
-                                            <p class="text-xs text-gray-500">1 year • Cat</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Bottom Nav -->
-                            <div class="mt-auto bg-white border-t border-gray-200 p-4 flex justify-around text-gray-400">
-                                <svg class="w-6 h-6 text-primary-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            </div>
+                <!-- Phone Mockup with Hover Slideshow -->
+                <div class="relative mx-auto w-full max-w-[320px] lg:max-w-[350px] group h-[680px] flex items-center justify-center fade-in-up">
+                    <style>
+                        @keyframes slidePhones {
+                            0%, 20% { transform: translateX(0); }
+                            25%, 45% { transform: translateX(-100%); }
+                            50%, 70% { transform: translateX(-200%); }
+                            75%, 95% { transform: translateX(-300%); }
+                            100% { transform: translateX(0); }
+                        }
+                        .group:hover .slideshow-track {
+                            animation: slidePhones 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                        }
+                    </style>
+
+                    <!-- Base Phone Frame -->
+                    <div class="relative w-full h-full rounded-[3.5rem] border-[14px] border-gray-800 bg-black shadow-2xl overflow-hidden z-40 transform transition-transform duration-500 group-hover:scale-105">
+                        <!-- Dynamic Island Notch -->
+                        <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[35%] h-7 bg-black rounded-full z-50"></div>
+                        
+                        <!-- Images Track -->
+                        <div class="slideshow-track flex w-full h-full rounded-[2.5rem]">
+                            <img src="{{ asset('MobileInterface1.jpeg') }}" class="w-full h-full object-cover shrink-0" alt="ResQNet Mobile Dashboard">
+                            <img src="{{ asset('MobileInterface2.jpeg') }}" class="w-full h-full object-cover shrink-0" alt="ResQNet Rescue Report">
+                            <img src="{{ asset('MobileInterface3.jpeg') }}" class="w-full h-full object-cover shrink-0" alt="ResQNet Pet Adoption">
+                            <img src="{{ asset('MobileInterface4.jpeg') }}" class="w-full h-full object-cover shrink-0" alt="ResQNet Profile settings">
                         </div>
                     </div>
                 </div>
@@ -437,30 +414,26 @@
                     </a>
                 </div>
                 <div class="lg:w-1/2 flex justify-center">
-                    <!-- Dashboard Mockup Placeholder -->
-                    <div class="w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden transform rotate-1 hover:rotate-0 transition duration-300">
-                        <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                        </div>
-                        <div class="p-6">
-                            <div class="h-8 w-1/3 bg-gray-200 rounded mb-6"></div>
-                            <div class="grid grid-cols-3 gap-4 mb-6">
-                                <div class="h-24 bg-primary-50 rounded-lg border border-primary-100 flex flex-col items-center justify-center">
-                                    <div class="text-2xl font-bold text-primary-600">42</div>
-                                    <div class="text-xs text-gray-500">Active Pets</div>
-                                </div>
-                                <div class="h-24 bg-secondary-50 rounded-lg border border-secondary-100 flex flex-col items-center justify-center">
-                                    <div class="text-2xl font-bold text-secondary-600">12</div>
-                                    <div class="text-xs text-gray-500">Adoptions</div>
-                                </div>
-                                <div class="h-24 bg-blue-50 rounded-lg border border-blue-100 flex flex-col items-center justify-center">
-                                    <div class="text-2xl font-bold text-blue-600">5</div>
-                                    <div class="text-xs text-gray-500">Rescues</div>
-                                </div>
+                    <!-- Dashboard Mockup Images -->
+                    <div class="relative w-full max-w-lg mx-auto group perspective">
+                        <!-- Background Image (Dashboard 2) -->
+                        <div class="absolute -right-8 -bottom-8 w-5/6 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-200 overflow-hidden transform rotate-3 group-hover:rotate-6 group-hover:translate-x-2 group-hover:translate-y-2 transition-all duration-500">
+                            <div class="bg-[#e5e7eb] px-3 py-2 border-b border-[#d1d5db] flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#eab308]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#22c55e]"></div>
                             </div>
-                            <div class="h-40 bg-gray-50 rounded-lg border border-gray-200"></div>
+                            <img src="{{ asset('dashboard2.png') }}" alt="ResQNet Dashboard Analytics" class="w-full h-auto object-cover border-t border-white/50">
+                        </div>
+                        
+                        <!-- Foreground Image (Dashboard 1) -->
+                        <div class="relative w-[105%] -left-3 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.25)] border border-gray-200 overflow-hidden transform -rotate-2 group-hover:-rotate-1 group-hover:-translate-y-2 transition-all duration-500 z-10 bg-white">
+                            <div class="bg-[#e5e7eb] px-3 py-2 border-b border-[#d1d5db] flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#eab308]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#22c55e]"></div>
+                            </div>
+                            <img src="{{ asset('dashboard1.png') }}" alt="ResQNet Real-time Dashboard" class="w-full h-auto object-cover border-t border-white/50">
                         </div>
                     </div>
                 </div>
@@ -549,16 +522,6 @@
         </div>
     </section>
     
-    <!-- 9. Volunteer CTA -->
-    <section class="py-24 bg-white border-t border-gray-100 text-center">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Make a Difference Today</h2>
-            <p class="text-xl text-gray-600 mb-10">Whether you want to foster, volunteer at a shelter, or spread awareness, your help is needed.</p>
-            <a href="#" class="inline-block bg-secondary-500 hover:bg-secondary-600 text-white px-8 py-4 rounded-full font-bold text-lg transition shadow-lg shadow-secondary-500/30">
-                Become a Volunteer
-            </a>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-white pt-16 pb-8">

@@ -1,5 +1,8 @@
 <x-layouts.admin>
     @php
+    /*
+        Generate QR code URL and SVG
+    */
         $qrScanUrl = route('public.pets.qr.show', $pet->qr_code_id);
         $qrCodeSvg = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
             ->size(180)
