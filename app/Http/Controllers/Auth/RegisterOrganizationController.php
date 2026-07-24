@@ -131,6 +131,9 @@ class RegisterOrganizationController extends Controller
                 ->withInput();
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Organization Registration Exception: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             // Fallback for general application errors
             return back()
