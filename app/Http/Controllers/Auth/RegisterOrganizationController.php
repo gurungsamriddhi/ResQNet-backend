@@ -132,9 +132,9 @@ class RegisterOrganizationController extends Controller
                 'exception' => $e
             ]);
 
-            // Fallback for general application errors
+            // Display exact error message for debugging
             return back()
-                ->withErrors(['error' => 'Something went wrong on our end. Please try again later.'])
+                ->withErrors(['error' => 'Something went wrong on our end: ' . $e->getMessage()])
                 ->withInput();
         }
     }
