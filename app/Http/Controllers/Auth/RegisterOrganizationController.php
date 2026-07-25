@@ -101,21 +101,18 @@ class RegisterOrganizationController extends Controller
             // Set organization_id on the owner user
             $user->update(['organization_id' => $org->id]);
 
-            DB::commit();
-
-            if ($request->hasFile('document')) {
-                try {
-                    $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
-                } catch (\Exception $mediaException) {
-                    Log::error('Media upload failed for Org ID ' . $org->id . ': ' . $mediaException->getMessage());
-                    return redirect()->route('registration.pending')->with('warning', 'Registration saved, but document upload failed. Please re-upload in dashboard.');
-                }
+            if ($request->hasFile('document')){
+                $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
             }
+
+            DB::commit();
 
             OrganizationRegisteredEvent::dispatch($org);
 
             return redirect()->route('registration.pending');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } 
+        
+        catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
 
             // Catch MySQL Error Code 1062 (Duplicate Entry) just in case
