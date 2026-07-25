@@ -119,8 +119,10 @@ class PetSeeder extends Seeder
                 $data
             );
 
-            $pet->addMedia(storage_path('app/public/pets/seed/' . $pet->qr_code_id . '.jpg'))
-                ->toMediaCollection('images');
+            $imagePath = storage_path('app/public/pets/seed/' . $pet->qr_code_id . '.jpg');
+            if (file_exists($imagePath)) {
+                $pet->addMedia($imagePath)->toMediaCollection('images');
+            }
         }
     }
 }

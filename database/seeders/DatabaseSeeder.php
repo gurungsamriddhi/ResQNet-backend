@@ -11,14 +11,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            DemoUserSeeder::class,
-            OrganizationSeeder::class,
-            VetSeeder::class,
-            PetSeeder::class,
-            PetHealthSeeder::class,
-            AdoptionRequestSeeder::class,
-            RescueReportSeeder::class,
-            DonationSeeder::class,
         ]);
 
         $admin = User::firstOrCreate(
@@ -34,5 +26,16 @@ class DatabaseSeeder extends Seeder
         if (!$admin->hasRole('super_admin')) {
             $admin->assignRole('super_admin');
         }
+
+        $this->call([
+            DemoUserSeeder::class,
+            OrganizationSeeder::class,
+            VetSeeder::class,
+            PetSeeder::class,
+            PetHealthSeeder::class,
+            AdoptionRequestSeeder::class,
+            RescueReportSeeder::class,
+            DonationSeeder::class,
+        ]);
     }
 }
