@@ -107,7 +107,11 @@ class RegisterOrganizationController extends Controller
 
             DB::commit();
 
-            OrganizationRegisteredEvent::dispatch($org);
+            try {
+                OrganizationRegisteredEvent::dispatch($org);
+            } catch (\Throwable $e) {
+                Log::warning('Failed to broadcast OrganizationRegisteredEvent: ' . $e->getMessage());
+            }
 
             return redirect()->route('registration.pending');
         } 
