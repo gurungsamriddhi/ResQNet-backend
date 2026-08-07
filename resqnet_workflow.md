@@ -1,5 +1,25 @@
 # ResQNet — Complete Feature & Workflow Guide
 
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ touch Procfile
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ git add Procfile
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ git commit -m "Add Procfile for Heroku"
+[main eb94cf9] Add Procfile for Heroku
+ 1 file changed, 1 insertion(+)
+ create mode 100644 Procfile
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ heroku create
+Creating app... done, ⬢ cryptic-meadow-34370
+https://cryptic-meadow-34370-866a112f207f.herokuapp.com/ | https://git.heroku.com/cryptic-meadow-34370.git
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ heroku addons:create jawsdb:kitefin
+Creating jawsdb:kitefin on ⬢ cryptic-meadow-34370... free
+Resource is being provisioned.
+jawsdb-flat-97131 is being created in the background. The app will restart when complete...
+Run heroku addons:info jawsdb-flat-97131 to check creation progress.
+Run heroku addons:docs jawsdb to view documentation.
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ heroku config:get JAWSDB_URL
+
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ heroku config:get JAWSDB_URL
+mysql://zsff09zc7urqdde3:jhacy11n42dec4bo@muowdopceqgxjn2b3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/pb65ef5mkoa0rw2t
+gurung-samriddhi@gurung-samriddhi-Inspiron-5402:~/Projects/ResQNet/ResQNet-backend$ 
 > **Three User Personas** · **Two Interfaces** · **One Unified API Backend**
 
 This document maps every feature from **Authentication → Dashboard → Core Modules → Logout** for each user type, grounded in the actual codebase.

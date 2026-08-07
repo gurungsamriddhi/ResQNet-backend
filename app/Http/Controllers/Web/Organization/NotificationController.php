@@ -15,7 +15,7 @@ class NotificationController extends Controller
             return response()->json([], 404);
         }
 
-        // Fetch up to 10 unread notifications
+        // Fetches up to 10 unread notifications
         $notifications = $organization->unreadNotifications()
             ->latest()
             ->take(10)

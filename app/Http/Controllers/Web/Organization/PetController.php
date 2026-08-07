@@ -102,10 +102,14 @@ class PetController extends Controller
 
         $data = $request->safe()->except(['primary_image', 'images', 'remove_image_ids']);
         if (isset($data['status'])) {
+            if ($pet->status === 'adopted' && $data['status'] !== 'adopted') {
+                return response()->json([
+                    'message' => 'Cannot change status of a pet that has already been adopted.'
+                ], 403);
+            }
+            
             if ($data['status'] === 'adopted') {
                 $data['adopted_at'] = $pet->adopted_at ?? now();
-            } elseif ($pet->status === 'adopted') {
-                $data['adopted_at'] = null;
             }
         }
         $pet->update($data);
@@ -174,11 +178,13 @@ class PetController extends Controller
         
         $request->merge(['status' => strtolower(trim($request->input('status', '')))]);
         $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive,in_care,suspended']);
+        if ($pet->status === 'adopted' && $request->status !== 'adopted') {
+            return response()->json(['message' => 'Cannot change status of a pet that has already been adopted.'], 403);
+        }
+
         $data = ['status' => $request->status];
         if ($request->status === 'adopted') {
             $data['adopted_at'] = $pet->adopted_at ?? now();
-        } elseif ($pet->status === 'adopted') {
-            $data['adopted_at'] = null;
         }
         $pet->update($data);
         return response()->json(['message' => 'Status updated.', 'pet' => $this->transformPet($pet)]);

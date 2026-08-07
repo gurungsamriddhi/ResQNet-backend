@@ -1,0 +1,49 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@2.0.0
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/php:8.2-node
+    steps:
+      - checkout
+      
+      # Install PHP dependencies
+      - run:
+          name: Install Composer Dependencies
+          command: composer install -n --prefer-dist
+          
+      # Install Node dependencies & Build Frontend
+      - run:
+          name: Install NPM Dependencies & Build
+          command: |
+            npm ci
+            npm run build
+            
+      # Run Laravel tests (assuming PHPUnit or Pest is set up)
+      - run:
+          name: Run Tests
+          command: php artisan test
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+          app-name: $HEROKU_APP_NAME
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build_and_test
+      - deploy:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: main

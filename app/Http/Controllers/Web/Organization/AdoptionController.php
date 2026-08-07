@@ -27,7 +27,7 @@ class AdoptionController extends Controller
             ->get()
             ->map(fn ($pet) => $this->transformListing($pet));
 
-        // Fix: eager-load user.profile to prevent N+1 queries in transformApplication()
+        // eager-load user.profile to prevent N+1 queries in transformApplication()
         $applications = AdoptionRequest::with(['pet.media', 'user.profile', 'pet.organization'])
             ->whereHas('pet', fn ($q) => $q->where('organization_id', $orgId))
             ->where('status', 'pending')

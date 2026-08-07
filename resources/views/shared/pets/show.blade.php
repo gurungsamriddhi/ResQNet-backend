@@ -725,14 +725,25 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-extrabold uppercase tracking-widest text-admin-textSecondary/60 mb-1.5">Status</label>
-                            <select x-model="status"
-                                    class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
-                                <option value="available">Available</option>
-                                <option value="adopted">Adopted</option>
-                                <option value="in_care">In Care</option>
-                                <option value="unavailable">Unavailable</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                            @if($pet->status === 'adopted')
+                                @php
+                                    $adopter = $pet->adoptionRequests->whereIn('status', ['approved', 'completed'])->first()?->user;
+                                @endphp
+                                <div class="w-full px-3.5 py-2.5 bg-admin-bg/80 border border-admin-border rounded-xl text-sm text-admin-textSecondary flex items-center gap-2 cursor-not-allowed">
+                                    <i data-lucide="lock" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-medium text-admin-textPrimary">Already adopted{{ $adopter ? ' by ' . $adopter->name : '' }}</span>
+                                </div>
+                                <input type="hidden" x-model="status" value="adopted">
+                            @else
+                                <select x-model="status"
+                                        class="w-full px-3.5 py-2.5 bg-admin-bg border border-admin-border rounded-xl text-sm text-admin-textPrimary focus:outline-none focus:ring-2 focus:ring-admin-primary/20 focus:border-admin-primary transition-all appearance-none">
+                                    <option value="available">Available</option>
+                                    <option value="adopted">Adopted</option>
+                                    <option value="in_care">In Care</option>
+                                    <option value="unavailable">Unavailable</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            @endif
                         </div>
                     </div>
 
