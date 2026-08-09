@@ -18,6 +18,7 @@ class RegistrationTest extends TestCase
 
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
+        Role::firstOrCreate(['name' => 'super_admin']);
         Role::firstOrCreate(['name' => 'organization']);
     }
 
