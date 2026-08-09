@@ -107,6 +107,13 @@ class RegisterOrganizationController extends Controller
 
             DB::commit();
 
+            // Find all users who are super admins
+$admins = User::role('super_admin')->get();
+// Send the notification to each admin
+foreach ($admins as $admin) {
+    $admin->notify(new NewOrganizationRegisteredNotification($org));
+}
+
             try {
                 OrganizationRegisteredEvent::dispatch($org);
             } catch (\Throwable $e) {

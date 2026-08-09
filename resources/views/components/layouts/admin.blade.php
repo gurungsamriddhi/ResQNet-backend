@@ -594,6 +594,29 @@
                 init() {
                     this.fetchNotifications();
 
+                     // 2. Listen for the NewOrganizationRegisteredNotification over Reverb
+    @auth
+        if (typeof window.Echo !== 'undefined') {
+            window.Echo.private('App.Models.User.{{ auth()->id() }}')
+                .notification((notification) => {
+                    // Re-use your existing addNotification method to pop it into the list
+                    // and automatically increment the unreadCount badge!
+                    this.addNotification({
+                        id: Date.now(), // temporary until page refresh
+                        type: 'organization', // sets the icon style
+                        title: 'New Organization',
+                        message: notification.message,
+                        action_url: '/admin/dashboard', 
+                        time: 'Just now'
+                    });
+                    
+                    if (window.lucide) {
+                        setTimeout(() => lucide.createIcons(), 50);
+                    }
+                });
+        }
+    @endauth
+
                     // Listen to window events from Echo/Pusher (broadcasted from dashboard.js)
                     window.addEventListener('new-rescue-report', (e) => {
                         this.addNotification({

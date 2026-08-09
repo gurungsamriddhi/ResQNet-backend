@@ -39,6 +39,14 @@ jobs:
           command: |
             npm ci
             npm run build
+      
+       # Prepare the environment for testing
+      - run:
+          name: Prepare Environment
+          command: |
+            cp .env.example .env
+            php artisan key:generate
+            php artisan migrate --force
 
       # Run Laravel tests
       - run:
