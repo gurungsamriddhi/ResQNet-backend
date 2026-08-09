@@ -6,7 +6,7 @@ orbs:
 jobs:
   build_and_test:
     docker:
-      - image: cimg/php:8.2-node
+      - image: cimg/php:8.3-node
     steps:
       - checkout
       
