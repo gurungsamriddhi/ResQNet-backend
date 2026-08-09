@@ -30,7 +30,7 @@ class RegistrationTest extends TestCase
 
     public function test_organization_can_register()
     {
-        $file = UploadedFile::fake()->create('document.pdf', 500, 'application/pdf');
+        $file = UploadedFile::fake()->createWithContent('document.pdf', '%PDF-1.4 dummy pdf content');
 
         $response = $this->post(route('register.organization.submit'), [
             'user_name' => 'Test User',
@@ -73,7 +73,7 @@ class RegistrationTest extends TestCase
     {
         User::factory()->create(['email' => 'existing@example.com']);
 
-        $file = UploadedFile::fake()->create('document.pdf', 500, 'application/pdf');
+        $file = UploadedFile::fake()->createWithContent('document.pdf', '%PDF-1.4 dummy pdf content');
 
         $response = $this->post(route('register.organization.submit'), [
             'user_name' => 'Test User',
