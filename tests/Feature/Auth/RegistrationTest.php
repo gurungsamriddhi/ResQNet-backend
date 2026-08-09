@@ -20,6 +20,7 @@ class RegistrationTest extends TestCase
 
         Role::firstOrCreate(['name' => 'super_admin']);
         Role::firstOrCreate(['name' => 'organization']);
+        Role::firstOrCreate(['name' => 'organization']);
     }
 
     public function test_registration_screen_can_be_rendered()
