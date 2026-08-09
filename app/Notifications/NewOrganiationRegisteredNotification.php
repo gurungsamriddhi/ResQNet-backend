@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\Organization;
+use Illuminate\Broadcasting\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,12 +13,8 @@ class NewOrganiationRegisteredNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(Organization $organization)
+    public function __construct(public Organization $organization)
     {
-        $this->organization=$organization;
     }
 
     /**

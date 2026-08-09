@@ -6,6 +6,7 @@ use App\Events\OrganizationRegisteredEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
+use App\Notifications\NewOrganiationRegisteredNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -107,12 +108,14 @@ class RegisterOrganizationController extends Controller
 
             DB::commit();
 
-            // Find all users who are super admins
-$admins = User::role('super_admin')->get();
-// Send the notification to each admin
-foreach ($admins as $admin) {
-    $admin->notify(new NewOrganizationRegisteredNotification($org));
-}
+            try {
+                $admins = User::role('super_admin')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new NewOrganiationRegisteredNotification($org));
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed to notify admins of new registration: ' . $e->getMessage());
+            }
 
             try {
                 OrganizationRegisteredEvent::dispatch($org);
