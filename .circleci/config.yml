@@ -7,9 +7,27 @@ jobs:
   build_and_test:
     docker:
       - image: cimg/php:8.3-node
+        environment:
+          APP_ENV: testing
+          APP_KEY: "base64:XmFCRWPCuSQ/iEZJLbsd+5/BieShEgc9H2k8QmJGgYU="
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: resqnet_testing
+          DB_USERNAME: root
+          DB_PASSWORD: password
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: resqnet_testing
     steps:
       - checkout
-      
+
+      # Wait for MySQL to be ready
+      - run:
+          name: Wait for MySQL
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+
       # Install PHP dependencies
       - run:
           name: Install Composer Dependencies
@@ -21,8 +39,8 @@ jobs:
           command: |
             npm ci
             npm run build
-            
-      # Run Laravel tests (assuming PHPUnit or Pest is set up)
+
+      # Run Laravel tests
       - run:
           name: Run Tests
           command: php artisan test
