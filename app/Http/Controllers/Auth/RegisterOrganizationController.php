@@ -40,19 +40,20 @@ class RegisterOrganizationController extends Controller
             $request->merge(['user_phone' => null]);
         }
 
-        $request->validate([
-            // User validations
-            'user_name' => 'required|string|max:255',
-            'user_email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'user_phone' => 'nullable|string|max:20|unique:users,phone',
+        $request->validate(
+            [
+                // User validations
+                'user_name' => 'required|string|max:255',
+                'user_email' => 'required|string|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+                'user_phone' => 'nullable|string|max:20|unique:users,phone',
 
-            // Organization validations
-            'org_name' => 'required|string|max:255',
-            'org_email' => 'required|string|email|max:255|unique:organizations,email',
-            'registration_number' => 'required|string|max:255',
-            'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-        ],
+                // Organization validations
+                'org_name' => 'required|string|max:255',
+                'org_email' => 'required|string|email|max:255|unique:organizations,email',
+                'registration_number' => 'required|string|max:255',
+                'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            ],
             [
                 // --- Custom Error Messages ---
                 'user_email.unique' => 'This email address is already registered to a user account.',
@@ -102,7 +103,7 @@ class RegisterOrganizationController extends Controller
             // Set organization_id on the owner user
             $user->update(['organization_id' => $org->id]);
 
-            if ($request->hasFile('document')){
+            if ($request->hasFile('document')) {
                 $org->addMediaFromRequest('document')->toMediaCollection('registration_documents');
             }
 
@@ -124,9 +125,7 @@ class RegisterOrganizationController extends Controller
             }
 
             return redirect()->route('registration.pending');
-        } 
-        
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
 
             // Catch MySQL Error Code 1062 (Duplicate Entry) just in case
