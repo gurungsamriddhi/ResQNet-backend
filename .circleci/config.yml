@@ -6,6 +6,7 @@ orbs:
 jobs:
   build_and_test:
     docker:
+    #circle ci considers the first image as a primary container to run the steps
       - image: cimg/php:8.3-node
         environment:
           APP_ENV: testing
