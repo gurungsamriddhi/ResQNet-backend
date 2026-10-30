@@ -94,15 +94,62 @@ class AuthAndDataExposureTest extends TestCase
         $this->assertNotNull($user->fresh()->email_verified_at);
     }
 
-    public function test_api_auth_routes_are_rate_limited()
+    public function test_api_auth_routes_are_rate_limited_per_ip()
     {
+        // Different emails each time, so only the per-IP route limit applies
         for ($i = 0; $i < 10; $i++) {
-            $this->postJson('/api/v1/auth/login', ['email' => 'nobody@example.com', 'password' => 'wrong-password'])
+            $this->postJson('/api/v1/auth/login', ['email' => "nobody{$i}@example.com", 'password' => 'wrong-password'])
                 ->assertStatus(422);
         }
 
-        $this->postJson('/api/v1/auth/login', ['email' => 'nobody@example.com', 'password' => 'wrong-password'])
+        $this->postJson('/api/v1/auth/login', ['email' => 'nobody10@example.com', 'password' => 'wrong-password'])
             ->assertStatus(429);
+    }
+
+    public function test_api_login_locks_an_account_after_five_failures()
+    {
+        $user = User::factory()->create(['is_active' => true, 'password' => bcrypt('Correct-Pass1!')]);
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->postJson('/api/v1/auth/login', ['email' => $user->email, 'password' => 'wrong-password'])
+                ->assertStatus(422);
+        }
+
+        // Even the right password is refused while locked
+        $this->postJson('/api/v1/auth/login', ['email' => $user->email, 'password' => 'Correct-Pass1!'])
+            ->assertStatus(429);
+    }
+
+    public function test_dashboard_login_locks_an_account_after_five_failures()
+    {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'organization']);
+        $user = User::factory()->create(['is_active' => true, 'password' => bcrypt('Correct-Pass1!')]);
+        $user->assignRole('organization');
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->post(route('organization.login.submit'), ['email' => $user->email, 'password' => 'wrong-password'])
+                ->assertSessionHasErrors('email');
+        }
+
+        $this->post(route('organization.login.submit'), ['email' => $user->email, 'password' => 'Correct-Pass1!'])
+            ->assertSessionHasErrors('email');
+
+        $this->assertGuest();
+    }
+
+    public function test_seeder_refuses_default_admin_password_outside_local()
+    {
+        $this->app['env'] = 'production';
+        putenv('ADMIN_PASSWORD');
+        unset($_ENV['ADMIN_PASSWORD'], $_SERVER['ADMIN_PASSWORD']);
+
+        try {
+            $this->expectException(\RuntimeException::class);
+            // Run the seeder directly; db:seed would prompt for confirmation in production
+            (new \Database\Seeders\DatabaseSeeder())->setContainer($this->app)->run();
+        } finally {
+            $this->app['env'] = 'testing';
+        }
     }
 
     public function test_admin_login_is_rate_limited()
