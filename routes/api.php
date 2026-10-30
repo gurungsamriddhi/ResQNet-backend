@@ -32,7 +32,8 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
 
     // ====================== PUBLIC ROUTES ======================
 
-    Route::prefix('auth')->name('api.auth.')->group(function () {
+    // Throttled per IP to slow down credential stuffing and OTP guessing
+    Route::prefix('auth')->name('api.auth.')->middleware('throttle:10,1')->group(function () {
         Route::post('/register', [AuthController::class, 'register'])->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');

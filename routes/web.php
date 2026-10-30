@@ -43,7 +43,8 @@ Route::get('/register-organization', [RegisterOrganizationController::class, 'cr
     ->name('register.organization');
 
 Route::post('/register-organization', [RegisterOrganizationController::class, 'store'])
-    ->name('register.organization.submit');
+    ->name('register.organization.submit')
+    ->middleware('throttle:5,1');
 
 Route::get('/registration-pending', function () {
     return view('auth.registration-pending');

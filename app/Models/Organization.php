@@ -64,7 +64,9 @@ class Organization extends Model implements HasMedia
      *
      * @var list<string>
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'fcm_token',
+    ];
 
     /**
      * Relationships

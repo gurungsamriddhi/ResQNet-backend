@@ -12,6 +12,10 @@ class OrganizationTeam extends Model
 {
     use HasFactory, Notifiable;
 
+    protected $hidden = [
+        'fcm_token',
+    ];
+
     protected $fillable = [
         'organization_id',
         'name',
