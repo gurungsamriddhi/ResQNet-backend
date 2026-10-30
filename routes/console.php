@@ -24,6 +24,9 @@ Schedule::call(function () {
         ->delete();
 })->daily()->name('cleanup:notifications')->onOneServer();
 
+// Remove mobile API tokens that expired more than a day ago
+Schedule::command('sanctum:prune-expired --hours=24')->daily();
+
 // One-off: move registration documents uploaded before they became private
 // from the public disk to the private "local" disk. Copies first; pass
 // --delete-public only after checking the admin dashboard still opens them.
