@@ -70,6 +70,9 @@ class PetController extends Controller
 
     public function show(Request $request, Pet $pet)
     {
+        // Suspended or inactive pets are not public
+        abort_if(in_array($pet->status, ['suspended', 'inactive'], true), 404);
+
         $this->loadPetForApi($request, $pet);
 
         return (new PetResource($pet))->additional([
@@ -82,7 +85,7 @@ class PetController extends Controller
 
     public function showByQr(Request $request, string $qrCodeId)
     {
-        $pet = Pet::where('qr_code_id', $qrCodeId)->firstOrFail();
+        $pet = Pet::active()->where('qr_code_id', $qrCodeId)->firstOrFail();
 
         $this->loadPetForApi($request, $pet);
 

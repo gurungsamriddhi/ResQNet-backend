@@ -64,8 +64,9 @@ class RescueController extends Controller
             ->findOrFail($id);
 
         // 2. Authorization: Allow if admin OR if Magic Link session is active
-        $isAuthorized = (auth()->check() && auth()->user()->organization_id === $report->organization_id)
-            || session()->has('team_member_id');
+        $orgId = auth()->user()?->organization_id;
+        $isAuthorized = ($orgId && ($report->organization_id === $orgId || $report->organization_id === null))
+            || (int) session('team_access_report_id') === $report->id;
 
         if (!$isAuthorized) {
             abort(403, 'Unauthorized access.');
@@ -138,7 +139,11 @@ class RescueController extends Controller
 
         $validated = $request->validate([
             'team_members' => 'required|array|min:1',
-            'team_members.*.team_member_id' => 'required|exists:organization_teams,id',
+            'team_members.*.team_member_id' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('organization_teams', 'id')
+                    ->where('organization_id', auth()->user()->organization_id),
+            ],
             'team_members.*.role' => 'nullable|string|max:100',
         ]);
 
@@ -309,7 +314,11 @@ class RescueController extends Controller
         $this->authorize('update', $report);
 
         $validated = $request->validate([
-            'pet_id' => 'required|exists:pets,id',
+            'pet_id' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('pets', 'id')
+                    ->where('organization_id', auth()->user()->organization_id),
+            ],
         ]);
 
         $report->update([

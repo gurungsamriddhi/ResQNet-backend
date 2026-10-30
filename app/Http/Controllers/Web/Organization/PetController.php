@@ -17,19 +17,15 @@ class PetController extends Controller
     {
         $user = auth()->user();
 
-        if ($user && $user->organization) {
-            $orgId = $user->organization->id;
-            $pets = Pet::with('media')
-                ->where('organization_id', $orgId)
-                ->orderBy('created_at', 'desc')
-                ->get()
-                ->map(fn($pet) => $this->transformPet($pet));
-        } else {
-            $pets = Pet::with('media')
-                ->orderBy('created_at', 'desc')
-                ->get()
-                ->map(fn($pet) => $this->transformPet($pet));
-        }
+        // An organization account without an organization sees nothing, never every pet
+        $orgId = $user?->organization?->id;
+        abort_unless($orgId, 403);
+
+        $pets = Pet::with('media')
+            ->where('organization_id', $orgId)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($pet) => $this->transformPet($pet));
 
         $canEdit = true;
 
@@ -44,6 +40,7 @@ class PetController extends Controller
     public function store(StorePetRequest $request)
     {
         $orgId = auth()->user()?->organization?->id;
+        abort_unless($orgId, 403);
         $data = $request->safe()->except(['primary_image', 'images']);
         $data['organization_id'] = $orgId;
 
@@ -62,7 +59,7 @@ class PetController extends Controller
     public function show(Pet $pet)
     {
         $orgId = auth()->user()?->organization?->id;
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
         }
         $pet->load([
@@ -96,8 +93,14 @@ class PetController extends Controller
     public function update(UpdatePetRequest $request, Pet $pet)
     {
         $orgId = auth()->user()?->organization?->id;
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
+        }
+
+        if ($pet->isSuspended()) {
+            return response()->json([
+                'message' => 'This pet has been suspended by an administrator and cannot be edited.'
+            ], 403);
         }
 
         $data = $request->safe()->except(['primary_image', 'images', 'remove_image_ids']);
@@ -156,7 +159,7 @@ class PetController extends Controller
     public function destroy(Pet $pet)
     {
         $orgId = auth()->user()?->organization?->id;
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
         }
         $petName = $pet->name;
@@ -172,12 +175,16 @@ class PetController extends Controller
     public function changeStatus(Request $request, Pet $pet)
     {
         $orgId = auth()->user()?->organization?->id;
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
         }
         
         $request->merge(['status' => strtolower(trim($request->input('status', '')))]);
-        $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive,in_care,suspended']);
+        // Suspension is an admin moderation action: organizations can neither set nor lift it
+        $request->validate(['status' => 'required|in:available,adopted,unavailable,inactive,in_care']);
+        if ($pet->isSuspended()) {
+            return response()->json(['message' => 'This pet has been suspended by an administrator.'], 403);
+        }
         if ($pet->status === 'adopted' && $request->status !== 'adopted') {
             return response()->json(['message' => 'Cannot change status of a pet that has already been adopted.'], 403);
         }
@@ -193,7 +200,7 @@ class PetController extends Controller
     public function generateQr(Request $request, Pet $pet)
     {
         $orgId = auth()->user()?->organization?->id;
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
         }
         return response()->json(['qr_code_id' => $pet->qr_code_id]);

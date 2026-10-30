@@ -94,9 +94,7 @@ class OrganizationController extends Controller
                 'rejection_reason' => $reasonString,
             ]);
 
-            if ($organization->user) {
-                $organization->user->update(['is_active' => false]);
-            }
+            $this->deactivateMembers($organization);
         });
 
         OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
@@ -133,9 +131,7 @@ class OrganizationController extends Controller
             'suspension_reason' => $reasonString,
         ]);
 
-        if ($organization->user) {
-            $organization->user->update(['is_active' => false]);
-        }
+        $this->deactivateMembers($organization);
 
         OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
 
@@ -153,5 +149,21 @@ class OrganizationController extends Controller
 
         return redirect()->route('admin.organizations.index')
             ->with('success', 'Organization verified with badge.');
+    }
+
+    /**
+     * Deactivate the owner and every staff account linked to the organization,
+     * and revoke their API tokens, so no member keeps access.
+     */
+    private function deactivateMembers(Organization $organization): void
+    {
+        $members = User::where('organization_id', $organization->id)
+            ->when($organization->user_id, fn ($q) => $q->orWhere('id', $organization->user_id))
+            ->get();
+
+        foreach ($members as $member) {
+            $member->update(['is_active' => false]);
+            $member->tokens()->delete();
+        }
     }
 }
