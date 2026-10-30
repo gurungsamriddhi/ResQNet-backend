@@ -74,6 +74,7 @@ Route::middleware(['auth', 'is_active', 'role:super_admin'])->prefix('admin')->n
     Route::post('/organizations/{organization}/reject', [OrganizationController::class, 'reject'])->name('organizations.reject');
     Route::post('/organizations/{organization}/suspend', [OrganizationController::class, 'suspend'])->name('organizations.suspend');
     Route::post('/organizations/{organization}/verify', [OrganizationController::class, 'verify'])->name('organizations.verify');
+    Route::get('/organizations/{organization}/document', [OrganizationController::class, 'document'])->name('organizations.document');
 
     //Users Management by Admin
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

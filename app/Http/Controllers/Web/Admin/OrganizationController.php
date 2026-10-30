@@ -43,6 +43,22 @@ class OrganizationController extends Controller
         ));
     }
 
+    /**
+     * Stream an organization's registration document to a super admin.
+     * The file lives on the private disk, so this route is the only way to read it.
+     */
+    public function document(Organization $organization)
+    {
+        $media = $organization->getFirstMedia('registration_documents');
+        abort_unless($media && is_file($media->getPath()), 404);
+
+        return response()->file($media->getPath(), [
+            'Content-Type' => $media->mime_type,
+            'Content-Disposition' => 'inline; filename="' . addslashes($media->file_name) . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     public function approve(Organization $organization)
     {
         $oldStatus = $organization->status;

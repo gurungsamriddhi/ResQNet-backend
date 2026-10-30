@@ -125,7 +125,9 @@ class Organization extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
+        // Registration documents are private: stored outside public/ and served only to admins
         $this->addMediaCollection('registration_documents')
+             ->useDisk('local')
              ->singleFile()           // only one registration document
              ->acceptsMimeTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']);
 
