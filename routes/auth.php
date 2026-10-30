@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\OrganizationLoginController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordOtpController; 
 use Illuminate\Support\Facades\Route;
 
@@ -34,9 +33,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Authenticated Admin Sub-Group
     Route::middleware(['auth', 'is_active', 'role:super_admin'])->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
-
-        // Settings-driven password modification inside the Admin Dashboard
-        Route::put('/password/update', [PasswordController::class, 'updateAdminPassword'])->name('password.update');
     });
 });
 
@@ -67,7 +63,6 @@ Route::prefix('organization')->name('organization.')->group(function () {
     Route::middleware(['auth', 'is_active', 'role:organization'])->group(function () {
         Route::post('/logout', [OrganizationLoginController::class, 'destroy'])->name('logout');
 
-        // Profile-driven password modification inside the Organization settings page
-        Route::put('/password/update', [PasswordController::class, 'updateOrgPassword'])->name('password.update');
+        // Password change lives in routes/web.php (organization.password.update -> Organization\ProfileController)
     });
 });

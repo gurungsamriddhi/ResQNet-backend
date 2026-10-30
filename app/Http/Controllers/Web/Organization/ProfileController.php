@@ -33,7 +33,8 @@ class ProfileController extends Controller
 
             return back()->with('success', 'Organization profile updated successfully.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to update profile: ' . $e->getMessage());
+            report($e);
+            return back()->with('error', 'Failed to update profile. Please try again.');
         }
     }
 
@@ -49,7 +50,7 @@ class ProfileController extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 
-                return redirect()->route('password.request')->with('error', 'Too many failed password attempts. For your security, you have been logged out. Please reset your password.');
+                return redirect()->route('organization.password.request')->with('error', 'Too many failed password attempts. For your security, you have been logged out. Please reset your password.');
             }
 
             // Verify current password
@@ -61,7 +62,7 @@ class ProfileController extends Controller
                     auth()->logout();
                     $request->session()->invalidate();
                     $request->session()->regenerateToken();
-                    return redirect()->route('password.request')->with('error', 'Too many failed password attempts. For your security, you have been logged out. Please reset your password.');
+                    return redirect()->route('organization.password.request')->with('error', 'Too many failed password attempts. For your security, you have been logged out. Please reset your password.');
                 }
 
                 return back()->withErrors(['current_password' => 'The provided password does not match your current password. Attempts left: ' . $attemptsLeft]);
@@ -76,7 +77,8 @@ class ProfileController extends Controller
 
             return back()->with('success', 'Password updated successfully.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to update password: ' . $e->getMessage());
+            report($e);
+            return back()->with('error', 'Failed to update password. Please try again.');
         }
     }
 }

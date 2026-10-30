@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\DonationCompletedEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDonationRequest;
 use App\Http\Resources\DonationResource;
 use App\Models\Donation;
 use App\Services\KhaltiService;
@@ -36,32 +34,6 @@ class DonationController extends Controller
             ],
         ]);
     }
-
-    //not being used currently
-    // public function store(StoreDonationRequest $request): JsonResponse
-    // {
-    //     $validated = $request->validated();
-    //     $isAnonymous = $request->boolean('is_anonymous');
-
-    //     $donation = Donation::create([
-    //         'user_id' => $request,
-    //         'organization_id' => $validated['organization_id'] ?? null,
-    //         'donor_name' => $isAnonymous ? null : ($validated['donor_name'] ?? null),
-    //         'donor_email' => $isAnonymous ? null : ($validated['donor_email'] ?? null),
-    //         'donor_phone' => $isAnonymous ? null : ($validated['donor_phone'] ?? null),
-    //         'is_anonymous' => $isAnonymous,
-    //         'frequency' => $validated['frequency'],
-    //         'amount' => $validated['amount'],
-    //         'payment_method' => $validated['payment_method'],
-    //         'status' => 'pending',
-    //         'remarks' => $validated['remarks'] ?? null,
-    //     ]);
-
-    //     return response()->json([
-    //         'message' => 'Donation recorded successfully.',
-    //         'donation' => new DonationResource($donation),
-    //     ], 201);
-    // }
 
     /**
      *Initiate KHalti Payment (Main endpoint for mobile app)
@@ -130,15 +102,17 @@ class DonationController extends Controller
                 'payment_payload' => ['error' => $e->getMessage()],
             ]);
 
+            report($e);
+
             return response()->json([
                 'message' => 'Payment initiation failed.',
-                'error' => $e->getMessage(),
             ], 422);
         }
     }
 
     /**
-     * Khalti Callback (called after payment from browser/WebView).
+     * Khalti Callback (Khalti redirects the browser/WebView here after payment).
+     * Public route: the WebView carries no API token, so the pidx is the only key.
      */
     public function khaltiCallback(Request $request, KhaltiService $khalti): JsonResponse
     {
@@ -151,80 +125,65 @@ class DonationController extends Controller
         $donation = Donation::where('pidx', $pidx)->firstOrFail();
 
         try {
-            $lookup = $khalti->lookupPayment($pidx);
-            $donation->update(['payment_payload' => $lookup]);
-
-            if ($khalti->isCompleted($lookup)) {
-                $donation->update([
-                    'status' => 'completed',
-                    'transaction_id' => $lookup['transaction_id'] ?? null,
-                ]);
-
-                DonationCompletedEvent::dispatch($donation);
-
-                return response()->json([
-                    'message' => 'Thank you! Donation completed successfully.',
-                    'donation' => new DonationResource($donation->fresh()),
-                ]);
-            }
-
-            $donation->update(['status' => 'failed']);
-
-            return response()->json([
-                'message' => 'Payment was not successful.',
-                'donation' => new DonationResource($donation->fresh()),
-            ], 422);
+            $result = $khalti->settle($donation, $khalti->lookupPayment($pidx));
         } catch (RuntimeException $e) {
-            $donation->update([
-                'payment_payload' => array_merge(
-                    $donation->payment_payload ?? [],
-                    ['lookup_error' => $e->getMessage()]
-                ),
-            ]);
+            report($e);
 
-            return response()->json([
-                'message' => 'Could not verify payment.',
-                'error' => $e->getMessage(),
-            ], 422);
+            return response()->json(['message' => 'Could not verify payment.'], 422);
         }
+
+        if ($result === 'completed') {
+            return response()->json([
+                'message' => 'Thank you! Donation completed successfully.',
+                'donation' => new DonationResource($donation->fresh()),
+            ]);
+        }
+
+        if ($result === 'pending') {
+            $donation->update(['status' => 'failed']);
+        }
+
+        return response()->json([
+            'message' => 'Payment was not successful.',
+            'donation' => new DonationResource($donation->fresh()),
+        ], 422);
     }
 
     /**
-    *Verify Payment (Mobile app calls this after webview)
+     * Verify Payment (mobile app calls this after the WebView closes).
      */
     public function khaltiVerify(Request $request, KhaltiService $khalti): JsonResponse
     {
-        $request->validate(['pidx' => 'required|string', ]);
-        $donation = Donation::where('pidx', $request->pidx)->first();
+        $request->validate(['pidx' => 'required|string']);
+
+        // Only the donor can verify their own donation
+        $donation = Donation::where('pidx', $request->pidx)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
 
         try {
-            $lookup = $khalti->lookupPayment($request->pidx);
-            $donation->update(['payment_payload' => $lookup]);
-
-            if ($khalti->isCompleted($lookup)) {
-                $donation->update([
-                    'status' => 'completed',
-                    'transaction_id' => $lookup['transaction_id'] ?? null,
-                ]);
-
-                DonationCompletedEvent::dispatch($donation);
-
-                return response()->json([
-                    'message' => 'Donation completed successfully.',
-                    'donation' => new DonationResource($donation->fresh()),
-                ]);
-            }
-
-            return response()->json([
-                'message' => 'Payment not yet completed.',
-                'status' => $donation->status,
-            ]);
+            $result = $khalti->settle($donation, $khalti->lookupPayment($request->pidx));
         } catch (RuntimeException $e) {
-            return response()->json([
-                'message' => 'Verification failed.',
-                'error' => $e->getMessage(),
-            ], 422);
+            report($e);
+
+            return response()->json(['message' => 'Verification failed.'], 422);
         }
+
+        if ($result === 'completed') {
+            return response()->json([
+                'message' => 'Donation completed successfully.',
+                'donation' => new DonationResource($donation->fresh()),
+            ]);
+        }
+
+        if ($result === 'amount_mismatch') {
+            return response()->json(['message' => 'Payment amount did not match the donation.'], 422);
+        }
+
+        return response()->json([
+            'message' => 'Payment not yet completed.',
+            'status' => $donation->fresh()->status,
+        ]);
     }
 
     /**

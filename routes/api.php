@@ -42,6 +42,11 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
     });
 
+    // Khalti redirects the payment WebView here; it carries no API token, so it must be public
+    Route::get('/donations/khalti/callback', [DonationController::class, 'khaltiCallback'])
+        ->name('api.donations.khalti.callback')
+        ->middleware('throttle:30,1');
+
     // Public Pet Routes
     Route::prefix('pets')->name('api.pets.')->group(function () {
         Route::get('/', [PetController::class, 'index'])->name('index');
@@ -56,8 +61,8 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
         // Auth Protected
         Route::prefix('auth')->name('api.auth.')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-            Route::post('/change-password', [AuthController::class, 'changePassword']);
-            Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+            Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password');
+            Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('update-profile');
         });
 
         // Apply 'is_active' middleware to all user-specific actions
@@ -107,11 +112,9 @@ Route::prefix('v1')->group(function () {   // Optional but recommended: versioni
             // Donations
             Route::prefix('donations')->name('api.donations.')->group(function () {
                 Route::get('/', [DonationController::class, 'index'])->name('index');
-                Route::post('/', [DonationController::class, 'store'])->name('store');
 
                 // Mobile Khalti payment flow
                 Route::post('/khalti/initiate', [DonationController::class, 'khaltiInitiate'])->name('khalti.initiate');
-                Route::get('/khalti/callback', [DonationController::class, 'khaltiCallback'])->name('khalti.callback');
                 Route::post('/khalti/verify', [DonationController::class, 'khaltiVerify'])->name('khalti.verify');
                 Route::get('/{donation}/status', [DonationController::class, 'status'])->name('status');
             });
