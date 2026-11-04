@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Events\DonationCompletedEvent;
+use App\Models\Donation;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
@@ -67,5 +69,46 @@ class KhaltiService
     public function isCompleted(array $lookupResult): bool
     {
         return ($lookupResult['status'] ?? '') === 'Completed';
+    }
+
+    /**
+     * Apply a Khalti lookup result to a donation. Safe to call repeatedly:
+     * a donation is completed (and its event fired) at most once, and only
+     * when Khalti reports the exact amount that was requested.
+     *
+     * @return string one of: completed, pending, amount_mismatch
+     */
+    public function settle(Donation $donation, array $lookup): string
+    {
+        $donation->payment_payload = $lookup;
+
+        if ($donation->status === 'completed') {
+            $donation->save();
+
+            return 'completed';
+        }
+
+        if (! $this->isCompleted($lookup)) {
+            $donation->save();
+
+            return 'pending';
+        }
+
+        // Khalti reports amounts in paisa
+        $expected = (int) round(((float) $donation->amount) * 100);
+        if ((int) ($lookup['total_amount'] ?? -1) !== $expected) {
+            $donation->status = 'failed';
+            $donation->save();
+
+            return 'amount_mismatch';
+        }
+
+        $donation->status = 'completed';
+        $donation->transaction_id = $lookup['transaction_id'] ?? null;
+        $donation->save();
+
+        DonationCompletedEvent::dispatch($donation);
+
+        return 'completed';
     }
 }

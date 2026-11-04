@@ -21,3 +21,20 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Local databases, dumps and backups (may contain real user data)
+*.sqlite
+*.sqlite3
+*.sql.gz
+*.dump
+/backups
+
+# Credentials that must never be committed
+/storage/app/firebase-auth.json
+*.pem
+*.p12
+
+# Editor / AI-tool working folders
+/.agents
+/.codex
+/.cursor

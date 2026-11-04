@@ -10,7 +10,6 @@ jobs:
       - image: cimg/php:8.3-node
         environment:
           APP_ENV: testing
-          APP_KEY: "base64:XmFCRWPCuSQ/iEZJLbsd+5/BieShEgc9H2k8QmJGgYU="
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
