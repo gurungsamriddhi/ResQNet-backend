@@ -38,6 +38,19 @@ not log anyone out.
 Do not run `php artisan key:generate` on the production server: it rewrites
 `.env` without keeping the previous key.
 
+### If the key has leaked
+
+Do not use `APP_PREVIOUS_KEYS`: it would keep accepting cookies and signed links
+made with the leaked key. Replace the key outright, from a local checkout:
+
+```bash
+heroku config:set -a <app> APP_KEY="$(php artisan key:generate --show)"
+```
+
+Everyone on the dashboards is logged out once, and rescue magic links already
+sent stop working (reassign the team to send new ones). Mobile API tokens are
+not affected.
+
 ## Rotating database credentials
 
 Reset the password from the JawsDB dashboard (`heroku addons:open jawsdb -a <app>`).
