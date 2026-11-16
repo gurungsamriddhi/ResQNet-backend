@@ -68,6 +68,10 @@ return [
 
     'dynamic_url' => env('DYNAMIC_APP_URL', env('APP_ENV') === 'local'),
 
+    // Pin generated URLs to APP_URL instead of the request's (proxy-supplied) host.
+    // Recommended in production once APP_URL is correct there.
+    'force_url' => env('FORCE_APP_URL', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

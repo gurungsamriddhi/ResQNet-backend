@@ -47,7 +47,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Mobile API tokens expire after 30 days by default (minutes); null disables expiry
+    'expiration' => env('SANCTUM_TOKEN_EXPIRATION', 60 * 24 * 30),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,1 +1,4 @@
-# *.sqlite* — removed, using MySQL only
+# Local SQLite databases may hold real data: never commit them
+*.sqlite
+*.sqlite-journal
+*.sqlite3

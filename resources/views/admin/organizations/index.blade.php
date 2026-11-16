@@ -108,7 +108,7 @@
 
                             <!-- Actions Section -->
                             <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3">
-                                <button @click="reviewDocs({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ $org->getFirstMediaUrl('registration_documents') }}')"
+                                <button @click="reviewDocs({{ $org->id }}, '{{ addslashes($org->name) }}', '{{ $org->getFirstMedia('registration_documents') ? route('admin.organizations.document', $org) : '' }}')"
                                         class="w-full border border-slate-200 dark:border-slate-700/40 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 bg-white dark:bg-[#1a2333] text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer">
                                     <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                     <span>Review Docs (Reg No: {{ $org->registration_number ?? 'N/A' }})</span>

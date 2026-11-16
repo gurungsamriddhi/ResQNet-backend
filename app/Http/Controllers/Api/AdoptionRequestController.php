@@ -111,27 +111,4 @@ class AdoptionRequestController extends Controller
 
         return new AdoptionRequestResource($adoption);
     }
-
-    public function destroy(Request $request, AdoptionRequest $adoption)
-    {
-        // Rule 1: Security Check - Ensure the user owns this specific request
-        if ($adoption->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized action.'], 403);
-        }
-
-        // Rule 2: Status Check - Only allow cancellation before a final decision is made
-        if (!in_array($adoption->status, ['pending', 'under_review'])) {
-            return response()->json([
-                'message' => 'You cannot cancel an application that is already ' . $adoption->status . '.'
-            ], 422);
-        }
-
-        // Action: Delete the request 
-        // (Since you have a 'deleted_at' column, this will soft-delete it)
-        $adoption->delete();
-
-        return response()->json([
-            'message' => 'Your adoption request has been successfully cancelled.'
-        ], 200);
-    }
 }

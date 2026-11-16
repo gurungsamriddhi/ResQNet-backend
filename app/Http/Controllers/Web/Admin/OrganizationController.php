@@ -43,6 +43,22 @@ class OrganizationController extends Controller
         ));
     }
 
+    /**
+     * Stream an organization's registration document to a super admin.
+     * The file lives on the private disk, so this route is the only way to read it.
+     */
+    public function document(Organization $organization)
+    {
+        $media = $organization->getFirstMedia('registration_documents');
+        abort_unless($media && is_file($media->getPath()), 404);
+
+        return response()->file($media->getPath(), [
+            'Content-Type' => $media->mime_type,
+            'Content-Disposition' => 'inline; filename="' . addslashes($media->file_name) . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     public function approve(Organization $organization)
     {
         $oldStatus = $organization->status;
@@ -94,9 +110,7 @@ class OrganizationController extends Controller
                 'rejection_reason' => $reasonString,
             ]);
 
-            if ($organization->user) {
-                $organization->user->update(['is_active' => false]);
-            }
+            $this->deactivateMembers($organization);
         });
 
         OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
@@ -133,9 +147,7 @@ class OrganizationController extends Controller
             'suspension_reason' => $reasonString,
         ]);
 
-        if ($organization->user) {
-            $organization->user->update(['is_active' => false]);
-        }
+        $this->deactivateMembers($organization);
 
         OrganizationStatusChangedEvent::dispatch($organization, $oldStatus);
 
@@ -153,5 +165,21 @@ class OrganizationController extends Controller
 
         return redirect()->route('admin.organizations.index')
             ->with('success', 'Organization verified with badge.');
+    }
+
+    /**
+     * Deactivate the owner and every staff account linked to the organization,
+     * and revoke their API tokens, so no member keeps access.
+     */
+    private function deactivateMembers(Organization $organization): void
+    {
+        $members = User::where('organization_id', $organization->id)
+            ->when($organization->user_id, fn ($q) => $q->orWhere('id', $organization->user_id))
+            ->get();
+
+        foreach ($members as $member) {
+            $member->update(['is_active' => false]);
+            $member->tokens()->delete();
+        }
     }
 }

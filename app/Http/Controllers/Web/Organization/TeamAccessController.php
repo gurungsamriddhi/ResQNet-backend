@@ -18,7 +18,10 @@ class TeamAccessController extends Controller
         }
 
         // Store team member ID in session for subsequent actions
-        session(['team_member_id' => $teamMember->id]);
+        session([
+            'team_member_id' => $teamMember->id,
+            'team_access_report_id' => $report->id,
+        ]);
 
         // Load the report with all necessary relationships
         $report->load(['user', 'organization', 'assignments.teamMember', 'histories']);
@@ -31,25 +34,30 @@ class TeamAccessController extends Controller
 
     public function markArrived(RescueReport $report, OrganizationTeam $teamMember)
     {
-        // 1. Ensure the user is the one linked to this session
-        if (session('team_member_id') != $teamMember->id) {
+        // 1. Ensure the user is the one linked to this session, for this case
+        if (session('team_member_id') != $teamMember->id || (int) session('team_access_report_id') !== $report->id) {
             abort(403);
         }
 
-        // 2. Update status to 'in_progress' (or a new 'arrived' status if you have one)
-        $report->update(['status' => 'in_progress']); // Or your specific status
+        // 2. Arrival only moves an assigned case forward; never reopen or rewind one
+        if ($report->status !== 'assigned') {
+            return back()->with('success', 'This case is already in progress or resolved.');
+        }
+
+        $previousStatus = $report->status;
+        $report->update(['status' => 'in_progress', 'in_progress_at' => now()]);
 
         // 3. Log the history
         RescueCaseHistory::create([
             'rescue_report_id' => $report->id,
-            'from_status' => 'assigned',
+            'from_status' => $previousStatus,
             'to_status' => 'in_progress',
             'changed_by' => null, // No admin, it was the rescuer
             'notes' => 'Rescuer ' . $teamMember->name . ' has arrived at the location.',
         ]);
 
         // 4. Broadcast to the Organization Dashboard
-        broadcast(new \App\Events\CaseStatusUpdatedEvent($report, 'assigned'));
+        broadcast(new \App\Events\CaseStatusUpdatedEvent($report, $previousStatus));
 
         return back()->with('success', 'Status updated: You have been marked as arrived.');
     }

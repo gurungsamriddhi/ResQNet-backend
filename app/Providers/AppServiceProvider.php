@@ -14,6 +14,7 @@ use App\Policies\RescueReportPolicy;
 use App\Policies\AdoptionRequestPolicy;
 use App\Policies\PetPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Sanctum::usePersonalAccessTokenModel(\Laravel\Sanctum\PersonalAccessToken::class);
+
+        // All proxies are trusted (Heroku's router has no fixed IPs), so a forged
+        // X-Forwarded-Host could otherwise leak into generated links
+        if (config('app.force_url') && ! \App\Support\AppUrl::isDynamic()) {
+            URL::forceRootUrl(config('app.url'));
+            if (str_starts_with((string) config('app.url'), 'https://')) {
+                URL::forceScheme('https');
+            }
+        }
 
         Gate::policy(Donation::class, DonationPolicy::class);
         Gate::policy(RescueReport::class, RescueReportPolicy::class);

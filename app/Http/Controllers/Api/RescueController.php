@@ -15,9 +15,11 @@ class RescueController extends Controller
 {
     public function index(Request $request)
     {
+        // "My reports": a citizen only ever sees the reports they submitted
         $reports = RescueReport::with(['user', 'organization', 'assignments.teamMember', 'histories'])
+            ->where('user_id', $request->user()->id)
             ->latest()
-            ->paginate($request->per_page ?? 20);
+            ->paginate(min((int) $request->get('per_page', 20), 50));
 
         return response()->json([
             'data' => $reports->items(),

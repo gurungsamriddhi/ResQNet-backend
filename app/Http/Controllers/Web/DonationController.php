@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Events\DonationCompletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDonationRequest;
 use App\Models\Donation;
@@ -134,41 +133,27 @@ class DonationController extends Controller
         }
 
         try {
-            $lookup = $khalti->lookupPayment($pidx);
-
-            $donation->update([
-                'payment_payload' => $lookup,
-            ]);
-
-            if ($khalti->isCompleted($lookup)) {
-                $donation->update([
-                    'status' => 'completed',
-                    'transaction_id' => $lookup['transaction_id'] ?? null,
-                ]);
-
-                DonationCompletedEvent::dispatch($donation);
-
-                return redirect()
-                    ->route('donate')
-                    ->with('success', 'Thank you! Your donation has been completed successfully.');
-            }
-
-            $donation->update(['status' => 'failed']);
-
-            return redirect()
-                ->route('donate')
-                ->withErrors(['payment' => 'Payment was not completed. Please try again.']);
+            $result = $khalti->settle($donation, $khalti->lookupPayment($pidx));
         } catch (RuntimeException $e) {
-            $donation->update([
-                'payment_payload' => array_merge(
-                    $donation->payment_payload ?? [],
-                    ['lookup_error' => $e->getMessage()]
-                ),
-            ]);
+            report($e);
 
             return redirect()
                 ->route('donate')
                 ->withErrors(['payment' => 'Could not verify payment status. Please contact support.']);
         }
+
+        if ($result === 'completed') {
+            return redirect()
+                ->route('donate')
+                ->with('success', 'Thank you! Your donation has been completed successfully.');
+        }
+
+        if ($result === 'pending') {
+            $donation->update(['status' => 'failed']);
+        }
+
+        return redirect()
+            ->route('donate')
+            ->withErrors(['payment' => 'Payment was not completed. Please try again.']);
     }
 }

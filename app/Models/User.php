@@ -21,6 +21,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
+    /** Wrong guesses allowed before an OTP is invalidated. */
+    public const MAX_OTP_ATTEMPTS = 5;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -46,6 +49,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'fcm_token',
     ];
 
     /**
@@ -117,11 +121,12 @@ class User extends Authenticatable
             throw new \Exception("Please wait 60 seconds before requesting a new OTP.");
         }
 
-        $otp = rand(100000, 999999);
+        $otp = random_int(100000, 999999);
         $key = "otp_{$type}_{$this->email}";
 
         //save otp in cache (temporary memory) for 10 minutes
         Cache::put($key, $otp, now()->addMinutes(10)); // 10 minutes expiry
+        Cache::forget("otp_attempts_{$type}_{$this->email}"); // fresh code, fresh attempt budget
         Cache::put($cooldownKey, now()->addSeconds(60), now()->addSeconds(60)); // 60s cooldown
 
         $this->notify(new SendOtpNotification($otp, $type));
@@ -130,13 +135,28 @@ class User extends Authenticatable
     public function verifyOtp($otp, $type = 'email')
     {
         $key = "otp_{$type}_{$this->email}";
+        $attemptsKey = "otp_attempts_{$type}_{$this->email}";
         //get otp from cache
         $storedOtp = Cache::get($key);
 
-        if ($storedOtp && $storedOtp == $otp) {
+        if (!$storedOtp) {
+            return false;
+        }
+
+        if (hash_equals((string) $storedOtp, (string) $otp)) {
             //delete otp from cache
             Cache::forget($key);
+            Cache::forget($attemptsKey);
             return true;
+        }
+
+        // Burn the code after too many wrong guesses so it cannot be brute-forced
+        $attempts = (int) Cache::get($attemptsKey, 0) + 1;
+        if ($attempts >= self::MAX_OTP_ATTEMPTS) {
+            Cache::forget($key);
+            Cache::forget($attemptsKey);
+        } else {
+            Cache::put($attemptsKey, $attempts, now()->addMinutes(10));
         }
 
         return false;

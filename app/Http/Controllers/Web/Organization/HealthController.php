@@ -26,6 +26,7 @@ class HealthController extends Controller
     public function index()
     {
         $orgId = auth()->user()?->organization?->id;
+        abort_unless($orgId, 403);
 
         $medicalRecordsQuery = MedicalRecord::with('pet.media');
         $vaccinationsQuery = Vaccination::with('pet.media');
@@ -279,17 +280,29 @@ class HealthController extends Controller
     private function resolveVetId(Request $request): ?int
     {
         if ($request->filled('vet_id')) {
+            // Only global vets or this organization's own vets may be referenced
+            $orgId = auth()->user()?->organization?->id;
+            $allowed = Vet::whereKey($request->vet_id)
+                ->where(fn ($q) => $q->where('is_global', true)->orWhere('organization_id', $orgId))
+                ->exists();
+            abort_unless($allowed, 422, 'The selected vet is not available to your organization.');
+
             return $request->vet_id;
         }
 
         if ($request->filled('vet_name')) {
-            $vet = Vet::firstOrCreate(
-                ['name' => $request->vet_name],
-                [
+            $orgId = auth()->user()?->organization?->id;
+
+            // Reuse a global vet or one of this organization's vets; never another organization's
+            $vet = Vet::where('name', $request->vet_name)
+                ->where(fn ($q) => $q->where('is_global', true)->orWhere('organization_id', $orgId))
+                ->first()
+                ?? Vet::create([
+                    'name' => $request->vet_name,
                     'status' => 'active',
-                    'organization_id' => auth()->user()?->organization?->id,
-                ]
-            );
+                    'organization_id' => $orgId,
+                ]);
+
             return $vet->id;
         }
 
@@ -300,7 +313,7 @@ class HealthController extends Controller
     {
         $orgId = auth()->user()?->organization?->id;
         $pet = Pet::findOrFail($petId);
-        if ($orgId && $pet->organization_id !== $orgId) {
+        if (!$orgId || $pet->organization_id !== $orgId) {
             abort(403);
         }
     }
